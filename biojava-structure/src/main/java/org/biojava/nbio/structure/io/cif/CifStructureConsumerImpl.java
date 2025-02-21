@@ -1819,6 +1819,10 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
 
             String[] chainNames = entityPoly.getPdbxStrandId().get(rowIndex).split(",");
             List<String> asymIds = entityId2asymId.get(entityPoly.getEntityId().get(rowIndex));
+            if (asymIds == null) {
+                logger.warn("No asym ids found for entity {} in _struct_asym. Can't provide a mapping from asym ids to author chain ids for this entity", entityPoly.getEntityId().get(rowIndex));
+                break;
+            }
             if (chainNames.length != asymIds.size()) {
                 logger.warn("The list of asym ids (from _struct_asym) and the list of author ids (from _entity_poly) " +
                         "for entity {} have different lengths! Can't provide a mapping from asym ids to author chain " +
