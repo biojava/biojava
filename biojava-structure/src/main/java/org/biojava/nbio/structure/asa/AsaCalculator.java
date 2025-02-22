@@ -165,20 +165,7 @@ public class AsaCalculator {
 	 * NACCESS' -h option
 	 */
 	public AsaCalculator(Structure structure, double probe, int nSpherePoints, int nThreads, boolean hetAtoms) {
-		this.atoms = StructureTools.getAllNonHAtomArray(structure, hetAtoms, 0);
-		this.atomCoords = Calc.atomsToPoints(atoms);
-		this.probe = probe;
-		this.nThreads = nThreads;
-
-		this.useSpatialHashingForNeighbors = DEFAULT_USE_SPATIAL_HASHING;
-
-		// initialising the radii by looking them up through AtomRadii
-		radii = new double[atomCoords.length];
-		for (int i=0;i<atomCoords.length;i++) {
-			radii[i] = getRadius(atoms[i]);
-		}
-
-		initSpherePoints(nSpherePoints);
+		this(structure, probe, nSpherePoints, nThreads, hetAtoms, 0);
 	}
 
 	/**
