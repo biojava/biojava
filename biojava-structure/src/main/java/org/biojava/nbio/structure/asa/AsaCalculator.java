@@ -165,7 +165,7 @@ public class AsaCalculator {
 	 * NACCESS' -h option
 	 */
 	public AsaCalculator(Structure structure, double probe, int nSpherePoints, int nThreads, boolean hetAtoms) {
-		this.atoms = StructureTools.getAllNonHAtomArray(structure, hetAtoms, 1);
+		this.atoms = StructureTools.getAllNonHAtomArray(structure, hetAtoms, 0);
 		this.atomCoords = Calc.atomsToPoints(atoms);
 		this.probe = probe;
 		this.nThreads = nThreads;
