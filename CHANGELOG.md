@@ -1,6 +1,15 @@
 BioJava Changelog
 -----------------
 
+BioJava 7.2.0
+==============================
+### Fixed
+* More lenient mmCIF parsing to be able to parse [PDB-IHM](https://pdb-ihm.org/) entries #1106
+* Now AsaCalculator main constructor will use first model only instead of all #1107 
+
+### Added
+* New constructor for AsaCalculator to provide Structure and model #1107
+
 BioJava 7.1.4
 ==============================
 ### Fixed
