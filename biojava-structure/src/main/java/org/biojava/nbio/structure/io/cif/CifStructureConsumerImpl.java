@@ -144,6 +144,7 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
     private StructNcsOper structNcsOper;
     private PdbxStructOperList structOpers;
     private StructRef structRef;
+    private StructRefSeq structRefSeq;
     private StructRefSeqDif structRefSeqDif;
     private StructSiteGen structSiteGen;
 
@@ -689,7 +690,7 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
     @Override
     public void consumeEntityPolySeq(EntityPolySeq entityPolySeq) {
         for (int rowIndex = 0; rowIndex < entityPolySeq.getRowCount(); rowIndex++) {
-            Chain entityChain = getEntityChain(entityPolySeq.getEntityId().get(rowIndex));
+            Chain entityChain = getEntityChain(entityPolySeq.getEntityId().get(rowIndex), true);
 
             // first we check through the chemcomp provider, if it fails we do some heuristics to guess the type of group
             // TODO some of this code is analogous to getNewGroup() and we should try to unify them - JD 2016-03-08
@@ -728,19 +729,27 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
         }
     }
 
-    private Chain getEntityChain(String entityId) {
+    /**
+     * Get a chain from the temporary list holding them. If createNewChains is true, a new chain
+     * will be added is none are found with the given entityId
+     * @param entityId the entity id
+     * @param createNewChains whether to add new chains if not found or not. If false, null will be returned if chain not found
+     * @return the chain
+     */
+    private Chain getEntityChain(String entityId, boolean createNewChains) {
         for (Chain chain : entityChains) {
             if (chain.getId().equals(entityId)) {
                 return chain;
             }
         }
-
-        // does not exist yet, so create...
-        Chain chain = new ChainImpl();
-        chain.setId(entityId);
-        entityChains.add(chain);
-
-        return chain;
+        if (createNewChains) {
+            // does not exist yet, so create...
+            Chain chain = new ChainImpl();
+            chain.setId(entityId);
+            entityChains.add(chain);
+            return chain;
+        }
+        return null;
     }
 
     @Override
@@ -967,6 +976,7 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
 
     @Override
     public void consumeStructRefSeq(StructRefSeq structRefSeq) {
+        this.structRefSeq = structRefSeq;
         for (int rowIndex = 0; rowIndex < structRefSeq.getRowCount(); rowIndex++) {
             String refId = structRefSeq.getRefId().get(rowIndex);
 
@@ -1173,7 +1183,7 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
             String entityId = structAsym.getEntityId().get(rowIndex);
             logger.debug("Entity {} matches asym_id: {}", entityId, id);
 
-            Chain chain = getEntityChain(entityId);
+            Chain chain = getEntityChain(entityId, true);
             Chain seqRes = (Chain) chain.clone();
             // to solve issue #160 (e.g. 3u7t)
             seqRes = removeSeqResHeterogeneity(seqRes);
@@ -1292,7 +1302,8 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
         setStructNcsOps();
         setCrystallographicInfoMetadata();
 
-        Map<String, List<SeqMisMatch>> misMatchMap = new HashMap<>();
+        // entity id to list of SeqMisMatch
+        Map<Integer, List<SeqMisMatch>> misMatchMap = new HashMap<>();
         for (int rowIndex = 0; rowIndex < structRefSeqDif.getRowCount(); rowIndex++) {
             SeqMisMatch seqMisMatch = new SeqMisMatchImpl();
             seqMisMatch.setDetails(structRefSeqDif.getDetails().get(rowIndex));
@@ -1311,20 +1322,54 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
             seqMisMatch.setUniProtId(structRefSeqDif.getPdbxSeqDbAccessionCode().isDefined()? structRefSeqDif.getPdbxSeqDbAccessionCode().get(rowIndex):null);
             seqMisMatch.setSeqNum(structRefSeqDif.getSeqNum().get(rowIndex));
 
-            String strandId = structRefSeqDif.getPdbxPdbStrandId().get(rowIndex);
-            List<SeqMisMatch> seqMisMatches = misMatchMap.computeIfAbsent(strandId, k -> new ArrayList<>());
-            seqMisMatches.add(seqMisMatch);
+            // try to trace the reference entity_id to struct_ref_seq -> struct_ref
+            String alignId = findRefIdInStructRefSeq(structRefSeqDif.getAlignId().get(rowIndex));
+            if (alignId!=null) {
+                int entityId = findEntityIdInStructRef(alignId);
+                if (entityId > 0) {
+                    List<SeqMisMatch> seqMisMatches = misMatchMap.computeIfAbsent(entityId, k -> new ArrayList<>());
+                    seqMisMatches.add(seqMisMatch);
+                }
+            }
         }
 
-        for (String chainId : misMatchMap.keySet()){
-            Chain chain = structure.getPolyChainByPDB(chainId);
+        for (int entityId : misMatchMap.keySet()){
+            Chain chain = getEntityChain(String.valueOf(entityId), false);
             if (chain == null) {
-                logger.warn("Could not set mismatches for chain with author id {}", chainId);
+                logger.warn("Could not set mismatches for chain with entity id {}", entityId);
                 continue;
             }
-
-            chain.setSeqMisMatches(misMatchMap.get(chainId));
+            chain.setSeqMisMatches(misMatchMap.get(entityId));
         }
+    }
+
+    private String findRefIdInStructRefSeq(String alignId) {
+        for (int rowIndex = 0; rowIndex < structRefSeq.getRowCount(); rowIndex++) {
+            String currentAlignId = structRefSeq.getAlignId().get(rowIndex);
+            if (alignId.equals(currentAlignId)) {
+                return structRefSeq.getRefId().isDefined()? structRefSeq.getRefId().get(rowIndex) : null;
+            }
+        }
+        return null;
+    }
+
+    private int findEntityIdInStructRef(String refId) {
+        String entityIdStr = null;
+        for (int rowIndex = 0; rowIndex < structRef.getRowCount(); rowIndex++) {
+            String currentId = structRef.getId().get(rowIndex);
+            if (refId.equals(currentId)) {
+                entityIdStr = structRef.getEntityId().isDefined()? structRef.getEntityId().get(rowIndex) : null;
+            }
+        }
+        int entityId = -1;
+        if (entityIdStr != null) {
+            try {
+                entityId = Integer.parseInt(entityIdStr);
+            } catch (NumberFormatException e) {
+                logger.warn("Could not parse entity id from '{}'", entityIdStr);
+            }
+        }
+        return entityId;
     }
 
     private String getEntityType(String entityId) {
