@@ -1171,7 +1171,7 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
                 currentModel.add(currentChain);
             }
         } else if (!params.isHeaderOnly()) {
-            logger.warn("current chain is null at end of document.");
+            logger.warn("No chains were instantiated after parsing the whole CIF document. This could be due to the atom_site category being absent");
         }
 
         allModels.add(currentModel);
