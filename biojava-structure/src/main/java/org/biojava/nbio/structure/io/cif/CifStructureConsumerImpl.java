@@ -1297,15 +1297,18 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
             SeqMisMatch seqMisMatch = new SeqMisMatchImpl();
             seqMisMatch.setDetails(structRefSeqDif.getDetails().get(rowIndex));
 
-            String insCode = structRefSeqDif.getPdbxPdbInsCode().get(rowIndex);
+            String insCode = null;
+            if (structRefSeqDif.getPdbxPdbInsCode().isDefined()) {
+                insCode = structRefSeqDif.getPdbxPdbInsCode().get(rowIndex);
                 if ("?".equals(insCode)) {
-                insCode = null;
+                    insCode = null;
+                }
             }
             seqMisMatch.setInsCode(insCode);
             seqMisMatch.setOrigGroup(structRefSeqDif.getDbMonId().get(rowIndex));
             seqMisMatch.setPdbGroup(structRefSeqDif.getMonId().get(rowIndex));
-            seqMisMatch.setPdbResNum(structRefSeqDif.getPdbxAuthSeqNum().get(rowIndex));
-            seqMisMatch.setUniProtId(structRefSeqDif.getPdbxSeqDbAccessionCode().get(rowIndex));
+            seqMisMatch.setPdbResNum(structRefSeqDif.getPdbxAuthSeqNum().isDefined()? structRefSeqDif.getPdbxAuthSeqNum().get(rowIndex):null);
+            seqMisMatch.setUniProtId(structRefSeqDif.getPdbxSeqDbAccessionCode().isDefined()? structRefSeqDif.getPdbxSeqDbAccessionCode().get(rowIndex):null);
             seqMisMatch.setSeqNum(structRefSeqDif.getSeqNum().get(rowIndex));
 
             String strandId = structRefSeqDif.getPdbxPdbStrandId().get(rowIndex);
