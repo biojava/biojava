@@ -1311,8 +1311,8 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
             seqMisMatch.setUniProtId(structRefSeqDif.getPdbxSeqDbAccessionCode().isDefined()? structRefSeqDif.getPdbxSeqDbAccessionCode().get(rowIndex):null);
             seqMisMatch.setSeqNum(structRefSeqDif.getSeqNum().get(rowIndex));
 
-            String strandId = structRefSeqDif.getPdbxPdbStrandId().isDefined()? structRefSeqDif.getPdbxPdbStrandId().get(rowIndex) : null;
-            if (strandId == null) continue;
+            if (!structRefSeqDif.getPdbxPdbStrandId().isDefined()) continue;
+            String strandId = structRefSeqDif.getPdbxPdbStrandId().get(rowIndex);
             List<SeqMisMatch> seqMisMatches = misMatchMap.computeIfAbsent(strandId, k -> new ArrayList<>());
             seqMisMatches.add(seqMisMatch);
         }
