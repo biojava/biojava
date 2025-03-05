@@ -1,6 +1,11 @@
 BioJava Changelog
 -----------------
 
+BioJava 7.2.1
+==============================
+### Fixed
+* More lenient mmCIF parsing to be able to parse [PDB-IHM](https://pdb-ihm.org/) entries, some more edge cases #1108
+
 BioJava 7.2.0
 ==============================
 ### Fixed
