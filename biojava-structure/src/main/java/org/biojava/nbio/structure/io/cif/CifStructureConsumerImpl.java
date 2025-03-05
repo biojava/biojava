@@ -1161,7 +1161,7 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
                 currentModel.add(currentChain);
             }
         } else if (!params.isHeaderOnly()) {
-            logger.warn("current chain is null at end of document.");
+            logger.warn("No chains were instantiated after parsing the whole CIF document. This could be due to the atom_site category being absent");
         }
 
         allModels.add(currentModel);
@@ -1297,17 +1297,21 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
             SeqMisMatch seqMisMatch = new SeqMisMatchImpl();
             seqMisMatch.setDetails(structRefSeqDif.getDetails().get(rowIndex));
 
-            String insCode = structRefSeqDif.getPdbxPdbInsCode().get(rowIndex);
+            String insCode = null;
+            if (structRefSeqDif.getPdbxPdbInsCode().isDefined()) {
+                insCode = structRefSeqDif.getPdbxPdbInsCode().get(rowIndex);
                 if ("?".equals(insCode)) {
-                insCode = null;
+                    insCode = null;
+                }
             }
             seqMisMatch.setInsCode(insCode);
             seqMisMatch.setOrigGroup(structRefSeqDif.getDbMonId().get(rowIndex));
             seqMisMatch.setPdbGroup(structRefSeqDif.getMonId().get(rowIndex));
-            seqMisMatch.setPdbResNum(structRefSeqDif.getPdbxAuthSeqNum().get(rowIndex));
-            seqMisMatch.setUniProtId(structRefSeqDif.getPdbxSeqDbAccessionCode().get(rowIndex));
+            seqMisMatch.setPdbResNum(structRefSeqDif.getPdbxAuthSeqNum().isDefined()? structRefSeqDif.getPdbxAuthSeqNum().get(rowIndex):null);
+            seqMisMatch.setUniProtId(structRefSeqDif.getPdbxSeqDbAccessionCode().isDefined()? structRefSeqDif.getPdbxSeqDbAccessionCode().get(rowIndex):null);
             seqMisMatch.setSeqNum(structRefSeqDif.getSeqNum().get(rowIndex));
 
+            if (!structRefSeqDif.getPdbxPdbStrandId().isDefined()) continue;
             String strandId = structRefSeqDif.getPdbxPdbStrandId().get(rowIndex);
             List<SeqMisMatch> seqMisMatches = misMatchMap.computeIfAbsent(strandId, k -> new ArrayList<>());
             seqMisMatches.add(seqMisMatch);
