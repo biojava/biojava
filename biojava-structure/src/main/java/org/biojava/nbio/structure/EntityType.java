@@ -21,8 +21,7 @@
 package org.biojava.nbio.structure;
 
 /**
- *
- * The type of entity (polymer, non-polymer, water, macrolide)
+ * The type of entity (polymer, non-polymer, water, macrolide, branched)
  * as defined in the mmCIF dictionary: <a href="http://mmcif.wwpdb.org/dictionaries/mmcif_pdbx_v40.dic/Items/_entity.type.html"></a>
  * <p>
  * Entities are of four types:  polymer, non-polymer, macrolide and water.
@@ -76,10 +75,8 @@ public enum EntityType {
 	/**
 	 * @param entType the type of the Entity
 	 */
-	private EntityType(String entType) {
-
+	EntityType(String entType) {
 		this.setEntityType(entType);
-
 	}
 
 	/**
@@ -101,19 +98,15 @@ public enum EntityType {
 	 * Returns null if entityType is null or not one of the supported
 	 * standard types.
 	 *
-	 * @param entityType String value , should be one of "polymer","non-polymer","water","macrolide"
-	 * @return an EntityType object
+	 * @param entityType should be one of "polymer", "non-polymer", "water", "macrolide", "branched" (case insensitive)
+	 * @return an EntityType object or null if the input string doesn't correspond to a known entity
 	 */
-	public static EntityType entityTypeFromString(String entityType)
-	{
-
-		if ( entityType == null)
+	public static EntityType entityTypeFromString(String entityType) {
+		if (entityType == null)
 			return null;
 
-		for(EntityType et : EntityType.values())
-		{
-			if(entityType.equals(et.entityType))
-			{
+		for(EntityType et : EntityType.values()) {
+			if (entityType.toLowerCase().equals(et.entityType)) {
 				return et;
 			}
 		}
