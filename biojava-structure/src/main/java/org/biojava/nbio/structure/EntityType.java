@@ -106,7 +106,7 @@ public enum EntityType {
 			return null;
 
 		for(EntityType et : EntityType.values()) {
-			if (entityType.toLowerCase().equals(et.entityType)) {
+			if (entityType.equalsIgnoreCase(et.entityType)) {
 				return et;
 			}
 		}
