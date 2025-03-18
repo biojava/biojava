@@ -44,7 +44,7 @@
 		<log4j.version>2.23.1</log4j.version>
 		<junit-jupiter.version>5.10.1</junit-jupiter.version>
 		<ciftools.artifact>ciftools-java</ciftools.artifact>
-		<ciftools.version>5.0.1</ciftools.version>
+		<ciftools.version>7.0.1</ciftools.version>
 	</properties>
 	<scm>
 		<connection>scm:git:git://github.com/biojava/biojava.git</connection>
