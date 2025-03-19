@@ -268,23 +268,16 @@ public class StructureImpl implements Structure {
 	/** {@inheritDoc} */
 	@Override
 	public Chain getChainByIndex(int number) {
-
-		int modelnr = 0 ;
-
-		return getChainByIndex(modelnr,number);
+		return getChainByIndex(0, number);
 	}
 
 
 	/** {@inheritDoc} */
 	@Override
 	public Chain getChainByIndex(int modelIdx, int number) {
-
 		Model model = models.get(modelIdx);
-
 		return model.getChains().get(number);
 	}
-
-
 
 	/** {@inheritDoc} */
 	@Override
@@ -297,15 +290,12 @@ public class StructureImpl implements Structure {
 		models.add(model);
 	}
 
-
 	/** {@inheritDoc} */
 	@Override
 	public void setChains(List<Chain> chains){
 
 		setModel(0,chains);
 	}
-
-
 
 	/** {@inheritDoc} */
 	@Override
@@ -327,9 +317,6 @@ public class StructureImpl implements Structure {
 		}
 	}
 
-	/** String representation.
-	 *
-	 */
 	@Override
 	public String toString(){
 		String newline = System.lineSeparator();
@@ -418,15 +405,11 @@ public class StructureImpl implements Structure {
 
 	}
 
-	/** return number of chains  of model.
-	 *
-	 */
 	@Override
-	public int size(int modelnr) { return models.get(modelnr).size(); }
+	public int size(int modelIdx) { return models.get(modelIdx).size(); }
 
 	// some NMR stuff :
 
-	/** return number of models. */
 	@Override
 	public int nrModels() {
 		return models.size() ;
@@ -496,16 +479,15 @@ public class StructureImpl implements Structure {
 	/** {@inheritDoc} */
 	@Override
 	public List<Chain> getChains(){
-		if (models.size()==0) {
+		if (models.isEmpty()) {
 			return new ArrayList<>(0);
 		}
 		return getChains(0);
-
 	}
 
 	@Override
 	public List<Chain> getPolyChains() {
-		if (models.size()==0) {
+		if (models.isEmpty()) {
 			return new ArrayList<>(0);
 		}
 		return getPolyChains(0);
@@ -518,7 +500,7 @@ public class StructureImpl implements Structure {
 
 	@Override
 	public List<Chain> getNonPolyChains() {
-		if (models.size()==0) {
+		if (models.isEmpty()) {
 			return new ArrayList<>(0);
 		}
 		return  getNonPolyChains(0);
@@ -531,7 +513,7 @@ public class StructureImpl implements Structure {
 
 	@Override
 	public List<Chain> getWaterChains() {
-		if (models.size()==0) {
+		if (models.isEmpty()) {
 			return new ArrayList<>(0);
 		}
 		return getWaterChains(0);
@@ -544,18 +526,17 @@ public class StructureImpl implements Structure {
 
 	/** {@inheritDoc} */
 	@Override
-	public void setChains(int modelnr, List<Chain> chains){
+	public void setChains(int modelIdx, List<Chain> chains){
 		for (Chain c: chains){
 			c.setStructure(this);
 		}
-		if (models.size()>modelnr) {
-			models.remove(modelnr);
+		if (models.size()> modelIdx) {
+			models.remove(modelIdx);
 		}
 
 		Model model = new Model();
 		model.setChains(chains);
-		models.add(modelnr, model);
-
+		models.add(modelIdx, model);
 	}
 
 	/**
@@ -563,7 +544,6 @@ public class StructureImpl implements Structure {
 	 */
 	@Override
 	public List<Chain> getModel(int modelIdx) {
-
 		return models.get(modelIdx).getChains();
 	}
 
@@ -606,7 +586,6 @@ public class StructureImpl implements Structure {
 		return null;
 	}
 
-
 	@Override
 	public Chain getNonPolyChain(String asymId) {
 		return getNonPolyChain(asymId, 0);
@@ -624,7 +603,6 @@ public class StructureImpl implements Structure {
 			if (c.getId().equals(asymId))
 				return c;
 		}
-
 		return null;
 	}
 
@@ -676,7 +654,6 @@ public class StructureImpl implements Structure {
 		return getWaterChain(asymId, 0);
 	}
 
-
 	@Override
 	public Chain getWaterChain(String asymId, int modelIdx) {
 		Model model = models.get(modelIdx);
@@ -696,7 +673,6 @@ public class StructureImpl implements Structure {
 	public Chain getWaterChainByPDB(String authId) {
 		return getWaterChainByPDB(authId, 0);
 	}
-
 
 	@Override
 	public Chain getWaterChainByPDB(String authId, int modelIdx) {
@@ -819,7 +795,6 @@ public class StructureImpl implements Structure {
 		}
 		this.dbrefs = dbrefs;
 	}
-
 
 	/** {@inheritDoc} */
 	@Override

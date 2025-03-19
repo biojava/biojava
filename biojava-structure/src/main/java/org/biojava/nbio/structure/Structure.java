@@ -178,10 +178,10 @@ public interface Structure extends Cloneable, Serializable {
 	/**
 	 * Return number of chains of model.
 	 *
-	 * @param modelnr  an int specifying the number of the Model that should be used
+	 * @param modelIdx  an int specifying the index of the Model that should be used
 	 * @return an int representing the number of Chains in this Model
 	 */
-	int size(int modelnr);
+	int size(int modelIdx);
 
 	/**
 	 * Return the number of models .
@@ -269,9 +269,9 @@ public interface Structure extends Cloneable, Serializable {
 	/**
 	 * Set the chains for a model
 	 * @param chains the chains for a model
-	 * @param modelnr the number of the model
+	 * @param modelIdx the model index
 	 */
-	void setChains(int modelnr, List<Chain> chains);
+	void setChains(int modelIdx, List<Chain> chains);
 
 	/**
 	 * Return all polymeric chains for the first model
