@@ -123,20 +123,15 @@ public class StructureImpl implements Structure {
 		n.setDBRefs(this.getDBRefs());
 		n.setSites(getSites());
 
-
 		// go through each chain and clone chain
 		for (int i=0;i<nrModels();i++){
 			List<Chain> cloned_model = new ArrayList<>();
 
 			for (int j=0;j<size(i);j++){
-
 				Chain cloned_chain  = (Chain) getChainByIndex(i,j).clone();
-
 				// setting the parent: can only be done from the parent
 				cloned_chain.setStructure(n);
-
 				cloned_model.add(cloned_chain);
-
 			}
 			n.addModel(cloned_model);
 
@@ -170,35 +165,29 @@ public class StructureImpl implements Structure {
 
 	/** {@inheritDoc} */
 	@Override
-	public Group findGroup(String chainName, String pdbResnum, int modelnr)
+	public Group findGroup(String chainName, String pdbResnum, int modelIdx)
 			throws StructureException {
 
-
 		// if structure is xray there will be only one "model".
-		if ( modelnr > models.size())
-			throw new StructureException(" no model nr " + modelnr +
+		if ( modelIdx > models.size())
+			throw new StructureException(" no model nr " + modelIdx +
 					" in this structure. (contains "+models.size()+")");
 
-
 		// first we need to gather all groups with the author id chainName: polymers, non-polymers and waters
-		Chain polyChain = getPolyChainByPDB(chainName, modelnr);
+		Chain polyChain = getPolyChainByPDB(chainName, modelIdx);
 		if(polyChain != null) {
-			List<Group> groups = new ArrayList<>();
 
-			groups.addAll(polyChain.getAtomGroups());
-
+            List<Group> groups = new ArrayList<>(polyChain.getAtomGroups());
 
 			// there can be more than one non-poly chain for a given author id
-			for (Chain chain: getNonPolyChainsByPDB(chainName, modelnr)) {
+			for (Chain chain: getNonPolyChainsByPDB(chainName, modelIdx)) {
 				groups.addAll(chain.getAtomGroups());
 			}
 
-			Chain water = getWaterChainByPDB(chainName, modelnr);
+			Chain water = getWaterChainByPDB(chainName, modelIdx);
 
 			if (water!=null)
 				groups.addAll(water.getAtomGroups());
-
-
 
 			// now iterate over all groups
 			// in order to find the amino acid that has this pdbRenum.
@@ -260,7 +249,7 @@ public class StructureImpl implements Structure {
 
 	/** {@inheritDoc} */
 	@Override
-	public void addChain(Chain chain, int modelnr) {
+	public void addChain(Chain chain, int modelIdx) {
 		// if model has not been initialized, init it!
 		chain.setStructure(this);
 		if (models.isEmpty()) {
@@ -271,15 +260,10 @@ public class StructureImpl implements Structure {
 			models.add(model);
 
 		} else {
-			Model model = models.get(modelnr);
+			Model model = models.get(modelIdx);
 			model.addChain(chain);
 		}
-
-
-
 	}
-
-
 
 	/** {@inheritDoc} */
 	@Override
@@ -293,9 +277,9 @@ public class StructureImpl implements Structure {
 
 	/** {@inheritDoc} */
 	@Override
-	public Chain getChainByIndex(int modelnr,int number) {
+	public Chain getChainByIndex(int modelIdx, int number) {
 
-		Model model = models.get(modelnr);
+		Model model = models.get(modelIdx);
 
 		return model.getChains().get(number);
 	}
@@ -333,8 +317,6 @@ public class StructureImpl implements Structure {
 			c.setStructure(this);
 
 		//System.out.println("model size:" + models.size());
-
-
 		Model model = new Model();
 		model.setChains(modelChains);
 
@@ -350,7 +332,7 @@ public class StructureImpl implements Structure {
 	 */
 	@Override
 	public String toString(){
-		String newline = System.getProperty("line.separator");
+		String newline = System.lineSeparator();
 		StringBuilder str = new StringBuilder();
 		str.append("structure ");
 		str.append(name);
@@ -384,15 +366,11 @@ public class StructureImpl implements Structure {
 				List<Group> hgr = cha.getAtomGroups(GroupType.HETATM);
 				List<Group> ngr = cha.getAtomGroups(GroupType.NUCLEOTIDE);
 
-
-
-
 				str.append("chain ")
 						.append(j).append(": asymId:")
 						.append(cha.getId())
 						.append(" authId:")
 						.append(cha.getName()).append(" ");
-
 
 				if ( cha.getEntityInfo() != null){
 					EntityInfo comp = cha.getEntityInfo();
@@ -405,7 +383,6 @@ public class StructureImpl implements Structure {
 							.append(type)
 							.append(")");
 				}
-
 
 				str.append(newline);
 				str.append(" length SEQRES: ").append(cha.getSeqResLength());
@@ -424,7 +401,6 @@ public class StructureImpl implements Structure {
 		for (EntityInfo mol : entityInfos) {
 			str.append(mol).append(newline);
 		}
-
 
 		return str.toString() ;
 	}
@@ -566,8 +542,6 @@ public class StructureImpl implements Structure {
 		return models.get(modelIdx).getWaterChains();
 	}
 
-
-
 	/** {@inheritDoc} */
 	@Override
 	public void setChains(int modelnr, List<Chain> chains){
@@ -584,37 +558,32 @@ public class StructureImpl implements Structure {
 
 	}
 
-	/** Retrieve all Chains belonging to a model .
-	 *
-	 * @param modelnr  an int
-	 * @return a List object
+	/**
+	 * {@inheritDoc}
 	 */
 	@Override
-	public List<Chain> getModel(int modelnr) {
+	public List<Chain> getModel(int modelIdx) {
 
-		return models.get(modelnr).getChains();
+		return models.get(modelIdx).getChains();
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public Chain getChain(String asymId, int modelnr) {
+	public Chain getChain(String asymId, int modelIdx) {
 
-		List<Chain> chains = getChains(modelnr);
+		List<Chain> chains = getChains(modelIdx);
 		for (Chain c : chains) {
 			if (c.getId().equals(asymId)) {
 				return c;
 			}
 		}
 		return null;
-
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public Chain getChain(String asymId) {
-
 		return getChain(asymId,0);
-
 	}
 
 	@Override
@@ -693,7 +662,6 @@ public class StructureImpl implements Structure {
 			return chains;
 		}
 
-
 		List<Chain> nonpolyChains = model.getNonPolyChains();
 		for (Chain c : nonpolyChains){
 			if (c.getName().equals(authId))
@@ -744,8 +712,6 @@ public class StructureImpl implements Structure {
 
 		return null;
 	}
-
-
 
 	/** {@inheritDoc} */
 	@Override
@@ -835,7 +801,6 @@ public class StructureImpl implements Structure {
 		return null;
 	}
 
-
 	/** {@inheritDoc} */
 	@Override
 	public List<DBRef> getDBRefs() {
@@ -872,7 +837,6 @@ public class StructureImpl implements Structure {
 	@Override
 	public List<Bond> getSSBonds(){
 		return ssbonds;
-
 	}
 
 	/** {@inheritDoc} */
@@ -882,9 +846,7 @@ public class StructureImpl implements Structure {
 	}
 
 	/**
-	 * Adds a single disulfide Bond to this structure
-	 *
-	 * @param ssbond the SSBond.
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void addSSBond(Bond ssbond){
@@ -892,10 +854,7 @@ public class StructureImpl implements Structure {
 	}
 
 	/**
-	 * Return whether or not the entry has an associated journal article
-	 * or publication. The JRNL section is not mandatory and thus may not be
-	 * present.
-	 * @return flag if a JournalArticle could be found.
+	 * R{@inheritDoc}
 	 */
 	@Override
 	public boolean hasJournalArticle() {
@@ -903,9 +862,7 @@ public class StructureImpl implements Structure {
 	}
 
 	/**
-	 * get the associated publication as defined by the JRNL records in a PDB
-	 * file.
-	 * @return a JournalArticle
+	 * {@inheritDoc}
 	 */
 	@Override
 	public JournalArticle getJournalArticle() {
@@ -913,9 +870,7 @@ public class StructureImpl implements Structure {
 	}
 
 	/**
-	 * set the associated publication as defined by the JRNL records in a PDB
-	 * file.
-	 * @param journalArticle the article
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void setJournalArticle(JournalArticle journalArticle) {
@@ -923,28 +878,20 @@ public class StructureImpl implements Structure {
 	}
 
 	/**
-	 * @return the sites contained in this structure
+	 * {@inheritDoc}
 	 */
-
 	@Override
 	public List<Site> getSites() {
 		return sites;
 	}
 
 	/**
-	 * @param sites the sites to set in the structure
+	 * {@inheritDoc}
 	 */
-
 	@Override
 	public void setSites(List<Site> sites) {
 		this.sites = sites;
 	}
-
-	/** Caution: we should probably remove this to avoid confusion. Currently this is always an empty list!
-	 *
-	 * @return a list of Groups listed in the HET records - this will not
-	 * include any waters.
-	 */
 
 	/**
 	 * Sets a flag to indicate if this structure is a biological assembly
@@ -1026,19 +973,17 @@ public class StructureImpl implements Structure {
 			pdbId = new PdbId(pdb_id);
 		}
 	}
-	
 
-
-	/** {@inheritDoc} 
-	 * @since 6.0.0
-	 * */
+	/**
+	 * {@inheritDoc}
+	 **/
 	public PdbId getPdbId() {
 		return this.pdbId;
 	}
 	
-	/** {@inheritDoc}
-	 * @since 6.0.0
-	 *  */
+	/**
+	 * {@inheritDoc}
+	 **/
 	public void setPdbId(PdbId pdbId) {
 		this.pdbId = pdbId;
 	}
