@@ -243,8 +243,7 @@ public class StructureImpl implements Structure {
 	/** {@inheritDoc} */
 	@Override
 	public void addChain(Chain chain) {
-		int modelnr = 0 ;
-		addChain(chain,modelnr);
+		addChain(chain, 0);
 	}
 
 	/** {@inheritDoc} */
@@ -293,8 +292,7 @@ public class StructureImpl implements Structure {
 	/** {@inheritDoc} */
 	@Override
 	public void setChains(List<Chain> chains){
-
-		setModel(0,chains);
+		setModel(0, chains);
 	}
 
 	/** {@inheritDoc} */
@@ -359,7 +357,7 @@ public class StructureImpl implements Structure {
 						.append(" authId:")
 						.append(cha.getName()).append(" ");
 
-				if ( cha.getEntityInfo() != null){
+				if (cha.getEntityInfo() != null){
 					EntityInfo comp = cha.getEntityInfo();
 					String molName = comp.getDescription();
 					if ( molName != null){
@@ -394,21 +392,15 @@ public class StructureImpl implements Structure {
 
 	@Override
 	public int size() {
-		int modelnr = 0 ;
-
 		if (!models.isEmpty()) {
-			return models.get(modelnr).getPolyChains().size();
-		}
-		else {
+			return models.get(0).getPolyChains().size();
+		} else {
 			return 0 ;
 		}
-
 	}
 
 	@Override
 	public int size(int modelIdx) { return models.get(modelIdx).size(); }
-
-	// some NMR stuff :
 
 	@Override
 	public int nrModels() {
