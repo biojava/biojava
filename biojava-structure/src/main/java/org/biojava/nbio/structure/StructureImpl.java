@@ -536,13 +536,13 @@ public class StructureImpl implements Structure {
 	 */
 	@Override
 	public List<Chain> getModel(int modelIdx) {
+		if (models.isEmpty()) return new ArrayList<>();
 		return models.get(modelIdx).getChains();
 	}
 
 	/** {@inheritDoc} */
 	@Override
 	public Chain getChain(String asymId, int modelIdx) {
-
 		List<Chain> chains = getChains(modelIdx);
 		for (Chain c : chains) {
 			if (c.getId().equals(asymId)) {
@@ -566,6 +566,8 @@ public class StructureImpl implements Structure {
 
 	@Override
 	public Chain getPolyChain(String asymId, int modelIdx) {
+		if (models.isEmpty()) return null;
+
 		Model model = models.get(modelIdx);
 		if (model==null) {
 			return null;
