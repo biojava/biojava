@@ -178,10 +178,10 @@ public interface Structure extends Cloneable, Serializable {
 	/**
 	 * Return number of chains of model.
 	 *
-	 * @param modelnr  an int specifying the number of the Model that should be used
+	 * @param modelIdx  an int specifying the index of the Model that should be used
 	 * @return an int representing the number of Chains in this Model
 	 */
-	int size(int modelnr);
+	int size(int modelIdx);
 
 	/**
 	 * Return the number of models .
@@ -232,10 +232,10 @@ public interface Structure extends Cloneable, Serializable {
 	 * Retrieve all Chains belonging to a model .
 	 * @see #getChains(int modelnr)
 	 *
-	 * @param modelnr  an int
+	 * @param modelIdx the model index
 	 * @return a List object containing the Chains of Model nr. modelnr
 	 */
-	List<Chain> getModel(int modelnr);
+	List<Chain> getModel(int modelIdx);
 
 	/**
 	 * Retrieve all chains for the first model.
@@ -261,17 +261,17 @@ public interface Structure extends Cloneable, Serializable {
 	 * Retrieve all chains of a model.
 	 * @see #getModel
 	 *
-	 * @param modelnr  an int
+	 * @param modelIdx the model index
 	 * @return a List object containing the Chains of Model nr. modelnr
 	 */
-	List<Chain> getChains(int modelnr);
+	List<Chain> getChains(int modelIdx);
 
 	/**
 	 * Set the chains for a model
 	 * @param chains the chains for a model
-	 * @param modelnr the number of the model
+	 * @param modelIdx the model index
 	 */
-	void setChains( int modelnr, List<Chain> chains);
+	void setChains(int modelIdx, List<Chain> chains);
 
 	/**
 	 * Return all polymeric chains for the first model
@@ -315,7 +315,7 @@ public interface Structure extends Cloneable, Serializable {
 
 	/**
 	 * Return all water chains for the given model index
-	 * @param modelIdx
+	 * @param modelIdx the model index
 	 * @return
 	 * @since 5.0
 	 */
@@ -332,9 +332,9 @@ public interface Structure extends Cloneable, Serializable {
 	 * Add a new chain to the model specified by the given index
 	 *
 	 * @param chain    a Chain object
-	 * @param modelnr  an int specifying to which model the Chain should be added
+	 * @param modelIdx  an int specifying to which model the Chain should be added
 	 */
-	void addChain(Chain chain, int modelnr);
+	void addChain(Chain chain, int modelIdx);
 
 	/**
 	 * Retrieve a chain by its index within the Structure .
@@ -348,10 +348,10 @@ public interface Structure extends Cloneable, Serializable {
 	 * Retrieve a chain by its indices within the Structure and model.
 	 *
 	 * @param chainIndex the index of the desired chain in the structure
-	 * @param modelnr the model the desired chain is in
+	 * @param modelIdx the model index
 	 * @return a Chain object
 	 */
-	Chain getChainByIndex(int modelnr, int chainIndex);
+	Chain getChainByIndex(int modelIdx, int chainIndex);
 
 	/**
 	 * Check if a chain with the chainId aymId is contained in this structure.
@@ -394,11 +394,11 @@ public interface Structure extends Cloneable, Serializable {
 	 * considers only model nr X. count starts with 0.
 	 * @param authId the chain name of the chain to use
 	 * @param pdbResnum the PDB residue number of the requested group
-	 * @param modelnr the number of the model to use
+	 * @param modelIdx the model index
 	 * @return Group the requested Group
 	 * @throws StructureException
 	 */
-	Group findGroup(String authId, String pdbResnum, int modelnr) throws StructureException;
+	Group findGroup(String authId, String pdbResnum, int modelIdx) throws StructureException;
 
 	/**
 	 * Retrieve a Chain (polymeric, non-polymeric or water) based on
