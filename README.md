@@ -1,7 +1,7 @@
 # Welcome to <img src="logo-full.png" height="35"/>
 
 ![Build](https://github.com/biojava/biojava/actions/workflows/master.yml/badge.svg)
-[![Version](http://img.shields.io/badge/version-7.2.1-blue.svg?style=flat)](https://github.com/biojava/biojava/releases/tag/biojava-7.2.1) [![License](http://img.shields.io/badge/license-LGPL_2.1-blue.svg?style=flat)](https://github.com/biojava/biojava/blob/master/LICENSE) [![Join the chat at https://gitter.im/biojava/biojava](https://badges.gitter.im/biojava/biojava.svg)](https://gitter.im/biojava/biojava?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![Version](http://img.shields.io/badge/version-7.2.2-blue.svg?style=flat)](https://github.com/biojava/biojava/releases/tag/biojava-7.2.2) [![License](http://img.shields.io/badge/license-LGPL_2.1-blue.svg?style=flat)](https://github.com/biojava/biojava/blob/master/LICENSE) [![Join the chat at https://gitter.im/biojava/biojava](https://badges.gitter.im/biojava/biojava.svg)](https://gitter.im/biojava/biojava?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 
 BioJava is an open-source project dedicated to providing a Java framework for **processing biological data**. It provides analytical and statistical routines, parsers for common file formats, reference implementations of popular algorithms, and allows the manipulation of sequences and 3D structures. The goal of the biojava project is to facilitate rapid application development for bioinformatics.
@@ -29,7 +29,7 @@ If you are using Maven you can add the BioJava repository by adding the followin
       <dependency>
         <groupId>org.biojava</groupId>
         <artifactId>biojava-core</artifactId>
-        <version>7.2.1</version>
+        <version>7.2.2</version>
       </dependency>
       <!-- other biojava modules as needed -->
     </dependencies>

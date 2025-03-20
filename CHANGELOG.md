@@ -1,6 +1,13 @@
 BioJava Changelog
 -----------------
 
+BioJava 7.2.2
+==============================
+### Fixed
+* mmCIF parsing: entity type should be case insensitive #1109
+* Upgraded to latest version of ciftools-java, fixes mmCIF parsing performance issues in some edge cases https://github.com/rcsb/ciftools-java/issues/13
+* Added safeguards for `Structure.get*Chain*()` methods #1111
+
 BioJava 7.2.1
 ==============================
 ### Fixed
