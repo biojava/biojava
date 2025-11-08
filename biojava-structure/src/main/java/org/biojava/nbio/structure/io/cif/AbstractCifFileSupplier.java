@@ -308,7 +308,12 @@ public abstract class AbstractCifFileSupplier<S> implements CifFileSupplier<S> {
                 }
             }
             labelEntityId.add(entityId);
-            labelSeqId.add(seqId);
+            // see https://github.com/biojava/biojava/issues/1116
+            if (chain.getEntityInfo().getType() == EntityType.POLYMER) {
+                labelSeqId.add(seqId);
+            } else {
+                labelSeqId.markNextNotPresent();
+            }
             String insCode = "";
             if (group.getResidueNumber().getInsCode() != null) {
                 insCode = Character.toString(group.getResidueNumber().getInsCode());
