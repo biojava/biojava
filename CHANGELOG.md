@@ -1,7 +1,7 @@
 BioJava Changelog
 -----------------
 
-BioJava 7.2.3 - future release
+BioJava 7.2.3
 ==============================
 ### Fixed
 * Don't use label_seq_id in mmCIF output for non-polymers #1116
