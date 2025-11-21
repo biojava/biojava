@@ -260,7 +260,9 @@ public class InsdcParser {
 					l.setPartialOn3prime(true);
 				}
 
-				if (!(accession == null || "".equals(accession))) l.setAccession(new AccessionID(accession));
+				if (accession != null && !"".equals(accession)) {
+					l.setAccession(new AccessionID(accession));
+				}
 
 				boundedLocationsCollection.add(l);
 

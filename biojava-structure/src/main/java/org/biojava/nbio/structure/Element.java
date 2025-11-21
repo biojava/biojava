@@ -424,7 +424,7 @@ public enum Element {
 	 * @return <CODE>true</CODE> if Element is not Hydrogen and not Carbon.
 	 */
 	public boolean isHeteroAtom() {
-		return !(this == C || this == H);
+		return this != C && this != H;
 	}
 
 	/**

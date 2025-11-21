@@ -62,7 +62,7 @@ public class Author implements Serializable{
 		if ((this.surname == null) ? (other.surname != null) : !this.surname.equals(other.surname)) {
 			return false;
 		}
-		return !((this.initials == null) ? (other.initials != null) : !this.initials.equals(other.initials));
+		return (this.initials == null) ? other.initials == null : this.initials.equals(other.initials);
 	}
 
 	@Override
