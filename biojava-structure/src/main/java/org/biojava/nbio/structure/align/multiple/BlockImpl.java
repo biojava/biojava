@@ -127,7 +127,7 @@ public class BlockImpl extends AbstractScoresCache implements Serializable,
 	public int length() {
 		if (alignRes == null)
 			return 0;
-		if (alignRes.size() == 0)
+		if (alignRes.isEmpty())
 			return 0;
 		return alignRes.get(0).size();
 	}

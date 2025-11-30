@@ -145,7 +145,7 @@ public class SystematicSolver implements QuatSymmetrySolver {
 	}
 
 	private boolean isValidPermutation(List<Integer> permutation) {
-		if (permutation.size() == 0) {
+		if (permutation.isEmpty()) {
 			return false;
 		}
 

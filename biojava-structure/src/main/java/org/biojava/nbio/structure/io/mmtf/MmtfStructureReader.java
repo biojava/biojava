@@ -396,7 +396,7 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 		}
 		// no matching altLoc group found.
 		// build it up.
-		if (group.getAtoms().size() == 0) {
+		if (group.getAtoms().isEmpty()) {
 			return group;
 		}
 		Group altLocG = (Group) group.clone();

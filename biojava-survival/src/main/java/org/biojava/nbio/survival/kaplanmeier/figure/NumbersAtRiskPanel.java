@@ -76,7 +76,7 @@ public class NumbersAtRiskPanel extends JPanel {
 			sfiHashMap = sfi.getStrataInfoHashMap();
 		}
 
-		if(sfiHashMap.size() == 0)
+		if(sfiHashMap.isEmpty())
 			return;
 		//int height = this.getHeight();
 

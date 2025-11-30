@@ -120,7 +120,7 @@ public class ZipChemCompProvider implements ChemCompProvider{
         }
 
         // If a null record or an empty chemcomp, return a default ChemComp and blacklist.
-        if (cc == null || (null == cc.getName() && cc.getAtoms().size() == 0)) {
+        if (cc == null || (null == cc.getName() && cc.getAtoms().isEmpty())) {
             s_logger.info("Unable to find or download {} - excluding from future searches.", recordName);
             unavailable.add(recordName);
             return getEmptyChemComp(recordName);

@@ -207,7 +207,7 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements
 	 * lengths.
 	 */
 	protected void updateLength() {
-		if (getBlockSets().size() == 0) {
+		if (getBlockSets().isEmpty()) {
 			throw new IndexOutOfBoundsException(
 					"Empty MultipleAlignment: blockSets size == 0.");
 		} // Otherwise try to calculate it from the BlockSet information
@@ -223,7 +223,7 @@ public class MultipleAlignmentImpl extends AbstractScoresCache implements
 	 * BlockSet core lengths.
 	 */
 	protected void updateCoreLength() {
-		if (getBlockSets().size() == 0) {
+		if (getBlockSets().isEmpty()) {
 			throw new IndexOutOfBoundsException(
 					"Empty MultipleAlignment: blockSets size == 0.");
 		} // Otherwise try to calculate it from the BlockSet information

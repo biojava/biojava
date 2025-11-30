@@ -102,7 +102,7 @@ public class ClusterAltAligs {
 
 			}
 			clusters.add(currentCluster);
-			if ( remainList.size() == 0) {
+			if ( remainList.isEmpty()) {
 				break;
 			}
 		}

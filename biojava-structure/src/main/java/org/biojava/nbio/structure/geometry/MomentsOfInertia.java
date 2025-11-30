@@ -72,7 +72,7 @@ public class MomentsOfInertia {
 
 	public Point3d getCenterOfMass() {
 
-		if (points.size() == 0) {
+		if (points.isEmpty()) {
 			throw new IllegalStateException(
 					"MomentsOfInertia: no points defined");
 		}

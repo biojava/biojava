@@ -58,7 +58,7 @@ public class SubunitClusterer {
 
 	public static Stoichiometry cluster(List<Subunit> subunits, SubunitClustererParameters params) {
 		List<SubunitCluster> clusters = new ArrayList<>();
-		if (subunits.size() == 0)
+		if (subunits.isEmpty())
 			return new Stoichiometry(clusters);
 
 		// First generate a new cluster for each Subunit

@@ -228,7 +228,7 @@ public class AtomCache {
 			throws StructureException, IOException {
 		return getBiologicalAssembly(new PdbId(pdbId), bioAssemblyId, multiModel);
 	}
-	
+
 	/**
 	 * Returns the biological assembly for a given PDB ID and bioAssemblyId, by building the
 	 * assembly from the biounit annotations found in {@link Structure#getPDBHeader()}
@@ -284,7 +284,7 @@ public class AtomCache {
 				asymUnit.getPDBHeader().getBioAssemblies().get(bioAssemblyId).getTransforms();
 
 
-		if (transformations == null || transformations.size() == 0) {
+		if (transformations == null || transformations.isEmpty()) {
 			throw new StructureException("Could not load transformations to recreate biological assembly id " + bioAssemblyId + " of " + pdbId);
 		}
 
@@ -339,7 +339,7 @@ public class AtomCache {
 				asymUnit.getPDBHeader().getBioAssemblies().get(bioAssemblyId).getTransforms();
 
 
-		if (transformations == null || transformations.size() == 0) {
+		if (transformations == null || transformations.isEmpty()) {
 			throw new StructureException("Could not load transformations to recreate biological assembly id " + bioAssemblyId + " of " + pdbId);
 		}
 
@@ -385,7 +385,7 @@ public class AtomCache {
 			List<BiologicalAssemblyTransformation> transformations =
 					asymUnit.getPDBHeader().getBioAssemblies().get(bioAssemblyId).getTransforms();
 
-			if (transformations == null || transformations.size() == 0) {
+			if (transformations == null || transformations.isEmpty()) {
 				logger.info("Could not load transformations to recreate biological assembly id {} of {}. Assembly " +
 						"id will be missing in biological assemblies.", bioAssemblyId, pdbId);
 				continue;
@@ -807,7 +807,7 @@ public class AtomCache {
 	public Structure getStructureForPdbId(PdbId pdbId) throws IOException {
 		if (pdbId == null)
 			return null;
-		
+
 		while (checkLoading(pdbId)) {
 			// waiting for loading to be finished...
 			try {
@@ -833,7 +833,7 @@ public class AtomCache {
 	protected Structure loadStructureFromCifByPdbId(String pdbId) throws IOException {
 		return loadStructureFromCifByPdbId(new PdbId(pdbId));
 	}
-	
+
 	protected Structure loadStructureFromCifByPdbId(PdbId pdbId) throws IOException {
 		logger.debug("Loading structure {} from mmCIF file {}.", pdbId, path);
 		Structure s;

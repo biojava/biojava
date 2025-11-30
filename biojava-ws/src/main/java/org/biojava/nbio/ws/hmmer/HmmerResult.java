@@ -140,7 +140,7 @@ public class HmmerResult implements Comparable<HmmerResult>, Serializable{
 		return(me.getSqFrom().compareTo(other.getSqFrom()));
 	}
 	private boolean emptyDomains(HmmerResult o) {
-		if ( o.getDomains() == null || o.getDomains().size() == 0)
+		if ( o.getDomains() == null || o.getDomains().isEmpty())
 			return true;
 		return false;
 	}

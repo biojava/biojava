@@ -119,7 +119,7 @@ public class GeneSequence extends DNASequence {
 		if (intronAdded) { //going to assume introns are correct
 			return;
 		}
-		if (exonSequenceList.size() == 0) {
+		if (exonSequenceList.isEmpty()) {
 			return;
 		}
 		ExonComparator exonComparator = new ExonComparator();

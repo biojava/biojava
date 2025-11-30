@@ -279,7 +279,7 @@ public class BioAssemblyTools {
 			return centroid;
 		}
 
-		if ( transformations.size() == 0) {
+		if ( transformations.isEmpty()) {
 			return Calc.getCentroid(atoms).getCoords();
 
 		}

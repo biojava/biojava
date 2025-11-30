@@ -305,7 +305,7 @@ public class RotationSolver implements QuatSymmetrySolver {
 	 * @return null if invalid, or a rotation if valid
 	 */
 	private Rotation isValidPermutation(List<Integer> permutation) {
-		if (permutation.size() == 0) {
+		if (permutation.isEmpty()) {
 			return null;
 		}
 
