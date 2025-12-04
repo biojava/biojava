@@ -1455,7 +1455,7 @@ nBestTrace=nTrace;
 			//afpChain.setTotalRmsdOpt(rmsd);
 			//System.out.println("rmsd: " + rmsd);
 
-			if(!(nAtom<strLen*0.95) && (!isRmsdLenAssigned)) {
+			if(nAtom >= strLen * 0.95 && !isRmsdLenAssigned) {
 				rmsdLen=rmsd;
 				isRmsdLenAssigned=true;
 			}

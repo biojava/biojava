@@ -135,7 +135,7 @@ public class Location implements Iterable<Location>
 		int s= start - 1;
 		int e= end;
 
-		if( !( strand == '-' || strand == '+' || strand == '.' ))
+		if( strand != '-' && strand != '+' && strand != '.' )
 		{
 			throw new IllegalArgumentException( "Strand must be '+', '-', or '.'" );
 		}
@@ -166,7 +166,7 @@ public class Location implements Iterable<Location>
 		int s= start;
 		int e= s + length;
 
-		if( !( strand == '-' || strand == '+' || strand == '.' ))
+		if( strand != '-' && strand != '+' && strand != '.' )
 		{
 			throw new IllegalArgumentException( "Strand must be '+', '-', or '.'" );
 		}

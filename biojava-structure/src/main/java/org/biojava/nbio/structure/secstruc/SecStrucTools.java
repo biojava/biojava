@@ -57,7 +57,7 @@ public class SecStrucTools {
 			Group g = iter.next();
 			if (g.hasAminoAtoms()) {
 				Object p = g.getProperty(Group.SEC_STRUC);
-				if (!(p == null)) {
+				if (p != null) {
 					SecStrucInfo ss = (SecStrucInfo) p;
 					listSSI.add(ss);
 				}

@@ -55,7 +55,7 @@ public class BioAssemblyTools {
 		if (first < 0 || last < 0) {
 			return true;
 		}
-		return ! (first == 0 && last > first);
+		return first != 0 || last <= first;
 	}
 
 	public static List<String> parseUnaryOperatorExpression(String operatorExpression) {

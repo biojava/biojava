@@ -49,7 +49,13 @@ public class Equals {
 	 * @see #classEqual(Object, Object)
 	 */
 	public static boolean equal(Object one, Object two) {
-		return one == null && two == null || !(one == null || two == null) && (one == two || one.equals(two));
+		if (one == two) {
+			return true;
+		}
+		if (one == null || two == null) {
+			return false;
+		}
+		return one.equals(two);
 	}
 
 	/**
@@ -84,6 +90,12 @@ public class Equals {
 	 *         equal at the class level
 	 */
 	public static boolean classEqual(Object one, Object two) {
-		return one == two || !(one == null || two == null) && one.getClass() == two.getClass();
+		if (one == two) {
+			return true;
+		}
+		if (one == null || two == null) {
+			return false;
+		}
+		return one.getClass() == two.getClass();
 	}
 }
