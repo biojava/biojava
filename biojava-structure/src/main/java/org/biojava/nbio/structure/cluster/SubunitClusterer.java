@@ -83,8 +83,7 @@ public class SubunitClusterer {
 						}
 
 					} catch (CompoundNotFoundException e) {
-						logger.warn("Could not merge by Sequence. {}",
-								e.getMessage());
+						logger.info("Could not merge by Sequence. {}", e.getMessage());
 					}
 				}
 			}
@@ -100,7 +99,7 @@ public class SubunitClusterer {
 							clusters.remove(c2);
 						}
 					} catch (StructureException e) {
-						logger.warn("Could not merge by Structure. {}", e.getMessage());
+						logger.info("Could not merge by Structure. {}", e.getMessage());
 					}
 				}
 			}
@@ -112,8 +111,7 @@ public class SubunitClusterer {
 				try {
 					clusters.get(c).divideInternally(params);
 				} catch (StructureException e) {
-					logger.warn("Error analyzing internal symmetry. {}",
-							e.getMessage());
+					logger.info("Error analyzing internal symmetry. {}", e.getMessage());
 				}
 			}
 
@@ -125,8 +123,7 @@ public class SubunitClusterer {
 						if (clusters.get(c1).mergeStructure(clusters.get(c2), params))
 							clusters.remove(c2);
 					} catch (StructureException e) {
-						logger.warn("Could not merge by Structure. {}",
-								e.getMessage());
+						logger.info("Could not merge by Structure. {}", e.getMessage());
 					}
 				}
 			}
