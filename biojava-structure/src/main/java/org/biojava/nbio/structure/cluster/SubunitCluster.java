@@ -331,7 +331,7 @@ public class SubunitCluster {
 			}
 		}
 
-		if (thisAligned.size() == 0 && otherAligned.size() == 0) {
+		if (thisAligned.isEmpty() && otherAligned.isEmpty()) {
 			logger.warn("No equivalent aligned atoms found between SubunitClusters {}-{} via entity SEQRES alignment. Is FileParsingParameters.setAlignSeqRes() set?", thisName, otherName);
 		}
 

@@ -126,7 +126,7 @@ extends JPanel{
 	public void setAligMap(List<AlignedPosition> apos){
 		this.apos = apos;
 
-		if ( apos.size() == 0)
+		if (apos.isEmpty())
 			return;
 
 		AlignedPosition last = apos.get(apos.size()-1);

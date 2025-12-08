@@ -72,7 +72,7 @@ public class PrettyXMLWriter implements XMLWriter {
 	private void handleDeclaredNamespaces()
 		throws IOException
 	{
-		if (namespacesDeclared.size() == 0) {
+		if (namespacesDeclared.isEmpty()) {
 			for (Iterator<String> nsi = namespacesDeclared.iterator(); nsi.hasNext(); ) {
 				String nsURI = nsi.next();
 				if (!namespacePrefixes.containsKey(nsURI)) {

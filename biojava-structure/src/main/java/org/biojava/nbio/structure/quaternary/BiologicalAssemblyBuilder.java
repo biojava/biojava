@@ -205,7 +205,7 @@ public class BiologicalAssemblyBuilder {
 
 		// multi-model bioassembly
 
-		if ( modelIndex.size() == 0)
+		if (modelIndex.isEmpty())
 			modelIndex.add("PLACEHOLDER FOR ASYM UNIT");
 
 		int modelCount = modelIndex.indexOf(transformId);

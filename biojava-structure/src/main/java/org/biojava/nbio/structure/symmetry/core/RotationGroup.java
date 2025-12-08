@@ -98,7 +98,7 @@ public class RotationGroup implements Iterable<Rotation> {
 
 	public String getPointGroup() {
 		if (modified) {
-			if (rotations.size() == 0) {
+			if (rotations.isEmpty()) {
 				return "C1";
 			}
 			complete();

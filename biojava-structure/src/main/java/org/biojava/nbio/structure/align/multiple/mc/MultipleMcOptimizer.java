@@ -153,7 +153,7 @@ public class MultipleMcOptimizer implements Callable<MultipleAlignment> {
 		for (Block b : toDelete) {
 			for (BlockSet bs : msa.getBlockSets()) {
 				bs.getBlocks().remove(b);
-				if (bs.getBlocks().size() == 0)
+				if (bs.getBlocks().isEmpty())
 					emptyBs.add(bs);
 			}
 		}

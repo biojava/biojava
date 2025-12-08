@@ -411,7 +411,7 @@ public class SimpleAlignedSequence<S extends Sequence<C>, C extends Compound> im
 		}
 
 		// combine sublocations into 1 Location
-		if (sublocations.size() == 0) {
+		if (sublocations.isEmpty()) {
 			location = null;
 		} else if (sublocations.size() == 1) {
 			location = sublocations.get(0);

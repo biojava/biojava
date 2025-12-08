@@ -117,7 +117,7 @@ public class QsAlignResult {
 					"Subunit Map index higher than Subunit List size.");
 
 		// Update the relation enum
-		if (subunitMap.size() == 0) {
+		if (subunitMap.isEmpty()) {
 			relation = QsRelation.DIFFERENT;
 		} else if (subunitMap.keySet().size() == subunits1.size()) {
 			if (subunitMap.values().size() == subunits2.size()) {

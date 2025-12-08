@@ -1970,7 +1970,7 @@ public class PDBFileParser  {
 		// build it up.
 
 		if ( groupCode3.equals(currentGroup.getPDBName())) {
-			if ( currentGroup.getAtoms().size() == 0) {
+			if ( currentGroup.getAtoms().isEmpty()) {
 				//System.out.println("current group is empty " + current_group + " " + altLoc);
 				return currentGroup;
 			}
@@ -2762,7 +2762,7 @@ public class PDBFileParser  {
 		}
 		//		System.out.println("[makeCompounds] adding sources to compounds from sourceLines");
 		// since we're starting again from the first compound, reset it here
-		if ( entities.size() == 0){
+		if ( entities.isEmpty()){
 			current_compound = new EntityInfo();
 		} else {
 			current_compound = entities.get(0);

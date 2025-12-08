@@ -645,10 +645,10 @@ public class SpaceGroup implements Serializable {
 
 	public void setTransfAlgebraic(List<String> transfAlgebraic) {
 		//System.out.println("setting transfAlgebraic " + transfAlgebraic);
-		if ( transformations == null || transformations.size() == 0)
+		if ( transformations == null || transformations.isEmpty())
 			transformations = new ArrayList<Matrix4d>(transfAlgebraic.size());
 
-		if ( this.transfAlgebraic == null || this.transfAlgebraic.size() == 0)
+		if ( this.transfAlgebraic == null || this.transfAlgebraic.isEmpty())
 			this.transfAlgebraic = new ArrayList<>(transfAlgebraic.size());
 
 		for ( String transf : transfAlgebraic){

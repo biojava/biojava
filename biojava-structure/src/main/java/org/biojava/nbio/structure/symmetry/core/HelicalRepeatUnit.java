@@ -64,7 +64,7 @@ public Map<Integer[], Integer> getInteractingRepeatUnits() {
 
 private void run() {
 	this.repeatUnitCenters = calcRepeatUnitCenters();
-	if (this.repeatUnitCenters.size() == 0) {
+	if (this.repeatUnitCenters.isEmpty()) {
 		return;
 	}
 	this.repeatUnits = calcRepeatUnits();

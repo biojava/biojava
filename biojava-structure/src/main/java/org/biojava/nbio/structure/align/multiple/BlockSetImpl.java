@@ -179,7 +179,7 @@ public class BlockSetImpl extends AbstractScoresCache implements Serializable,
 		// Get the size from the variables that can contain the information
 		if (parent != null)
 			return parent.size();
-		else if (getBlocks().size() == 0) {
+		else if (getBlocks().isEmpty()) {
 			throw new IndexOutOfBoundsException(
 					"Empty BlockSet: number of Blocks == 0.");
 		} else
@@ -194,7 +194,7 @@ public class BlockSetImpl extends AbstractScoresCache implements Serializable,
 	}
 
 	protected void updateLength() {
-		if (getBlocks().size() == 0) {
+		if (getBlocks().isEmpty()) {
 			throw new IndexOutOfBoundsException(
 					"Empty BlockSet: number of Blocks == 0.");
 		}
@@ -207,7 +207,7 @@ public class BlockSetImpl extends AbstractScoresCache implements Serializable,
 	}
 
 	protected void updateCoreLength() {
-		if (getBlocks().size() == 0) {
+		if (getBlocks().isEmpty()) {
 			throw new IndexOutOfBoundsException(
 					"Empty BlockSet: number of Blocks == 0.");
 		}

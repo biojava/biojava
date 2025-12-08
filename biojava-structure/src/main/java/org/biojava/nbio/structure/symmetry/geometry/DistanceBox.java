@@ -166,7 +166,7 @@ public class DistanceBox<T> {
 		}
 		// ensure that boxTwo has no empty element by copying from tempBox of defined size
 		List<T> boxTwo = null;
-		if (tempBox.size() == 0) {
+		if (tempBox.isEmpty()) {
 			boxTwo = Collections.emptyList();
 		} else if (tempBox.size() == 1) {
 			boxTwo = Collections.singletonList(tempBox.get(0));
