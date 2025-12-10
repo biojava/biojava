@@ -1,6 +1,11 @@
 BioJava Changelog
 -----------------
 
+BioJava 7.2.4
+==============================
+### Fixed
+* Edge case in quaternary symmetry calculation #1120
+
 BioJava 7.2.3
 ==============================
 ### Fixed
