@@ -507,27 +507,24 @@ public class SubunitCluster {
 			}
 		}
 
-		AFPChain afp = aligner.align(this.subunits.get(this.representative)
-				.getRepresentativeAtoms(),
-				other.subunits.get(other.representative)
-						.getRepresentativeAtoms());
+		AFPChain afp = aligner.align(this.subunits.get(this.representative).getRepresentativeAtoms(),
+				other.subunits.get(other.representative).getRepresentativeAtoms());
 
+        String pairName = this.subunits.get(this.representative).getName() + "-" + other.subunits.get(other.representative).getName();
 		if (afp.getOptLength() < 1) {
 			// alignment failed (eg if chains were too short)
 			throw new StructureException(
-					String.format("Subunits failed to align using %s", params.getSuperpositionAlgorithm()));
+					String.format("Subunits %s failed to align using %s", pairName, params.getSuperpositionAlgorithm()));
 		}
 
 		// Convert AFPChain to MultipleAlignment for convenience
 		MultipleAlignment msa = new MultipleAlignmentEnsembleImpl(
 				afp,
 				this.subunits.get(this.representative).getRepresentativeAtoms(),
-				other.subunits.get(other.representative)
-						.getRepresentativeAtoms(), false)
-				.getMultipleAlignment(0);
+				other.subunits.get(other.representative).getRepresentativeAtoms(),
+                false).getMultipleAlignment(0);
 
-		double structureCoverage = Math.min(msa.getCoverages().get(0), msa
-				.getCoverages().get(1));
+		double structureCoverage = Math.min(msa.getCoverages().get(0), msa.getCoverages().get(1));
 
 		if(params.isUseStructureCoverage() && structureCoverage < params.getStructureCoverageThreshold()) {
 			return false;
@@ -543,8 +540,7 @@ public class SubunitCluster {
 			return false;
 		}
 
-		logger.info(String.format("SubunitClusters are structurally similar with "
-				+ "%.2f RMSD %.2f coverage", rmsd, structureCoverage));
+		logger.info("SubunitClusters {} are structurally similar with [ {} ] RMSD and [ {} ] coverage", pairName, String.format("%.2f", rmsd), String.format("%.2f", structureCoverage));
 
 		// Merge clusters
 		List<List<Integer>> alignedRes = msa.getBlock(0).getAlignRes();
@@ -565,12 +561,17 @@ public class SubunitCluster {
 
 			// Only consider residues that are part of the SubunitCluster
 			if (this.subunitEQR.get(this.representative).contains(thisIndex)
-					&& other.subunitEQR.get(other.representative).contains(
-							otherIndex)) {
+					&& other.subunitEQR.get(other.representative).contains(otherIndex)) {
 				thisAligned.add(thisIndex);
 				otherAligned.add(otherIndex);
 			}
 		}
+
+        // this can happen in very rare cases, e.g. 9y9z when merging E_1 into the cluster D_1, OM_1, Y_1
+        if (thisAligned.isEmpty() && otherAligned.isEmpty()) {
+            logger.warn("No equivalent aligned atoms found between SubunitClusters {} via structure alignment. Will not merge the second one into the first.", pairName);
+            return false;
+        }
 
 		updateEquivResidues(other, thisAligned, otherAligned);
 
@@ -602,18 +603,12 @@ public class SubunitCluster {
 		Collections.sort(otherRemove);
 		Collections.reverse(otherRemove);
 
-		for (int t = 0; t < thisRemove.size(); t++) {
-			for (List<Integer> eqr : this.subunitEQR) {
-				int column = thisRemove.get(t);
-				eqr.remove(column);
-			}
+		for (int column : thisRemove) {
+            this.subunitEQR.forEach(eqr -> eqr.remove(column));
 		}
 
-		for (int t = 0; t < otherRemove.size(); t++) {
-			for (List<Integer> eqr : other.subunitEQR) {
-				int column = otherRemove.get(t);
-				eqr.remove(column);
-			}
+		for (int column : otherRemove) {
+            other.subunitEQR.forEach(eqr -> eqr.remove(column));
 		}
 
 		// The representative is the longest sequence
