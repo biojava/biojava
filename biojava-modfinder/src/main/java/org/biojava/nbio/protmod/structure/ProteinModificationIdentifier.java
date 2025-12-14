@@ -285,7 +285,7 @@ public class ProteinModificationIdentifier {
 
 		if (residues.isEmpty()) {
 			String pdbId = "?";
-			if ( chains.size() > 0) {
+			if (!chains.isEmpty()) {
 				Structure struc = chains.get(0).getStructure();
 				if ( struc != null)
 					pdbId = struc.getPDBCode();

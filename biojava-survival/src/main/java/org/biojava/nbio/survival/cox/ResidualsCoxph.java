@@ -29,7 +29,7 @@ import java.util.LinkedHashMap;
 
 /**
  *
- * @author Scooter Willis 
+ * @author Scooter Willis
  */
 public class ResidualsCoxph {
 
@@ -108,7 +108,7 @@ public class ResidualsCoxph {
 			double[] weighted = ci.getWeighted();
 			rr = Matrix.scale(rr, weighted);
 		}
-		if (cluster != null && cluster.size() > 0) {
+		if (cluster != null && !cluster.isEmpty()) {
 			rr = rowsum(rr, cluster);
 		}
 

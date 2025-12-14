@@ -27,7 +27,7 @@ import java.util.*;
  * Need to handle very large spreadsheets of expression data so keep memory
  * footprint low
  *
- * @author Scooter Willis 
+ * @author Scooter Willis
  */
 public class WorkSheet {
 
@@ -1391,7 +1391,7 @@ public class WorkSheet {
 		ArrayList<String> joinedColumns = new ArrayList<>();
 		joinedColumns.addAll(w1DataColumns);
 		joinedColumns.addAll(w2DataColumns);
-		if (!joinedColumns.contains("META_DATA") && (w1MetaDataColumns.size() > 0 || w2MetaDataColumns.size() > 0)) {
+		if (!joinedColumns.contains("META_DATA") && (!w1MetaDataColumns.isEmpty() || !w2MetaDataColumns.isEmpty())) {
 			joinedColumns.add("META_DATA");
 		}
 		for (String column : w1MetaDataColumns) {

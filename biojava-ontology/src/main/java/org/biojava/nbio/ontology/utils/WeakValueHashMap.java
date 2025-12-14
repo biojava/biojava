@@ -58,12 +58,12 @@ public class WeakValueHashMap extends AbstractMap {
 	private void diddleReferenceQueue() {
 	// Avoid making behind-the-scenes modifications while iterators exist.
 
-	if (iteratorRefs.size() > 0) {
+	if (!iteratorRefs.isEmpty()) {
 		Reference ref;
 		while ((ref = iteratorRefQueue.poll()) != null) {
 		iteratorRefs.remove(ref);
 		}
-		if (iteratorRefs.size() > 0) {
+		if (!iteratorRefs.isEmpty()) {
 		return;
 		}
 	}

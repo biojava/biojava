@@ -83,7 +83,7 @@ public class Site implements PDBRecord, Comparable<Site> {
 
 	@Override
 	public void toPDB(StringBuffer buf) {
-		if (groups == null || groups.size() < 1) {
+		if (groups == null || groups.isEmpty()) {
 			return;
 		}
 

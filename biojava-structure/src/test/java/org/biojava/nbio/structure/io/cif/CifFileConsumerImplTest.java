@@ -147,7 +147,7 @@ public class CifFileConsumerImplTest {
         Chain c = s2.getWaterChainByPDB("F");
 
         assertNotNull("Got null when looking for water-only chain with author id F", c);
-        assertTrue(c.getAtomGroups().size() > 0);
+		assertFalse(c.getAtomGroups().isEmpty());
 
         // checking that compounds are linked
         assertNotNull(c.getEntityInfo());
@@ -157,7 +157,7 @@ public class CifFileConsumerImplTest {
 
         Chain cAsymId = s2.getWaterChain("E");
         assertNotNull("Got null when looking for water-only chain with asym id E", cAsymId);
-        assertTrue(cAsymId.getAtomGroups().size() > 0);
+		assertFalse(cAsymId.getAtomGroups().isEmpty());
         assertSame(c, cAsymId);
     }
 

@@ -211,7 +211,7 @@ public class QuatSymmetrySubunits {
 	}
 
 	private void run() {
-		if (centers.size() > 0) {
+		if (!centers.isEmpty()) {
 			return;
 		}
 		calcOriginalCenters();

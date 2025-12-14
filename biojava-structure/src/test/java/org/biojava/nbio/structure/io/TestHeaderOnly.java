@@ -205,8 +205,7 @@ public class TestHeaderOnly {
 	 * @return true if has any Atom(s)
 	 */
 	public boolean hasAtoms(Group g) {
-		if (g.getAtoms().size() > 0) return true;
-		return false;
+		return !g.getAtoms().isEmpty();
 	}
 
 	/**

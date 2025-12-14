@@ -372,7 +372,7 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
     private Group getAltLocGroup(String recordName, Character altLoc, Character oneLetterCode, String threeLetterCode,
                                  long seqId) {
         List<Atom> atoms = currentGroup.getAtoms();
-        if (atoms.size() > 0) {
+        if (!atoms.isEmpty()) {
             if (atoms.get(0).getAltLoc().equals(altLoc)) {
                 return currentGroup;
             }
@@ -381,7 +381,7 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
         List<Group> altLocs = currentGroup.getAltLocs();
         for (Group altLocGroup : altLocs) {
             atoms = altLocGroup.getAtoms();
-            if (atoms.size() > 0) {
+            if (!atoms.isEmpty()) {
                 for (Atom a1 : atoms) {
                     if (a1.getAltLoc().equals(altLoc)) {
                         return altLocGroup;
@@ -1478,7 +1478,7 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
             }
         }
 
-        if (ncsOperators.size() > 0) {
+        if (!ncsOperators.isEmpty()) {
             structure.getCrystallographicInfo()
                     .setNcsOperators(ncsOperators.toArray(new Matrix4d[0]));
         }

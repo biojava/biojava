@@ -205,7 +205,7 @@ public class MultipleAlignmentWriter {
 
 			List<Matrix4d> btransforms = alignment.getBlockSet(bs)
 					.getTransformations();
-			if (btransforms == null || btransforms.size() < 1)
+			if (btransforms == null || btransforms.isEmpty())
 				continue;
 
 			if (alignment.getBlockSets().size() > 1) {

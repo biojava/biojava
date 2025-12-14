@@ -79,7 +79,7 @@ public class SequenceFunctionRefiner implements SymmetryRefiner {
 
 		// Refine the alignment Map
 		Map<Integer, Integer> refined = refineSymmetry(alignment, k);
-		if (refined.size() < 1)
+		if (refined.isEmpty())
 			throw new RefinerFailedException("Refiner returned empty alignment");
 
 		//Substitute and partition the alignment

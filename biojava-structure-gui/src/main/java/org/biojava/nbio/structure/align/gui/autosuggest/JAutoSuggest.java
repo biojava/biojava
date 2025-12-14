@@ -229,7 +229,7 @@ public class JAutoSuggest extends JTextField{
 					list.ensureIndexIsVisible(list.getSelectedIndex() - 1);
 					return;
 				} else if (e.getKeyCode() == KeyEvent.VK_ENTER
-						&& list.getSelectedIndex() != -1 && suggestions.size() > 0) {
+						&& list.getSelectedIndex() != -1 && !suggestions.isEmpty()) {
 					setText((String) list.getSelectedValue());
 
 
@@ -365,7 +365,7 @@ public class JAutoSuggest extends JTextField{
 
 				setFont(regular);
 
-				if (suggestions.size() > 0) {
+				if (!suggestions.isEmpty()) {
 					list.setListData(suggestions);
 					list.setSelectedIndex(0);
 					list.ensureIndexIsVisible(0);

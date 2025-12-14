@@ -32,7 +32,7 @@ import java.util.LinkedHashMap;
 
 /**
  * Holds the results of a cox analysis where calling dump(), toString() will give an output similar to R
- * @author Scooter Willis 
+ * @author Scooter Willis
  */
 public class CoxInfo {
 
@@ -505,7 +505,7 @@ public class CoxInfo {
 
 		o = o + beginLine + endLine;
 
-		if (baselineSurvivorFunction.size() > 0) {
+		if (!baselineSurvivorFunction.isEmpty()) {
 			o = o + beginLine + "Baseline Survivor Function (at predictor means)" + endLine;
 			for (Double time : baselineSurvivorFunction.keySet()) {
 				Double mean = baselineSurvivorFunction.get(time);

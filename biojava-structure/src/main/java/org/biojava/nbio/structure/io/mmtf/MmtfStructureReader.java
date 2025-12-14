@@ -372,7 +372,7 @@ public class MmtfStructureReader implements StructureAdapterInterface, Serializa
 	private Group getCorrectAltLocGroup(Character altLoc) {
 		// see if we know this altLoc already;
 		List<Atom> atoms = group.getAtoms();
-		if (atoms.size() > 0) {
+		if (!atoms.isEmpty()) {
 			Atom a1 = atoms.get(0);
 			// we are just adding atoms to the current group
 			// probably there is a second group following later...

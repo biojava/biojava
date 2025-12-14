@@ -655,7 +655,7 @@ public class ScopInstallation implements LocalScopDatabase {
 	}
 
 	protected void downloadClaFile() throws IOException{
-		if(mirrors.size()<1) {
+		if(mirrors.isEmpty()) {
 			initScopURLs();
 		}
 		IOException exception = null;
@@ -676,7 +676,7 @@ public class ScopInstallation implements LocalScopDatabase {
 	}
 
 	protected void downloadDesFile() throws IOException{
-		if(mirrors.size()<1) {
+		if(mirrors.isEmpty()) {
 			initScopURLs();
 		}
 		IOException exception = null;
@@ -697,7 +697,7 @@ public class ScopInstallation implements LocalScopDatabase {
 	}
 
 	protected void downloadHieFile() throws IOException{
-		if(mirrors.size()<1) {
+		if(mirrors.isEmpty()) {
 			initScopURLs();
 		}
 		IOException exception = null;
@@ -719,7 +719,7 @@ public class ScopInstallation implements LocalScopDatabase {
 	}
 
 	protected void downloadComFile() throws IOException{
-		if(mirrors.size()<1) {
+		if(mirrors.isEmpty()) {
 			initScopURLs();
 		}
 		IOException exception = null;

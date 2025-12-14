@@ -47,9 +47,9 @@ public class TestSiftsParsing {
 		for (SiftsEntity e : entities) {
 			//System.out.println(e.getEntityId() + " " +e.getType());
 
-			Assert.assertTrue(e.getSegments().size() > 0);
+			Assert.assertFalse(e.getSegments().isEmpty());
 			for (SiftsSegment seg : e.getSegments()) {
-				Assert.assertTrue(seg.getResidues().size() > 0);
+				Assert.assertFalse(seg.getResidues().isEmpty());
 
 				for (SiftsResidue res : seg.getResidues()) {
 
@@ -78,9 +78,9 @@ public class TestSiftsParsing {
 
 		for (SiftsEntity e : entities) {
 			//System.out.println(e.getEntityId() + " " +e.getType());
-			Assert.assertTrue(e.getSegments().size() > 0);
+			Assert.assertFalse(e.getSegments().isEmpty());
 			for (SiftsSegment seg : e.getSegments()) {
-				Assert.assertTrue(seg.getResidues().size() > 0);
+				Assert.assertFalse(seg.getResidues().isEmpty());
 				//System.out.println(seg.getResidues().size());
 				//System.out.println(" Segment: " + seg.getSegId() + " " + seg.getStart() + " " + seg.getEnd()) ;
 
@@ -125,7 +125,7 @@ public class TestSiftsParsing {
 			//assertTrue(seg1.getResidues().size() == 17);
 
 			for (SiftsSegment seg : e.getSegments()) {
-				Assert.assertTrue(seg.getResidues().size() > 0);
+				Assert.assertFalse(seg.getResidues().isEmpty());
 
 				//System.out.println(" Segment: " + seg.getSegId() + " " + seg.getStart() + " " + seg.getEnd() + " res. size: " + seg.getResidues().size()) ;
 
@@ -175,7 +175,7 @@ public class TestSiftsParsing {
 			//System.out.println(" Segment: " + seg1.getSegId() + " " + seg1.getStart() + " " + seg1.getEnd() + " res. size: " + seg1.getResidues().size());
 			//assertTrue(seg1.getResidues().size() == 17);
 
-			Assert.assertTrue(seg.getResidues().size() > 0);
+			Assert.assertFalse(seg.getResidues().isEmpty());
 
 			for (SiftsResidue res : seg.getResidues()) {
 

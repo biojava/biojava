@@ -1313,7 +1313,7 @@ public class AlignmentTools {
 		if ( afpChain.getBlockNum() > 0){
 
 			// Superimpose ligands relative to the first block
-			if( hetatms2.size() > 0 ) {
+			if(!hetatms2.isEmpty()) {
 
 				if ( afpChain.getBlockRotationMatrix().length > 0 ) {
 

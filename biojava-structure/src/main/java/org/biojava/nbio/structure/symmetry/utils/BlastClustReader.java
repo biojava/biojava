@@ -140,7 +140,7 @@ public class BlastClustReader implements Serializable {
 
 	private void loadClusters(int sequenceIdentity) {
 		// load clusters only once
-		if (clusters.size() > 0) {
+		if (!clusters.isEmpty()) {
 			return;
 		}
 

@@ -162,7 +162,7 @@ public class GenbankProxySequenceReaderTest {
 		logger.info("taxonomy name '{}'", taxonName);
 		Assert.assertNotNull(taxonName);
 
-		if (seq.getFeaturesByType("CDS").size() > 0) {
+		if (!seq.getFeaturesByType("CDS").isEmpty()) {
 			FeatureInterface<AbstractSequence<AminoAcidCompound>, AminoAcidCompound> CDS = seq.getFeaturesByType("CDS").get(0);
 			logger.info("CDS: {}", CDS);
 			String codedBy = CDS.getQualifiers().get("coded_by").get(0).getValue();

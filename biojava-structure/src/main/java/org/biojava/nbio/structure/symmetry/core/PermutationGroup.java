@@ -65,7 +65,7 @@ public class PermutationGroup implements Iterable<List<Integer>> {
 		Set<List<Integer>> known = new HashSet<>(permutations);
 		//breadth-first search through the map of all members
 		List<List<Integer>> currentLevel = new ArrayList<>(permutations);
-		while( currentLevel.size() > 0) {
+		while(!currentLevel.isEmpty()) {
 			List<List<Integer>> nextLevel = new ArrayList<>();
 			for( List<Integer> p : currentLevel) {
 				for(List<Integer> gen : gens) {
