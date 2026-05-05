@@ -1,6 +1,14 @@
 BioJava Changelog
 -----------------
 
+BioJava 7.2.5
+==============================
+### Fixed
+* Fix NPE in Structure.toMMCIF() for some PDB entries (e.g. 2G10)
+* Maven plugin duplication in main pom.xml
+* Fixes for SonarQube S1155
+* Some library upgrades
+
 BioJava 7.2.4
 ==============================
 ### Fixed
