@@ -226,7 +226,7 @@ public class BiologicalAssemblyTransformation implements Cloneable, Comparable<B
 
 		List<BiologicalAssemblyTransformation> transformations = fromMultiXML(xml);
 
-		if ( transformations.size() > 0)
+		if (!transformations.isEmpty())
 			return transformations.get(0);
 
 		else

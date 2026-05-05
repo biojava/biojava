@@ -37,7 +37,7 @@ import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
 
 
 public class TestMMcifOrganismParsing {
@@ -90,7 +90,7 @@ public class TestMMcifOrganismParsing {
 		Structure s = StructureIO.getStructure(pdbId);
 
 		assertNotNull(s.getEntityInfos());
-		assertTrue(s.getEntityInfos().size() > 0);
+		assertFalse(s.getEntityInfos().isEmpty());
 
 		for ( EntityInfo c : s.getEntityInfos()) {
 			if(EntityType.POLYMER.equals(c.getType())) {

@@ -69,7 +69,7 @@ public class ModifiedCompoundXMLConverter {
 
 
 		Set<StructureAtomLinkage > linkages = mc.getAtomLinkages();
-		if ( linkages.size() > 0 ) {
+		if (!linkages.isEmpty()) {
 			int pos = -1;
 			for ( StructureAtomLinkage link: linkages){
 				pos ++;

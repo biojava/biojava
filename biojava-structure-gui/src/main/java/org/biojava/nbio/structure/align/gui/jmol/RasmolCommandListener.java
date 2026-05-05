@@ -74,7 +74,7 @@ MouseListener {
 		// check last command in history
 		// if equivalent, don't add,
 		// otherwise add
-		if (history.size()>0){
+		if (!history.isEmpty()){
 			String txt=history.get(history.size()-1);
 			if (! txt.equals(cmd)) {
 				history.add(cmd);

@@ -36,7 +36,7 @@ import java.util.Map;
 
 /**
  *
- * @author Scooter Willis 
+ * @author Scooter Willis
  */
 public class GeneFeatureHelper {
 
@@ -418,7 +418,7 @@ public class GeneFeatureHelper {
 			String startCodonName = "";
 			String stopCodonName = "";
 			FeatureList startCodonList = mRNAChildren.selectByType("five_prime_UTR");
-			if (startCodonList != null && startCodonList.size() > 0) {
+			if (startCodonList != null && !startCodonList.isEmpty()) {
 				startCodon = startCodonList.get(0);
 				if (strand == Strand.NEGATIVE) {
 					startCodonBegin = startCodon.location().bioEnd();
@@ -430,7 +430,7 @@ public class GeneFeatureHelper {
 
 			FeatureList stopCodonList = mRNAChildren.selectByType("three_prime_UTR");
 
-			if (stopCodonList != null && stopCodonList.size() > 0) {
+			if (stopCodonList != null && !stopCodonList.isEmpty()) {
 				stopCodon = stopCodonList.get(0);
 				if (strand == Strand.NEGATIVE) {
 					stopCodonEnd = stopCodon.location().bioStart();
@@ -577,7 +577,7 @@ public class GeneFeatureHelper {
 			String startCodonName = "";
 			String stopCodonName = "";
 			FeatureList startCodonList = gene.selectByAttribute("Note", "initial-exon");
-			if (startCodonList != null && startCodonList.size() > 0) {
+			if (startCodonList != null && !startCodonList.isEmpty()) {
 				startCodon = startCodonList.get(0);
 				if (strand == Strand.NEGATIVE) {
 					startCodonBegin = startCodon.location().bioEnd();
@@ -589,7 +589,7 @@ public class GeneFeatureHelper {
 
 			FeatureList stopCodonList = gene.selectByAttribute("Note", "final-exon");
 
-			if (stopCodonList != null && stopCodonList.size() > 0) {
+			if (stopCodonList != null && !stopCodonList.isEmpty()) {
 				stopCodon = stopCodonList.get(0);
 				if (strand == Strand.NEGATIVE) {
 					stopCodonEnd = stopCodon.location().bioStart();
@@ -723,7 +723,7 @@ public class GeneFeatureHelper {
 				String startCodonName = "";
 				String stopCodonName = "";
 				FeatureList startCodonList = transcriptFeature.selectByType("start_codon");
-				if (startCodonList != null && startCodonList.size() > 0) {
+				if (startCodonList != null && !startCodonList.isEmpty()) {
 					startCodon = startCodonList.get(0);
 					if (strand == Strand.POSITIVE) {
 						startCodonBegin = startCodon.location().bioStart();
@@ -735,7 +735,7 @@ public class GeneFeatureHelper {
 
 				FeatureList stopCodonList = transcriptFeature.selectByType("stop_codon");
 
-				if (stopCodonList != null && stopCodonList.size() > 0) {
+				if (stopCodonList != null && !stopCodonList.isEmpty()) {
 					stopCodon = stopCodonList.get(0);
 					if (strand == Strand.POSITIVE) {
 						stopCodonEnd = stopCodon.location().bioEnd();

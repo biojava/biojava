@@ -169,7 +169,7 @@ public class MultipleAlignmentXMLParser {
 			}
 		}
 		//Because if it is 0 means that there were no transformations
-		if (transforms.size() != 0){
+		if (!transforms.isEmpty()){
 			bs.setTransformations(transforms);
 		}
 		return bs;

@@ -57,7 +57,7 @@ public class GroupContact implements Serializable {
 	}
 
 	public double getMinDistance() {
-		if (atomContacts.size()==0) return 0;
+		if (atomContacts.isEmpty()) return 0;
 
 		double minDistance = Double.MAX_VALUE;
 		for (AtomContact atomContact:atomContacts) {

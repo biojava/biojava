@@ -380,7 +380,7 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 		clusters = new ArrayList<>();
 
 		// nothing to do if we have no interfaces
-		if (list.size()==0) return clusters;
+		if (list.isEmpty()) return clusters;
 
 		logger.debug("Calculating all-vs-all Jaccard scores for {} interfaces", list.size());
 		double[][] matrix = new double[list.size()][list.size()];

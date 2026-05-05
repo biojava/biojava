@@ -46,7 +46,7 @@ import java.util.Map;
 
 /**
  *
- * @author Scooter Willis 
+ * @author Scooter Willis
  * @author Mark Chapman
  */
 public class GFF3FromUniprotBlastHits {
@@ -163,7 +163,7 @@ public class GFF3FromUniprotBlastHits {
 								String notes = "";
 								if (featureKeyWords != null) {
 									List<String> keyWords = featureKeyWords.getKeyWords();
-									if (keyWords.size() > 0) {
+									if (!keyWords.isEmpty()) {
 										notes = ";Note=";
 										for (String note : keyWords) {
 											if ("Complete proteome".equals(note)) {
@@ -187,7 +187,7 @@ public class GFF3FromUniprotBlastHits {
 									List<DBReferenceInfo> cazyList = databaseReferenceHashMap.get("CAZy");
 									List<DBReferenceInfo> goList = databaseReferenceHashMap.get("GO");
 									List<DBReferenceInfo> eccList = databaseReferenceHashMap.get("BRENDA");
-									if (pfamList != null && pfamList.size() > 0) {
+									if (pfamList != null && !pfamList.isEmpty()) {
 										if (notes.length() == 0) {
 											notes = ";Note=";
 										}
@@ -197,7 +197,7 @@ public class GFF3FromUniprotBlastHits {
 										}
 									}
 
-									if (cazyList != null && cazyList.size() > 0) {
+									if (cazyList != null && !cazyList.isEmpty()) {
 										if (notes.length() == 0) {
 											notes = ";Note=";
 										}
@@ -208,7 +208,7 @@ public class GFF3FromUniprotBlastHits {
 										}
 									}
 
-									if (eccList != null && eccList.size() > 0) {
+									if (eccList != null && !eccList.isEmpty()) {
 										if (notes.length() == 0) {
 											notes = ";Note=";
 										}
@@ -221,8 +221,8 @@ public class GFF3FromUniprotBlastHits {
 										}
 									}
 
-									if (goList != null && goList.size() > 0) {
-										if (notes.length() == 0) {
+									if (goList != null && !goList.isEmpty()) {
+										if (notes.isEmpty()) {
 											notes = ";Note=";
 										}
 										for (DBReferenceInfo note : goList) {

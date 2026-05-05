@@ -1943,7 +1943,7 @@ public class PDBFileParser  {
 
 		// see if we know this altLoc already;
 		List<Atom> atoms = currentGroup.getAtoms();
-		if ( atoms.size() > 0) {
+		if (!atoms.isEmpty()) {
 			Atom a1 = atoms.get(0);
 			// we are just adding atoms to the current group
 			// probably there is a second group following later...
@@ -1956,7 +1956,7 @@ public class PDBFileParser  {
 		List<Group> altLocs = currentGroup.getAltLocs();
 		for ( Group altLocG : altLocs ){
 			atoms = altLocG.getAtoms();
-			if ( atoms.size() > 0) {
+			if (!atoms.isEmpty()) {
 				for ( Atom a1 : atoms) {
 					if (a1.getAltLoc().equals( altLoc)) {
 
@@ -2921,7 +2921,7 @@ public class PDBFileParser  {
 			pdbHeader.setBioAssemblies(bioAssemblyParser.getTransformationMap());
 		}
 
-		if (ncsOperators !=null && ncsOperators.size()>0) {
+		if (ncsOperators !=null && !ncsOperators.isEmpty()) {
 			crystallographicInfo.setNcsOperators(
 				ncsOperators.toArray(new Matrix4d[ncsOperators.size()]));
 		}

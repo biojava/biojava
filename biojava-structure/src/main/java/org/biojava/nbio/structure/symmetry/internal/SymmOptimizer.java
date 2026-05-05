@@ -392,10 +392,7 @@ public class SymmOptimizer {
 			length--;
 		}
 
-		if (shrinkColumns.size() != 0)
-			return true;
-		else
-			return false;
+		return !shrinkColumns.isEmpty();
 	}
 
 	/**

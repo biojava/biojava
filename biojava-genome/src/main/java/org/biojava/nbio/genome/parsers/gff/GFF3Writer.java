@@ -31,7 +31,7 @@ import java.util.Map;
 
 /**
  *
- * @author Scooter Willis 
+ * @author Scooter Willis
  */
 public class GFF3Writer {
 
@@ -122,7 +122,7 @@ public class GFF3Writer {
 	private String getGFF3Note(List<String> notesList) {
 		String notes = "";
 
-		if (notesList.size() > 0) {
+		if (!notesList.isEmpty()) {
 			notes = ";Note=";
 			int noteindex = 1;
 			for (String note : notesList) {

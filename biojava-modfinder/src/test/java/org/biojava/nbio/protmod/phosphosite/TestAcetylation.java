@@ -32,7 +32,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 
@@ -100,11 +101,11 @@ public class TestAcetylation  {
 
 		List<Site> sites = Site.parseSites(localFile);
 
-		assertTrue(sites.size() > 0);
+		assertFalse(sites.isEmpty());
 
 		for (Site s : sites) {
 
-			assertTrue(s.getResidue() != null);
+			assertNotNull(s.getResidue());
 
 		}
 

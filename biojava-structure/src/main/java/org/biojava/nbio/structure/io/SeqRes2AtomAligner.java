@@ -198,7 +198,7 @@ public class SeqRes2AtomAligner {
 			}
 		}
 
-		if ( atomRes.getAtomGroups(GroupType.AMINOACID).size() < 1) {
+		if (atomRes.getAtomGroups(GroupType.AMINOACID).isEmpty()) {
 			logger.debug("ATOM chain {} does not contain amino acids, ignoring...", atomRes.getId());
 			return;
 		}
@@ -215,7 +215,7 @@ public class SeqRes2AtomAligner {
 
 	private void alignNucleotideChains(Chain seqRes, Chain atomRes) {
 
-		if ( atomRes.getAtomGroups(GroupType.NUCLEOTIDE).size() < 1) {
+		if (atomRes.getAtomGroups(GroupType.NUCLEOTIDE).isEmpty()) {
 			logger.debug("ATOM chain {} does not contain nucleotides, ignoring...", atomRes.getId());
 
 			return;

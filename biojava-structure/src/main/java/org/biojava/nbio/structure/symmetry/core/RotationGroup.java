@@ -83,7 +83,7 @@ public class RotationGroup implements Iterable<Rotation> {
 
 	public void complete() {
 		if (modified) {
-			if (rotations.size() > 0) {
+			if (!rotations.isEmpty()) {
 				findHighestOrderAxis();
 				setEAxis();
 				calcAxesDirections();
@@ -344,7 +344,7 @@ public class RotationGroup implements Iterable<Rotation> {
 			// when a structure is symmetric, some subunits are below the rmsd threshold,
 			// and some are just above the rmsd threshold
 			int n = 0;
-			if (rotations.size() > 0) {
+			if (!rotations.isEmpty()) {
 				n = rotations.get(0).getPermutation().size();
 				rotations.clear();
 			}

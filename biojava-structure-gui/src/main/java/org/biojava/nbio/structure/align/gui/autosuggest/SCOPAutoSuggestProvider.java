@@ -111,7 +111,7 @@ public class SCOPAutoSuggestProvider implements AutoSuggestProvider{
 			if ( stop.get())
 				return domains;
 
-			if ( domains == null || domains.size() < 1){
+			if ( domains == null || domains.isEmpty()){
 
 				if ( userInput.length() > 5){
 					// e.g. d4hhba
@@ -127,11 +127,11 @@ public class SCOPAutoSuggestProvider implements AutoSuggestProvider{
 			if (DEBUG)
 				System.out.println("domains: " + domains);
 
-			if ( domains == null || domains.size() < 1) {
+			if ( domains == null || domains.isEmpty()) {
 				if ( userInput.length() > 0 ){
 					List<ScopDescription> descs = scop.filterByClassificationId(userInput);
 
-					if ( descs == null || descs.size() < 1){
+					if ( descs == null || descs.isEmpty()){
 						descs = scop.filterByDescription(userInput);
 					}
 
