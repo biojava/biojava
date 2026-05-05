@@ -309,7 +309,8 @@ public abstract class AbstractCifFileSupplier<S> implements CifFileSupplier<S> {
             }
             labelEntityId.add(entityId);
             // see https://github.com/biojava/biojava/issues/1116
-            if (chain.getEntityInfo().getType() == EntityType.POLYMER) {
+            // note the first condition is to safeguard and to have a default that writes labelSeqId if there's no knowledge about what's the entity type
+            if (chain.getEntityInfo()==null || chain.getEntityInfo().getType() == EntityType.POLYMER) {
                 labelSeqId.add(seqId);
             } else {
                 labelSeqId.markNextNotPresent();
