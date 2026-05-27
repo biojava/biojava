@@ -20,8 +20,8 @@
  */
 package org.biojava.nbio.genome.io.fastq;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,7 +34,7 @@ import java.nio.file.Files;
 /**
  * Abstract unit test for implementations of FastqReader.
  */
-public abstract class AbstractFastqReaderTest {
+abstract class AbstractFastqReaderTest {
 	/** Array of example files that should throw IOExceptions. */
 	static final String[] ERROR_EXAMPLES = new String[]
 		{
@@ -87,21 +87,21 @@ public abstract class AbstractFastqReaderTest {
 	public void testCreateFastq()
 	{
 		Fastq fastq = createFastq();
-		Assert.assertNotNull(fastq);
+		Assertions.assertNotNull(fastq);
 	}
 
 	@Test
 	public void testCreateFastqReader()
 	{
 		FastqReader reader = createFastqReader();
-		Assert.assertNotNull(reader);
+		Assertions.assertNotNull(reader);
 	}
 
 	@Test
 	public void testCreateFastqWriter()
 	{
 		FastqWriter writer = createFastqWriter();
-		Assert.assertNotNull(writer);
+		Assertions.assertNotNull(writer);
 	}
 
 	@Test
@@ -111,7 +111,7 @@ public abstract class AbstractFastqReaderTest {
 		try
 		{
 			reader.read((File) null);
-			Assert.fail("read((File) null) expected IllegalArgumentException");
+			Assertions.fail("read((File) null) expected IllegalArgumentException");
 		}
 		catch (IllegalArgumentException e)
 		{
@@ -121,7 +121,7 @@ public abstract class AbstractFastqReaderTest {
 		{
 			File noSuchFile = new File("no such file");
 			reader.read(noSuchFile);
-			Assert.fail("read(no such file) expected IOException");
+			Assertions.fail("read(no such file) expected IOException");
 		}
 		catch (IOException e)
 		{
@@ -135,14 +135,14 @@ public abstract class AbstractFastqReaderTest {
 		FastqReader reader = createFastqReader();
 		File empty = Files.createTempFile("abstractFastqReaderTest",null).toFile();
 		Iterable<Fastq> iterable = reader.read(empty);
-		Assert.assertNotNull(iterable);
+		Assertions.assertNotNull(iterable);
 		int count = 0;
 		for (Fastq f : iterable)
 		{
-			Assert.assertNotNull(f);
+			Assertions.assertNotNull(f);
 			count++;
 		}
-		Assert.assertEquals(0, count);
+		Assertions.assertEquals(0, count);
 	}
 
 	@Test
@@ -154,14 +154,14 @@ public abstract class AbstractFastqReaderTest {
 		FastqWriter writer = createFastqWriter();
 		writer.write(single, fastq);
 		Iterable<Fastq> iterable = reader.read(single);
-		Assert.assertNotNull(iterable);
+		Assertions.assertNotNull(iterable);
 		int count = 0;
 		for (Fastq f : iterable)
 		{
-			Assert.assertNotNull(f);
+			Assertions.assertNotNull(f);
 			count++;
 		}
-		Assert.assertEquals(1, count);
+		Assertions.assertEquals(1, count);
 	}
 
 	@Test
@@ -175,14 +175,14 @@ public abstract class AbstractFastqReaderTest {
 		FastqWriter writer = createFastqWriter();
 		writer.write(multiple, fastq0, fastq1, fastq2);
 		Iterable<Fastq> iterable = reader.read(multiple);
-		Assert.assertNotNull(iterable);
+		Assertions.assertNotNull(iterable);
 		int count = 0;
 		for (Fastq f : iterable)
 		{
-			Assert.assertNotNull(f);
+			Assertions.assertNotNull(f);
 			count++;
 		}
-		Assert.assertEquals(3, count);
+		Assertions.assertEquals(3, count);
 	}
 
 	@Test
@@ -192,7 +192,7 @@ public abstract class AbstractFastqReaderTest {
 		try
 		{
 			reader.read((URL) null);
-			Assert.fail("read((URL) null) expected IllegalArgumentException");
+			Assertions.fail("read((URL) null) expected IllegalArgumentException");
 		}
 		catch (IllegalArgumentException e)
 		{
@@ -202,7 +202,7 @@ public abstract class AbstractFastqReaderTest {
 		{
 			URL noSuchURL = new URL("file:///no such url");
 			reader.read(noSuchURL);
-			Assert.fail("read(no such URL) expected IOException");
+			Assertions.fail("read(no such URL) expected IOException");
 		}
 		catch (IOException e)
 		{
@@ -216,14 +216,14 @@ public abstract class AbstractFastqReaderTest {
 		FastqReader reader = createFastqReader();
 		URL empty = getClass().getResource("empty.fastq");
 		Iterable<Fastq> iterable = reader.read(empty);
-		Assert.assertNotNull(iterable);
+		Assertions.assertNotNull(iterable);
 		int count = 0;
 		for (Fastq f : iterable)
 		{
-			Assert.assertNotNull(f);
+			Assertions.assertNotNull(f);
 			count++;
 		}
-		Assert.assertEquals(0, count);
+		Assertions.assertEquals(0, count);
 	}
 
 	@Test
@@ -233,7 +233,7 @@ public abstract class AbstractFastqReaderTest {
 		try
 		{
 			reader.read((InputStream) null);
-			Assert.fail("read((InputStream) null) expected IllegalArgumentException");
+			Assertions.fail("read((InputStream) null) expected IllegalArgumentException");
 		}
 		catch (IllegalArgumentException e)
 		{
@@ -247,14 +247,14 @@ public abstract class AbstractFastqReaderTest {
 		FastqReader reader = createFastqReader();
 		InputStream empty = getClass().getResourceAsStream("empty.fastq");
 		Iterable<Fastq> iterable = reader.read(empty);
-		Assert.assertNotNull(iterable);
+		Assertions.assertNotNull(iterable);
 		int count = 0;
 		for (Fastq f : iterable)
 		{
-			Assert.assertNotNull(f);
+			Assertions.assertNotNull(f);
 			count++;
 		}
-		Assert.assertEquals(0, count);
+		Assertions.assertEquals(0, count);
 		empty.close();
 	}
 
@@ -264,15 +264,15 @@ public abstract class AbstractFastqReaderTest {
 		FastqReader reader = createFastqReader();
 		InputStream wrappedSequence = getClass().getResourceAsStream("wrapped-sequence.fastq");
 		Iterable<Fastq> iterable = reader.read(wrappedSequence);
-		Assert.assertNotNull(iterable);
+		Assertions.assertNotNull(iterable);
 		int count = 0;
 		for (Fastq f : iterable)
 		{
-			Assert.assertNotNull(f);
-			Assert.assertEquals("ACTG", f.getSequence());
+			Assertions.assertNotNull(f);
+			Assertions.assertEquals("ACTG", f.getSequence());
 			count++;
 		}
-		Assert.assertEquals(1, count);
+		Assertions.assertEquals(1, count);
 		wrappedSequence.close();
 	}
 
@@ -282,15 +282,15 @@ public abstract class AbstractFastqReaderTest {
 		FastqReader reader = createFastqReader();
 		InputStream wrappedQuality = getClass().getResourceAsStream("wrapped-quality.fastq");
 		Iterable<Fastq> iterable = reader.read(wrappedQuality);
-		Assert.assertNotNull(iterable);
+		Assertions.assertNotNull(iterable);
 		int count = 0;
 		for (Fastq f : iterable)
 		{
-			Assert.assertNotNull(f);
-			Assert.assertEquals("ZZZZ", f.getQuality());
+			Assertions.assertNotNull(f);
+			Assertions.assertEquals("ZZZZ", f.getQuality());
 			count++;
 		}
-		Assert.assertEquals(1, count);
+		Assertions.assertEquals(1, count);
 		wrappedQuality.close();
 	}
 
@@ -300,15 +300,15 @@ public abstract class AbstractFastqReaderTest {
 		FastqReader reader = createFastqReader();
 		InputStream wrappedQuality = getClass().getResourceAsStream("multiple-wrapped-quality.fastq");
 		Iterable<Fastq> iterable = reader.read(wrappedQuality);
-		Assert.assertNotNull(iterable);
+		Assertions.assertNotNull(iterable);
 		int count = 0;
 		for (Fastq f : iterable)
 		{
-			Assert.assertNotNull(f);
-			Assert.assertEquals("ZZZZ", f.getQuality());
+			Assertions.assertNotNull(f);
+			Assertions.assertEquals("ZZZZ", f.getQuality());
 			count++;
 		}
-		Assert.assertEquals(4, count);
+		Assertions.assertEquals(4, count);
 		wrappedQuality.close();
 	}
 
@@ -322,7 +322,7 @@ public abstract class AbstractFastqReaderTest {
 			try
 			{
 				reader.read(inputStream);
-				Assert.fail("error example " + errorExample + " expected IOException");
+				Assertions.fail("error example " + errorExample + " expected IOException");
 			}
 			catch (IOException e)
 			{
@@ -430,7 +430,7 @@ public abstract class AbstractFastqReaderTest {
 								 // empty
 							 }
 						 });
-			Assert.fail("parse(null, ) expected IllegalArgumentException");
+			Assertions.fail("parse(null, ) expected IllegalArgumentException");
 		}
 		catch (IllegalArgumentException e)
 		{
@@ -446,7 +446,7 @@ public abstract class AbstractFastqReaderTest {
 		try
 		{
 			reader.parse(new StringReader(input), null);
-			Assert.fail("parse(, null) expected IllegalArgumentException");
+			Assertions.fail("parse(, null) expected IllegalArgumentException");
 		}
 		catch (IllegalArgumentException e)
 		{

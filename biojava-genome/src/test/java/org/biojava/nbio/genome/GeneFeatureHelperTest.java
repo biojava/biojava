@@ -28,9 +28,9 @@ import org.biojava.nbio.core.sequence.ChromosomeSequence;
 import org.biojava.nbio.core.sequence.GeneSequence;
 import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.biojava.nbio.core.sequence.io.FastaWriterHelper;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,20 +45,20 @@ import java.util.Map;
  *
  * @author Scooter Willis 
  */
-public class GeneFeatureHelperTest {
+class GeneFeatureHelperTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(GeneFeatureHelperTest.class);
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws Exception {
 	}
 
 	@Test
-	public void testZeroLocation() throws Exception {
+    void testZeroLocation() throws Exception {
 
 		@SuppressWarnings("unused")
 		FeatureList listGenes = GFF3Reader.read("src/test/resources/amphimedon.gff3");
@@ -71,7 +71,7 @@ public class GeneFeatureHelperTest {
 	 */
 
 	@Test
-	public void testLoadFastaAddGeneFeaturesFromUpperCaseExonFastaFile() throws Exception {
+    void testLoadFastaAddGeneFeaturesFromUpperCaseExonFastaFile() throws Exception {
 		// logger.info("loadFastaAddGeneFeaturesFromUpperCaseExonFastaFile");
 		File fastaSequenceFile = new File("src/test/resources/volvox_all.fna");
 		File uppercaseFastaFile = new File("src/test/resources/volvox_all_genes_exon_uppercase.fna");
@@ -93,7 +93,7 @@ public class GeneFeatureHelperTest {
 	 * Test of outputFastaSequenceLengthGFF3 method, of class GeneFeatureHelper.
 	 */
 	@Test
-	public void testOutputFastaSequenceLengthGFF3() throws Exception {
+    void testOutputFastaSequenceLengthGFF3() throws Exception {
 		// logger.info("outputFastaSequenceLengthGFF3");
 
 		File fastaSequenceFile = new File("src/test/resources/volvox_all.fna");
@@ -112,7 +112,7 @@ public class GeneFeatureHelperTest {
 	 */
 
 	@Test
-	public void testAddGFF3Note() throws Exception {
+    void testAddGFF3Note() throws Exception {
 		Map<String, ChromosomeSequence> chromosomeSequenceList = GeneFeatureHelper
 				.loadFastaAddGeneFeaturesFromGmodGFF3(new File("src/test/resources/volvox_all.fna"), new File(
 						"src/test/resources/volvox.gff3"), false);
@@ -128,7 +128,7 @@ public class GeneFeatureHelperTest {
 	 * output.
 	 */
 	@Test
-	public void testGetProteinSequences() throws Exception {
+    void testGetProteinSequences() throws Exception {
 		Map<String, ChromosomeSequence> chromosomeSequenceList = GeneFeatureHelper
 				.loadFastaAddGeneFeaturesFromGmodGFF3(new File("src/test/resources/volvox_all.fna"), new File(
 						"src/test/resources/volvox.gff3"), false);
@@ -148,7 +148,7 @@ public class GeneFeatureHelperTest {
 	 * Test of getGeneSequences method, of class GeneFeatureHelper.
 	 */
 	@Test
-	public void testGetGeneSequences() throws Exception {
+    void testGetGeneSequences() throws Exception {
 		// logger.info("getGeneSequences");
 		Map<String, ChromosomeSequence> chromosomeSequenceList = GeneFeatureHelper
 				.loadFastaAddGeneFeaturesFromGmodGFF3(new File("src/test/resources/volvox_all.fna"), new File(

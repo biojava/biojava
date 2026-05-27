@@ -21,12 +21,12 @@
 package org.biojava.nbio.genome.io.fastq;
 
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit test for SolexaFastqWriter.
  */
-public final class SolexaFastqWriterTest
+final class SolexaFastqWriterTest
 	extends AbstractFastqWriterTest
 {
 
@@ -48,7 +48,7 @@ public final class SolexaFastqWriterTest
 	}
 
 	@Test
-	public void testConvertNotSolexaVariant() throws Exception
+    void testConvertNotSolexaVariant() throws Exception
 	{
 		SolexaFastqWriter writer = new SolexaFastqWriter();
 		Appendable appendable = new StringBuilder();
