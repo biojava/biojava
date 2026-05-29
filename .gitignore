@@ -10,3 +10,5 @@
 *.swp
 target
 *~
+
+cache.aot
