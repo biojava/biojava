@@ -61,6 +61,9 @@
         	<artifactId>slf4j-api</artifactId>
     	</dependency>
     	<!-- binding for log4j2, scope=runTime set in parent pom -->
+    	<!-- AOT NOTE: log4j-core ships module-info.class (named module), which
+    	     breaks AOT cache creation. Excluded in benchmark/pom.xml; BioJava
+    	     only calls the slf4j-api façade so the binding is swappable. -->
  		<dependency>
     		<groupId>org.apache.logging.log4j</groupId>
     		<artifactId>log4j-slf4j2-impl</artifactId>
@@ -74,4 +77,24 @@
     		<artifactId>log4j-core</artifactId>
   		</dependency>
 	</dependencies>
+
+	<profiles>
+		<profile>
+			<id>tree-merge</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<configuration>
+							<argLine>-XX:-AOTClassLinking -XX:AOTCacheOutput=${project.basedir}/cache.aot</argLine>
+							<forkCount>1</forkCount>
+							<reuseForks>true</reuseForks>
+							<testFailureIgnore>true</testFailureIgnore>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 </project>
