@@ -1,6 +1,11 @@
 BioJava Changelog
 -----------------
 
+BioJava 7.2.6
+==============================
+### Fixed
+* Parsing of PDBx/mmCIF with empty database_PDB_rev.date
+
 BioJava 7.2.5
 ==============================
 ### Fixed
