@@ -217,7 +217,8 @@
 					<version>3.1.1</version>
 					<configuration>
 						<remoteTagging>true</remoteTagging>
-						<preparationGoals>clean install</preparationGoals>
+						<arguments>-DskipTests</arguments>
+						<preparationGoals>clean verify -DskipTests</preparationGoals>
 						<autoVersionSubmodules>true</autoVersionSubmodules>
 
 						<!-- work around for GPG hanging issue http://jira.codehaus.org/browse/MGPG-9 -->
