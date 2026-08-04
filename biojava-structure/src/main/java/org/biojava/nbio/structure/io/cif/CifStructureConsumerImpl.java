@@ -630,7 +630,8 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
                 modDate = relDate;
             } else {
                 String dbrev = databasePDBrev.getDate().get(rowIndex);
-                modDate = convert(LocalDate.parse(dbrev, DATE_FORMAT));
+                if (dbrev != null && !dbrev.isBlank())
+                    modDate = convert(LocalDate.parse(dbrev, DATE_FORMAT));
             }
             pdbHeader.setModDate(modDate);
         }
