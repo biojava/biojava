@@ -31,6 +31,8 @@ import org.biojava.nbio.structure.io.LocalPDBDirectory.FetchBehavior;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.ObsoleteBehavior;
 import org.biojava.nbio.structure.io.PDBFileReader;
 import org.biojava.nbio.structure.io.StructureFiletype;
+import org.biojava.nbio.structure.scop.ScopFactory;
+import org.biojava.nbio.structure.test.util.ScopTestHelper;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -49,6 +51,9 @@ public class TestAtomCache {
 	@Before
 	public void setUp() throws IOException {
 		cache = new AtomCache();
+
+		// Bundled mock SCOP so domain IDs resolve without downloading classification files
+		ScopTestHelper.installMockScop(ScopFactory.LATEST_VERSION);
 
 		// Delete files which were cached in previous tests
 		String[] uncacheIDs = new String[] {

@@ -65,6 +65,7 @@ import org.biojava.nbio.structure.io.StructureFiletype;
 import org.biojava.nbio.structure.scop.ScopDatabase;
 import org.biojava.nbio.structure.scop.ScopFactory;
 import org.biojava.nbio.structure.test.util.GlobalsHelper;
+import org.biojava.nbio.structure.test.util.ScopTestHelper;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -83,15 +84,15 @@ public class AtomCacheTest {
 	private AtomCache cache;
 
 	@Before
-	public void setUp() {
+	public void setUp() throws IOException {
 		GlobalsHelper.pushState();
 
 		cache = new AtomCache();
 		cache.setObsoleteBehavior(ObsoleteBehavior.FETCH_OBSOLETE);
 		StructureIO.setAtomCache(cache);
 
-		// Use a fixed SCOP version for stability
-		ScopFactory.setScopDatabase(ScopFactory.LATEST_VERSION);
+		// Use a fixed SCOP version with bundled mock classification (no network)
+		ScopTestHelper.installMockScop(ScopFactory.LATEST_VERSION);
 	}
 
 	@After
@@ -172,7 +173,8 @@ public class AtomCacheTest {
 	 */
 	@Test
 	public void testGetStructureForChainlessDomains() throws IOException, StructureException {
-		ScopDatabase scop = ScopFactory.getSCOP(ScopFactory.VERSION_1_71); // Uses the range '1-135' without a chain
+		// Uses the range '1-135' without a chain; mock SCOP 1.71 avoids network download
+		ScopDatabase scop = ScopTestHelper.createMockScop(ScopFactory.VERSION_1_71);
 		Structure structure = cache.getStructureForDomain("d1hcy_1",scop);
 
 		//System.out.println(cache.getStructure("1hcy"));

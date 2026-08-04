@@ -1,0 +1,5 @@
+# Mock SCOPe 2.08 classification lines for unit tests (subset of dir.cla.scope.2.08-stable.txt)
+d1i3o.1	1i3o	A:,B:	c.17.1.1	61603	cl=51349,cf=52128,sf=52129,fa=52130,dm=52131,sp=52132,px=61603
+d2gs2a_	2gs2	A:	d.144.1.7	135574	cl=53931,cf=56111,sf=56112,fa=88854,dm=82795,sp=82796,px=135574
+d3bzy.1	3bzy	A:246-262,B:263-345	d.367.1.1	155799	cl=53931,cf=160543,sf=160544,fa=160545,dm=160546,sp=160547,px=155799
+d1i3oe_	1i3o	E:	g.52.1.1	61605	cl=56992,cf=57923,sf=57924,fa=57925,dm=57928,sp=57929,px=61605
