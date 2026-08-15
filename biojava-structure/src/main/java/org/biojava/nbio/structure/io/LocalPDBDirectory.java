@@ -612,8 +612,9 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	 * Note that this only works for http URLs
 	 * @param url
 	 * @return the last modified date or null if it couldn't be retrieved (in that case a warning will be logged)
+	 * @since 7.3.0 made public so that other caching code can reuse it
 	 */
-	protected static Date getLastModifiedTime(URL url) {
+	public static Date getLastModifiedTime(URL url) {
 
 		// see http://stackoverflow.com/questions/2416872/how-do-you-obtain-modified-date-from-a-remote-file-java
 		Date date = null;
