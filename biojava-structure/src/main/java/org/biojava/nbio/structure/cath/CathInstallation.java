@@ -31,8 +31,6 @@ import org.biojava.nbio.core.util.InputStreamProvider;
 
 import java.io.*;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -54,7 +52,7 @@ public class CathInstallation implements CathDatabase{
 	public static final String nodeListFileName = "cath-names-v%s.txt";
 	public static final String domallFileName = "cath-domain-boundaries-v%s.txt";
 
-	public static final String CATH_DOWNLOAD_URL                     = "http://download.cathdb.info/cath/releases/";
+	public static final String CATH_DOWNLOAD_URL                     = "https://download.cathdb.info/cath/releases/";
 	public static final String CATH_DOWNLOAD_ALL_RELEASES_DIR        = "all-releases";
 	public static final String CATH_DOWNLOAD_CLASSIFICATION_DATA_DIR = "cath-classification-data";
 
@@ -637,27 +635,26 @@ public class CathInstallation implements CathDatabase{
 	}
 
 	protected void downloadFileFromRemote(URL remoteURL, File localFile) throws IOException{
-//        System.out.println("downloading " + remoteURL + " to: " + localFile);
 		LOGGER.info("Downloading file {} to local file {}", remoteURL, localFile);
 
 		long timeS = System.currentTimeMillis();
-		File tempFile  = Files.createTempFile(FileDownloadUtils.getFilePrefix(localFile),"." + FileDownloadUtils.getFileExtension(localFile)).toFile();
 
-		FileOutputStream out = new FileOutputStream(tempFile);
-
-		InputStream in = remoteURL.openStream();
-		byte[] buf = new byte[4 * 1024]; // 4K buffer
-		int bytesRead;
-		while ((bytesRead = in.read(buf)) != -1) {
-			out.write(buf, 0, bytesRead);
+		File parent = localFile.getAbsoluteFile().getParentFile();
+		if (parent != null && !parent.isDirectory() && !parent.mkdirs()) {
+			throw new IOException("Could not create directory " + parent);
 		}
-		in.close();
-		out.close();
 
-		Files.copy(tempFile.toPath(), localFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+		// Previously this read the response with a bare remoteURL.openStream() and
+		// copied whatever came back. That silently accepted error and redirect
+		// responses: when download.cathdb.info began redirecting http to https, the
+		// body of the 301 was written here as though it were classification data,
+		// and the failure only surfaced much later as an unparseable file.
+		FileDownloadUtils.downloadFileWithValidation(remoteURL, localFile, null,
+				FileDownloadUtils.Hash.UNKNOWN, FileDownloadUtils.ETagPolicy.USE_IF_HEX_DIGEST);
 
-		// delete the tmp file
-		tempFile.delete();
+		if (!FileDownloadUtils.validateFile(localFile)) {
+			throw new IOException("Downloaded file invalid: " + localFile);
+		}
 
 		long size =  localFile.length();
 
