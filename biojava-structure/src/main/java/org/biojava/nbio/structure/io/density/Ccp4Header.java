@@ -68,9 +68,12 @@ public class Ccp4Header {
 	 * @throws IOException if the file could not be read
 	 */
 	public static boolean isCcp4(File file) throws IOException {
-		if (file == null || !file.isFile() || file.length() < HEADER_BYTES) {
+		if (file == null || !file.isFile()) {
 			return false;
 		}
+		// Deliberately no shortcut on file.length(): a gzipped map compresses to far
+		// less than the size of the header it contains, so a length test here would
+		// reject perfectly good small maps. Reading decides it instead.
 		try (InputStream in = openPossiblyGzipped(file)) {
 			return isCcp4(in);
 		}
