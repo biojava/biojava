@@ -179,6 +179,35 @@ public class DensityCacheLayout {
 	}
 
 	/**
+	 * The companion name a density-server file must have for Jmol to read its
+	 * difference-map block.
+	 * <p>
+	 * A density server response holds both a <code>2FO-FC</code> and an
+	 * <code>FO-FC</code> data block, and Jmol's reader chooses between them by
+	 * testing whether the <i>file name</i> contains the literal text
+	 * <code>&amp;diff=1</code>. That works for a URL fetched straight from the
+	 * server, where the marker rides along in the query string, but a cached local
+	 * file has no query string; appending the marker to the file URL only makes
+	 * Jmol look for a file that does not exist. Putting the marker into the name
+	 * itself is what actually selects the block.
+	 * <p>
+	 * This was verified against Jmol 14.31.10 and is unchanged in current Jmol: the
+	 * relevant line in <code>BCifDensityReader</code> still carries the author's
+	 * "what about cached data" to-do beside it. Should Jmol gain a cleaner way to
+	 * choose the block, this can be retired.
+	 *
+	 * @param mapFile the cached density-server file
+	 * @return the sibling path that selects the difference map
+	 */
+	public static File differenceMarkerFile(File mapFile) {
+		String name = mapFile.getName();
+		int dot = name.lastIndexOf('.');
+		String stem = dot < 0 ? name : name.substring(0, dot);
+		String ext = dot < 0 ? "" : name.substring(dot);
+		return new File(mapFile.getAbsoluteFile().getParentFile(), stem + "&diff=1" + ext);
+	}
+
+	/**
 	 * The short four-character spelling of an identifier where one exists.
 	 * <p>
 	 * Every entry in the archive today has a four-character form, and the density

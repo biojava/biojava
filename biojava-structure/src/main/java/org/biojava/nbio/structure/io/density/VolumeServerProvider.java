@@ -20,6 +20,8 @@ package org.biojava.nbio.structure.io.density;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
 /**
  * Fetches downsampled volume slices from a Mol* density server.
@@ -210,6 +212,35 @@ public class VolumeServerProvider extends AbstractDensityMapProvider {
 			target = DensityCacheLayout.pdbMapFile(effectiveCacheRoot(request), request.getPdbId(),
 					DensityCacheLayout.BOTH_KINDS_TOKEN, getSource(), getFormat(), qualifier);
 		}
-		return obtain(request, url, target, request.getKind(), request.getEmdbId(), null, null);
+		DensityMapResult result = obtain(request, url, target, request.getKind(), request.getEmdbId(), null, null);
+
+		if (request.getKind() == DensityMapKind.FO_FC) {
+			return presentAsDifferenceMap(result);
+		}
+		return result;
+	}
+
+	/**
+	 * Points the result at the companion file name that makes Jmol read the
+	 * difference-map block. See
+	 * {@link DensityCacheLayout#differenceMarkerFile(File)} for why the marker has
+	 * to be in the name.
+	 * <p>
+	 * The companion is a hard link where the filesystem allows one, so the second
+	 * name costs no additional space; a copy is only made if linking is refused.
+	 */
+	private DensityMapResult presentAsDifferenceMap(DensityMapResult result) throws IOException {
+		File marker = DensityCacheLayout.differenceMarkerFile(result.getFile());
+		if (!marker.isFile() || marker.length() != result.getFile().length()) {
+			Files.deleteIfExists(marker.toPath());
+			try {
+				Files.createLink(marker.toPath(), result.getFile().toPath());
+			} catch (IOException | UnsupportedOperationException e) {
+				Files.copy(result.getFile().toPath(), marker.toPath(), StandardCopyOption.REPLACE_EXISTING);
+			}
+		}
+		return new DensityMapResult(marker, result.getSource(), result.getFormat(), result.getKind(),
+				result.getPdbId(), result.getEmdbId(), result.getSourceUrl(), result.isFromCache(),
+				result.getRecommendedContourLevel(), result.getSigma());
 	}
 }
