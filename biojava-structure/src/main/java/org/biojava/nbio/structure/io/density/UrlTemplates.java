@@ -27,16 +27,16 @@ import java.util.regex.Pattern;
  * templates.
  * <p>
  * The recognised placeholders are:
- * <table summary="placeholders">
- * <tr><td><code>{pdbid}</code></td><td>the PDB identifier as given</td></tr>
- * <tr><td><code>{pdbid_lc}</code></td><td>the PDB identifier in lower case</td></tr>
- * <tr><td><code>{pdbid_uc}</code></td><td>the PDB identifier in upper case</td></tr>
- * <tr><td><code>{mid}</code></td><td>the two-character divided-archive directory,
- * e.g. <code>cb</code> for <code>1cbs</code></td></tr>
- * <tr><td><code>{emdb_id}</code></td><td>the EMDB identifier, e.g. <code>EMD-0262</code></td></tr>
- * <tr><td><code>{emdb_num}</code></td><td>the EMDB number alone, e.g. <code>0262</code></td></tr>
- * <tr><td><code>{detail}</code></td><td>the density-server detail level</td></tr>
- * </table>
+ * <dl>
+ * <dt><code>{pdbid}</code></dt><dd>the PDB identifier as given</dd>
+ * <dt><code>{pdbid_lc}</code></dt><dd>the PDB identifier in lower case</dd>
+ * <dt><code>{pdbid_uc}</code></dt><dd>the PDB identifier in upper case</dd>
+ * <dt><code>{mid}</code></dt><dd>the two-character divided-archive directory,
+ * e.g. <code>cb</code> for <code>1cbs</code></dd>
+ * <dt><code>{emdb_id}</code></dt><dd>the EMDB identifier, e.g. <code>EMD-0262</code></dd>
+ * <dt><code>{emdb_num}</code></dt><dd>the EMDB number alone, e.g. <code>0262</code></dd>
+ * <dt><code>{detail}</code></dt><dd>the density-server detail level</dd>
+ * </dl>
  * A placeholder with no supplied value is left in place rather than replaced by
  * an empty string, so that a misconfigured template produces an obviously wrong
  * URL instead of a subtly wrong one.
