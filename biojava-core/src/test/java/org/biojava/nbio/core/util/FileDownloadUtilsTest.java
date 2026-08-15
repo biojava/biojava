@@ -215,6 +215,31 @@ class FileDownloadUtilsTest {
     }
 
     @Nested
+    class HttpStatus {
+
+        @Test
+        void notFoundThrowsAndLeavesNothingBehind() throws IOException {
+            // A path that is guaranteed absent from the wwPDB archive.
+            URL missing = new URL("https://files.wwpdb.org/pub/pdb/data/structures/divided/mmCIF/zz/zzzz.cif.gz");
+            File dest = new File(System.getProperty("java.io.tmpdir"), "bj-missing.cif.gz");
+            File sizeFile = new File(dest.getParentFile(), dest.getName() + ".size");
+            dest.delete();
+            sizeFile.delete();
+
+            HttpStatusException e = assertThrows(HttpStatusException.class,
+                    () -> FileDownloadUtils.downloadFile(missing, dest));
+            assertEquals(404, e.getStatusCode());
+            assertTrue(e.isNotFound());
+            assertFalse(dest.exists(), "a 404 body must never be written to the destination");
+
+            // ... and no validation metadata may be recorded for it either, or the
+            // cached error page would later pass validation.
+            FileDownloadUtils.createValidationFiles(missing, dest, null, FileDownloadUtils.Hash.UNKNOWN);
+            assertFalse(sizeFile.exists(), "no size file should be written for a 404 response");
+        }
+    }
+
+    @Nested
     class Hashing {
 
         private File writeTemp(String name, byte[] content) throws IOException {
