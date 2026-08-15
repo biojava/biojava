@@ -550,7 +550,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 			ftp = DEFAULT_BCIF_FILE_SERVER + filename;
 		} else {
 			ftp = String.format("%s%s/%s/%s",
-			serverName, pathOnServer, id.substring(id.length()-3, id.length()-1), getFilename(id));
+			serverName, pathOnServer, getMiddleHash(id), getFilename(id));
 		}
 
 		URL url = new URL(ftp);
@@ -576,12 +576,35 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 		logger.info("Fetching {}", ftp);
 		logger.info("Writing to {}", realFile);
 
-		FileDownloadUtils.createValidationFiles(url, realFile, null, FileDownloadUtils.Hash.UNKNOWN);
-		FileDownloadUtils.downloadFile(url, realFile);
+		// A single connection, so the recorded size and checksum describe exactly the
+		// bytes that were written. The wwPDB servers return the content MD5 as the
+		// ETag, so this also gives the cached file a real integrity check.
+		FileDownloadUtils.downloadFileWithValidation(url, realFile, null, FileDownloadUtils.Hash.UNKNOWN,
+				FileDownloadUtils.ETagPolicy.USE_IF_HEX_DIGEST);
 		if(! FileDownloadUtils.validateFile(realFile))
 			throw new IOException("Downloaded file invalid: "+realFile);
 
 		return realFile;
+	}
+
+	/**
+	 * Returns the two-character directory name under which an entry is filed in the
+	 * PDB's divided layout, e.g. <code>cb</code> for <code>1cbs</code>.
+	 * <p>
+	 * The characters are taken relative to the <i>end</i> of the identifier rather
+	 * than the start, so that both spellings of the same entry land in the same
+	 * bucket: <code>1cbs</code> and its extended form <code>pdb_00001cbs</code> both
+	 * give <code>cb</code>. Taking them from the start would file the extended form
+	 * under <code>db</code> instead. The extended PDB identifier format is expected
+	 * to keep using this same hashing scheme.
+	 *
+	 * @param pdbId a PDB identifier, in either the short or the extended form
+	 * @return the lowercase two-character directory name
+	 * @since 7.3.0
+	 */
+	public static String getMiddleHash(String pdbId) {
+		int offset = pdbId.length() - 3;
+		return pdbId.substring(offset, offset + 2).toLowerCase();
 	}
 
 	/**
@@ -590,7 +613,7 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	 * @param url
 	 * @return the last modified date or null if it couldn't be retrieved (in that case a warning will be logged)
 	 */
-	private Date getLastModifiedTime(URL url) {
+	protected static Date getLastModifiedTime(URL url) {
 
 		// see http://stackoverflow.com/questions/2416872/how-do-you-obtain-modified-date-from-a-remote-file-java
 		Date date = null;
@@ -629,14 +652,12 @@ public abstract class LocalPDBDirectory implements StructureIOFile {
 	protected File getDir(String pdbId, boolean obsolete) {
 
 		File dir = null;
-		int offset = pdbId.length() - 3;
+		String middle = getMiddleHash(pdbId);
 
 		if (obsolete) {
 			// obsolete is always split
-			String middle = pdbId.substring(offset, offset + 2).toLowerCase();
 			dir = new File(obsoleteDirPath, middle);
 		} else {
-			String middle = pdbId.substring(offset, offset + 2).toLowerCase();
 			dir = new File(splitDirPath, middle);
 		}
 
