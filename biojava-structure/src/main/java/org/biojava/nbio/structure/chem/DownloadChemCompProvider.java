@@ -1,5 +1,6 @@
 package org.biojava.nbio.structure.chem;
 
+import org.biojava.nbio.core.util.FileDownloadUtils;
 import org.biojava.nbio.core.util.InputStreamProvider;
 import org.biojava.nbio.structure.align.util.URLConnectionTools;
 import org.biojava.nbio.structure.align.util.UserConfiguration;
@@ -395,6 +396,17 @@ public class DownloadChemCompProvider implements ChemCompProvider {
         try {
             url = new URL(u);
             URLConnection uconn = URLConnectionTools.openURLConnection(url);
+
+            // A 4xx or 5xx already fails safely, because getInputStream() throws for
+            // those. A redirect does not: if the server answers 3xx and the JDK
+            // declines to follow it - which it always does when the redirect changes
+            // http to https - getInputStream() hands back the body of the redirect
+            // instead. That body is short but not empty, so the "did we read any
+            // lines" check below accepts it, and it is gzipped and stored under the
+            // component's name. Every later lookup then reads it back and fails to
+            // parse, long after the request that caused it. This is exactly how the
+            // CATH downloader broke when download.cathdb.info moved to https.
+            FileDownloadUtils.checkHttpStatus(uconn);
 
             try (PrintWriter pw = new PrintWriter(new GZIPOutputStream(new FileOutputStream(newFile)));
                  BufferedReader fileBuffer = new BufferedReader(new InputStreamReader(uconn.getInputStream()))) {
