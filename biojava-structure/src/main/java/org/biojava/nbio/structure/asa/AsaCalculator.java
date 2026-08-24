@@ -27,7 +27,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.vecmath.Point3d;
-import javax.vecmath.Vector3d;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -116,7 +115,14 @@ public class AsaCalculator {
 	private final double[] radii;
 	private final double probe;
 	private final int nThreads;
-	private Vector3d[] spherePoints;
+	/**
+	 * The sphere points to sample, as a flat array of interleaved x,y,z coordinates (thus of size 3 x nSpherePoints).
+	 * A flat array of primitives (rather than an array of Vector3d objects) is used for performance: it keeps the
+	 * points contiguous in memory and avoids a pointer dereference per point in the innermost loop of
+	 * {@link #calcSingleAsa(int)}.
+	 */
+	private double[] spherePoints;
+	private int nSpherePoints;
 	private double cons;
 	private IndexAndDistance[][] neighborIndices;
 
@@ -239,7 +245,8 @@ public class AsaCalculator {
 		logger.debug("Will use {} sphere points", nSpherePoints);
 
 		// initialising the sphere points to sample
-		spherePoints = generateSpherePoints(nSpherePoints);
+		this.nSpherePoints = nSpherePoints;
+		this.spherePoints = generateSpherePoints(nSpherePoints);
 
 		cons = 4.0 * Math.PI / nSpherePoints;
 	}
@@ -334,17 +341,19 @@ public class AsaCalculator {
 	 * Returns list of 3d coordinates of points on a unit sphere using the
 	 * Golden Section Spiral algorithm.
 	 * @param nSpherePoints the number of points to be used in generating the spherical dot-density
-	 * @return the array of points as Vector3d objects
+	 * @return a flat array of interleaved x,y,z coordinates, of size 3 x nSpherePoints
 	 */
-	private Vector3d[] generateSpherePoints(int nSpherePoints) {
-		Vector3d[] points = new Vector3d[nSpherePoints];
+	private double[] generateSpherePoints(int nSpherePoints) {
+		double[] points = new double[3 * nSpherePoints];
 		double inc = Math.PI * (3.0 - Math.sqrt(5.0));
 		double offset = 2.0 / nSpherePoints;
 		for (int k=0;k<nSpherePoints;k++) {
 			double y = k * offset - 1.0 + (offset / 2.0);
 			double r = Math.sqrt(1.0 - y*y);
 			double phi = k * inc;
-			points[k] = new Vector3d(Math.cos(phi)*r, y, Math.sin(phi)*r);
+			points[3*k    ] = Math.cos(phi)*r;
+			points[3*k + 1] = y;
+			points[3*k + 2] = Math.sin(phi)*r;
 		}
 		return points;
 	}
@@ -476,36 +485,47 @@ public class AsaCalculator {
 		int[] numDistsCalced = null;
 		if (logger.isDebugEnabled()) numDistsCalced = new int[n_neighbor];
 
-		// now we precalculate anything depending only on i,j in equation 3 in Eisenhaber 1994
-		double[] sqRadii = new double[n_neighbor];
-		Vector3d[] aj_minus_ais = new Vector3d[n_neighbor];
+		// Now we precalculate anything depending only on i,j in equation 3 in Eisenhaber 1994.
+		// The per-neighbor data is laid out in a single flat array as quadruplets
+		// [aj_minus_ai.x, aj_minus_ai.y, aj_minus_ai.z, cutoff], so that the innermost loop below is a purely
+		// sequential scan over contiguous primitives, with no object dereferencing. That matches the access
+		// pattern of the early break and is significantly faster than an array of Vector3d objects.
+		double[] nbData = new double[4 * n_neighbor];
 		for (int nbArrayInd =0; nbArrayInd<n_neighbor; nbArrayInd++) {
 			int j = neighbor_indices[nbArrayInd].index;
 			double dist = neighbor_indices[nbArrayInd].dist;
 			double radius_j = radii[j] + probe;
+			Point3d atom_j = atomCoords[j];
+			int off = 4 * nbArrayInd;
+			nbData[off    ] = atom_j.x - atom_i.x;
+			nbData[off + 1] = atom_j.y - atom_i.y;
+			nbData[off + 2] = atom_j.z - atom_i.z;
 			// see equation 3 in Eisenhaber 1994
-			sqRadii[nbArrayInd] = (dist*dist + radius_i*radius_i - radius_j*radius_j)/(2*radius_i);
-			Vector3d aj_minus_ai = new Vector3d(atomCoords[j]);
-			aj_minus_ai.sub(atom_i);
-			aj_minus_ais[nbArrayInd] = aj_minus_ai;
+			nbData[off + 3] = (dist*dist + radius_i*radius_i - radius_j*radius_j)/(2*radius_i);
 		}
 
-		for (Vector3d point: spherePoints){
+		int nbDataLength = nbData.length;
+
+		for (int p = 0; p < nSpherePoints; p++) {
+			double pointX = spherePoints[3*p];
+			double pointY = spherePoints[3*p + 1];
+			double pointZ = spherePoints[3*p + 2];
+
 			boolean is_accessible = true;
 
 			// note that the neighbors are sorted by distance, achieving optimal performance in this inner loop
 			// See Eisenhaber et al, J Comp Chemistry 1994
 
-			for (int nbArrayInd =0; nbArrayInd<n_neighbor; nbArrayInd++) {
+			for (int off = 0; off < nbDataLength; off += 4) {
 
 				// see equation 3 in Eisenhaber 1994. This is slightly more efficient than
 				// calculating distances to the actual sphere points on atom_i (which would be obtained with:
 				// Point3d test_point = new Point3d(point.x*radius + atom_i.x,point.y*radius + atom_i.y,point.z*radius + atom_i.z))
-				double dotProd = aj_minus_ais[nbArrayInd].dot(point);
+				double dotProd = nbData[off]*pointX + nbData[off + 1]*pointY + nbData[off + 2]*pointZ;
 
-				if (numDistsCalced!=null) numDistsCalced[nbArrayInd]++;
+				if (numDistsCalced!=null) numDistsCalced[off >> 2]++;
 
-				if (dotProd > sqRadii[nbArrayInd]) {
+				if (dotProd > nbData[off + 3]) {
 					is_accessible = false;
 					break;
 				}
