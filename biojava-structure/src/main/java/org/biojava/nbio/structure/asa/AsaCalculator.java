@@ -100,12 +100,56 @@ public class AsaCalculator {
 		}
 	}
 
-	static class IndexAndDistance {
-		final int index;
-		final double dist;
-		IndexAndDistance(int index, double dist) {
-			this.index = index;
-			this.dist = dist;
+	/**
+	 * The neighbors of a single atom, as parallel primitive arrays of neighbor atom indices and their distances to
+	 * the central atom, sorted by increasing distance.
+	 * <p>
+	 * Parallel primitive arrays are used rather than an array of index-distance objects because there are ~30
+	 * neighbors per atom: for a large structure that would mean millions of small short-lived objects.
+	 */
+	static class Neighbors {
+
+		/** The neighbor atom indices, ordered by increasing distance to the central atom */
+		final int[] indices;
+		/** The distances to the central atom, in increasing order and parallel to {@link #indices} */
+		final double[] dists;
+
+		private Neighbors(int[] indices, double[] dists) {
+			this.indices = indices;
+			this.dists = dists;
+		}
+
+		/**
+		 * Creates a Neighbors from the first count elements of the given buffers, copying them to exact-size arrays
+		 * and sorting them by increasing distance.
+		 * @param indicesBuffer the neighbor indices, only the first count elements are used
+		 * @param distsBuffer the neighbor distances, only the first count elements are used
+		 * @param count the number of neighbors
+		 * @return the sorted neighbors
+		 */
+		static Neighbors createSorted(int[] indicesBuffer, double[] distsBuffer, int count) {
+			int[] indices = Arrays.copyOf(indicesBuffer, count);
+			double[] dists = Arrays.copyOf(distsBuffer, count);
+			// Sorting by closest to farthest away neighbors achieves faster runtimes when checking for occluded
+			// sphere sample points in calcSingleAsa. This follows the ideas exposed in
+			// Eisenhaber et al, J Comp Chemistry 1994 (https://onlinelibrary.wiley.com/doi/epdf/10.1002/jcc.540160303)
+			// This is essential for performance: it brings down the number of occlusion checks to
+			// an average of n_sphere_points/10 per atom, producing ~ x4 performance gain overall.
+			// An insertion sort is used because the arrays are small (~30 elements on average) and because it avoids
+			// both the boxing of a comparator-based sort and the object allocation an index-distance array would need.
+			for (int i = 1; i < count; i++) {
+				double dist = dists[i];
+				int index = indices[i];
+				int j = i - 1;
+				while (j >= 0 && dists[j] > dist) {
+					dists[j + 1] = dists[j];
+					indices[j + 1] = indices[j];
+					j--;
+				}
+				dists[j + 1] = dist;
+				indices[j + 1] = index;
+			}
+			return new Neighbors(indices, dists);
 		}
 	}
 
@@ -124,7 +168,7 @@ public class AsaCalculator {
 	private double[] spherePoints;
 	private int nSpherePoints;
 	private double cons;
-	private IndexAndDistance[][] neighborIndices;
+	private Neighbors[] neighbors;
 
 	private boolean useSpatialHashingForNeighbors;
 
@@ -292,10 +336,10 @@ public class AsaCalculator {
 		long start = System.currentTimeMillis();
 		if (useSpatialHashingForNeighbors) {
 			logger.debug("Will use spatial hashing to find neighbors");
-			neighborIndices = findNeighborIndicesSpatialHashing();
+			neighbors = findNeighborIndicesSpatialHashing();
 		} else {
 			logger.debug("Will not use spatial hashing to find neighbors");
-			neighborIndices = findNeighborIndices();
+			neighbors = findNeighborIndices();
 		}
 		long end = System.currentTimeMillis();
 		logger.debug("Took {} s to find neighbors", (end-start)/1000.0);
@@ -359,93 +403,108 @@ public class AsaCalculator {
 	}
 
 	/**
-	 * Returns the 2-dimensional array with neighbor indices for every atom.
-	 * @return 2-dimensional array of size: n_atoms x n_neighbors_per_atom
+	 * Tells whether the 2 given atoms are neighbors for the purposes of the ASA calculation, i.e. whether their
+	 * probe-inflated spheres overlap.
+	 * @param i the index of the first atom
+	 * @param j the index of the second atom
+	 * @param dist the distance between the 2 atoms
+	 * @return true if they are neighbors, false otherwise
 	 */
-	IndexAndDistance[][] findNeighborIndices() {
+	private boolean areNeighbors(int i, int j, double dist) {
+		return dist < radii[i] + probe + probe + radii[j];
+	}
 
-		// looking at a typical protein case, number of neighbours are from ~10 to ~50, with an average of ~30
-		int initialCapacity = 60;
+	/**
+	 * Returns the neighbors of every atom, sorted by increasing distance.
+	 * @return array of size n_atoms
+	 */
+	Neighbors[] findNeighborIndices() {
 
-		IndexAndDistance[][] nbsIndices = new IndexAndDistance[atomCoords.length][];
+		Neighbors[] nbs = new Neighbors[atomCoords.length];
+
+		// looking at a typical protein case, number of neighbours are from ~10 to ~50, with an average of ~30.
+		// The buffers are reused for all atoms and grown on demand, so that only the exact-size arrays kept in the
+		// returned Neighbors objects are allocated per atom.
+		int[] indicesBuffer = new int[60];
+		double[] distsBuffer = new double[60];
 
 		for (int k=0; k<atomCoords.length; k++) {
-			double radius = radii[k] + probe + probe;
 
-			List<IndexAndDistance> thisNbIndices = new ArrayList<>(initialCapacity);
+			int count = 0;
 
 			for (int i = 0; i < atomCoords.length; i++) {
 				if (i == k) continue;
 
 				double dist = atomCoords[i].distance(atomCoords[k]);
 
-				if (dist < radius + radii[i]) {
-					thisNbIndices.add(new IndexAndDistance(i, dist));
+				if (areNeighbors(k, i, dist)) {
+					if (count == indicesBuffer.length) {
+						indicesBuffer = Arrays.copyOf(indicesBuffer, count * 2);
+						distsBuffer = Arrays.copyOf(distsBuffer, count * 2);
+					}
+					indicesBuffer[count] = i;
+					distsBuffer[count] = dist;
+					count++;
 				}
 			}
 
-			IndexAndDistance[] indicesArray = thisNbIndices.toArray(new IndexAndDistance[0]);
-			nbsIndices[k] = indicesArray;
+			nbs[k] = Neighbors.createSorted(indicesBuffer, distsBuffer, count);
 		}
-		return nbsIndices;
+		return nbs;
 	}
 
 	/**
-	 * Returns the 2-dimensional array with neighbor indices for every atom,
+	 * Returns the neighbors of every atom, sorted by increasing distance,
 	 * using spatial hashing to avoid all to all distance calculation.
-	 * @return 2-dimensional array of size: n_atoms x n_neighbors_per_atom
+	 * @return array of size n_atoms
 	 */
-	IndexAndDistance[][] findNeighborIndicesSpatialHashing() {
-
-		// looking at a typical protein case, number of neighbours are from ~10 to ~50, with an average of ~30
-		int initialCapacity = 60;
+	Neighbors[] findNeighborIndicesSpatialHashing() {
 
 		List<Contact> contactList = calcContacts();
-		Map<Integer, List<IndexAndDistance>> indices = new HashMap<>(atomCoords.length);
+
+		// A first pass to count the neighbors per atom, so that exact-size arrays can be allocated in the second
+		// pass. Atom indices are dense, so plain arrays are used rather than a map: that avoids boxing the indices
+		// and the repeated hashing, which are significant given that there are ~30 contacts per atom.
+		int[] counts = new int[atomCoords.length];
 		for (Contact contact : contactList) {
 			// note contacts are stored 1-way only, with j>i
 			int i = contact.getI();
 			int j = contact.getJ();
-
-			List<IndexAndDistance> iIndices;
-			List<IndexAndDistance> jIndices;
-			if (!indices.containsKey(i)) {
-				iIndices = new ArrayList<>(initialCapacity);
-				indices.put(i, iIndices);
-			} else {
-				iIndices = indices.get(i);
+			if (areNeighbors(i, j, contact.getDistance())) {
+				counts[i]++;
+				counts[j]++;
 			}
-			if (!indices.containsKey(j)) {
-				jIndices = new ArrayList<>(initialCapacity);
-				indices.put(j, jIndices);
-			} else {
-				jIndices = indices.get(j);
-			}
+		}
 
-			double radius = radii[i] + probe + probe;
+		int[][] indices = new int[atomCoords.length][];
+		double[][] dists = new double[atomCoords.length][];
+		for (int i = 0; i < atomCoords.length; i++) {
+			// note that some atoms might have no neighbors at all, in which case these are empty arrays
+			indices[i] = new int[counts[i]];
+			dists[i] = new double[counts[i]];
+		}
+
+		int[] filled = new int[atomCoords.length];
+		for (Contact contact : contactList) {
+			int i = contact.getI();
+			int j = contact.getJ();
 			double dist = contact.getDistance();
-			if (dist < radius + radii[j]) {
-				iIndices.add(new IndexAndDistance(j, dist));
-				jIndices.add(new IndexAndDistance(i, dist));
+			if (areNeighbors(i, j, dist)) {
+				indices[i][filled[i]] = j;
+				dists[i][filled[i]] = dist;
+				filled[i]++;
+				indices[j][filled[j]] = i;
+				dists[j][filled[j]] = dist;
+				filled[j]++;
 			}
 		}
 
-		// convert map to array for fast access
-		IndexAndDistance[][] nbsIndices = new IndexAndDistance[atomCoords.length][];
-		for (Map.Entry<Integer, List<IndexAndDistance>> entry : indices.entrySet()) {
-			List<IndexAndDistance> list = entry.getValue();
-			IndexAndDistance[] indexAndDistances = list.toArray(new IndexAndDistance[0]);
-			nbsIndices[entry.getKey()] = indexAndDistances;
+		Neighbors[] nbs = new Neighbors[atomCoords.length];
+		for (int i = 0; i < atomCoords.length; i++) {
+			nbs[i] = Neighbors.createSorted(indices[i], dists[i], counts[i]);
 		}
 
-		// important: some atoms might have no neighbors at all: we need to initialise to empty arrays
-		for (int i=0; i<nbsIndices.length; i++) {
-			if (nbsIndices[i] == null) {
-				nbsIndices[i] = new IndexAndDistance[0];
-			}
-		}
-
-		return nbsIndices;
+		return nbs;
 	}
 
 	Point3d[] getAtomCoords() {
@@ -469,14 +528,12 @@ public class AsaCalculator {
 	private double calcSingleAsa(int i) {
 		Point3d atom_i = atomCoords[i];
 
-		int n_neighbor = neighborIndices[i].length;
-		IndexAndDistance[] neighbor_indices = neighborIndices[i];
-		// Sorting by closest to farthest away neighbors achieves faster runtimes when checking for occluded
-		// sphere sample points below. This follows the ideas exposed in
-		// Eisenhaber et al, J Comp Chemistry 1994 (https://onlinelibrary.wiley.com/doi/epdf/10.1002/jcc.540160303)
-		// This is essential for performance. In my tests this brings down the number of occlusion checks in loop below to
-		// an average of n_sphere_points/10 per atom i, producing ~ x4 performance gain overall
-		Arrays.sort(neighbor_indices, Comparator.comparingDouble(o -> o.dist));
+		// note the neighbors are already sorted by increasing distance (see Neighbors#createSorted), which is
+		// essential for the performance of the occlusion checks in the loop below
+		Neighbors nbs = neighbors[i];
+		int[] neighbor_indices = nbs.indices;
+		double[] neighbor_dists = nbs.dists;
+		int n_neighbor = neighbor_indices.length;
 
 		double radius_i = probe + radii[i];
 
@@ -492,8 +549,8 @@ public class AsaCalculator {
 		// pattern of the early break and is significantly faster than an array of Vector3d objects.
 		double[] nbData = new double[4 * n_neighbor];
 		for (int nbArrayInd =0; nbArrayInd<n_neighbor; nbArrayInd++) {
-			int j = neighbor_indices[nbArrayInd].index;
-			double dist = neighbor_indices[nbArrayInd].dist;
+			int j = neighbor_indices[nbArrayInd];
+			double dist = neighbor_dists[nbArrayInd];
 			double radius_j = radii[j] + probe;
 			Point3d atom_j = atomCoords[j];
 			int off = 4 * nbArrayInd;
