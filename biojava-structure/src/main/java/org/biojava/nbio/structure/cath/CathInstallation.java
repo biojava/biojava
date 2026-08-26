@@ -350,15 +350,15 @@ public class CathInstallation implements CathDatabase{
 		parseCathDomainList(buffer);
 	}
 
-	private void parseCathDomainList(BufferedReader bufferedReader) throws IOException{
+	protected void parseCathDomainList(BufferedReader bufferedReader) throws IOException{
 		String line;
-	 //   int counter = 0;
+		int counter = 0;
 		while ( (line = bufferedReader.readLine()) != null ) {
 			if ( line.startsWith("#") ) continue;
 			if ( line.trim().isEmpty() ) continue;
 			CathDomain cathDomain = parseCathListFileLine(line);
 			if ( cathDomain == null ) continue;
-		   // counter++;
+			counter++;
 
 			String pdbId = cathDomain.getPdbIdAndChain().substring(0,4); // includes chain letter
 
@@ -373,6 +373,9 @@ public class CathInstallation implements CathDatabase{
 			domainList.add(cathDomain);
 
 			domainMap.put( cathDomain.getDomainName(), cathDomain );
+		}
+		if (counter == 0) {
+			throw new IOException("Could not parse any CATH domains from the domain list file.");
 		}
 	}
 
