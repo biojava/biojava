@@ -1,0 +1,54 @@
+name: Nightly Integration Tests
+
+# The integration tests reach out to CATH, ECOD, RCSB, EBI, UniProt and others.
+# That makes them valuable - they are how we find out that an upstream service
+# has changed a URL, a format or a redirect - but it also makes them unsuitable
+# as a gate on pull requests, because an outage anywhere blocks every
+# contributor. Running them on a schedule keeps the coverage while decoupling it
+# from people's ability to merge.
+on:
+  schedule:
+    # 03:17 UTC daily. Off the hour deliberately: scheduled jobs that ask for
+    # exactly midnight queue behind everybody else's.
+    - cron: '17 3 * * *'
+  # Also runnable by hand, e.g. to confirm an upstream service is back.
+  workflow_dispatch:
+
+permissions:
+  contents: read # to fetch code (actions/checkout)
+
+jobs:
+  integrationtest:
+    runs-on: ubuntu-latest
+    # These tests download large files from servers we do not control; the
+    # default 6 hour limit is far more than they need and far more than we want
+    # to spend if one of them hangs.
+    timeout-minutes: 90
+    strategy:
+      matrix:
+        # One JDK only. The point of this run is to exercise the network paths,
+        # not the language level, which the pull request build already covers
+        # across 11, 17 and 21.
+        java: [21]
+      fail-fast: false
+    name: Integration tests, JDK ${{ matrix.java }}
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'oracle'
+          java-version: ${{ matrix.java }}
+      - name: Build and run integration tests
+        run: mvn verify --no-transfer-progress
+      - name: Upload surefire reports
+        # Kept on failure so an upstream break can be diagnosed after the fact:
+        # GitHub expires run logs after 90 days, and these reports carry the
+        # stack traces that say which service misbehaved.
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: surefire-reports
+          path: '**/target/surefire-reports/**'
+          retention-days: 30
