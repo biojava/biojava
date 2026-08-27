@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Test;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.StringReader;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -41,6 +42,8 @@ public class CathInstallationTest {
 		CathInstallation installation = new CathInstallation("");
 		BufferedReader reader = new BufferedReader(new StringReader(data));
 		installation.parseCathDomainList(reader);
+		installation.setInstalledDomainList(new AtomicBoolean(true)); //1
+		installation.setInstalledDomall(new AtomicBoolean(true)); //2
 
 		CathDomain domain = installation.getDomainByCathId("1oaiA00");
 		assertNotNull(domain);
