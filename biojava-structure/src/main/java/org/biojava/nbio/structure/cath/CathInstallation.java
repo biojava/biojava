@@ -350,13 +350,15 @@ public class CathInstallation implements CathDatabase{
 		parseCathDomainList(buffer);
 	}
 
-	private void parseCathDomainList(BufferedReader bufferedReader) throws IOException{
+	protected void parseCathDomainList(BufferedReader bufferedReader) throws IOException{
 		String line;
-	 //   int counter = 0;
+		int counter = 0;
 		while ( (line = bufferedReader.readLine()) != null ) {
 			if ( line.startsWith("#") ) continue;
+			if ( line.trim().isEmpty() ) continue;
 			CathDomain cathDomain = parseCathListFileLine(line);
-		   // counter++;
+			if ( cathDomain == null ) continue;
+			counter++;
 
 			String pdbId = cathDomain.getPdbIdAndChain().substring(0,4); // includes chain letter
 
@@ -372,6 +374,9 @@ public class CathInstallation implements CathDatabase{
 
 			domainMap.put( cathDomain.getDomainName(), cathDomain );
 		}
+		if (counter == 0) {
+			throw new IOException("Could not parse any CATH domains from the domain list file.");
+		}
 	}
 
 	private void parseCathNames() throws IOException {
@@ -386,7 +391,9 @@ public class CathInstallation implements CathDatabase{
 		//int counter = 0;
 		while ( (line = bufferedReader.readLine()) != null ) {
 			if ( line.startsWith("#") ) continue;
+			if ( line.trim().isEmpty() ) continue;
 			CathNode cathNode = parseCathNamesFileLine(line);
+			if ( cathNode == null ) continue;
 			cathTree.put(cathNode.getNodeId(), cathNode);
 		}
 	}
@@ -413,6 +420,7 @@ public class CathInstallation implements CathDatabase{
 		StringBuilder sseqs = null;
 		while ( (line = bufferedReader.readLine()) != null ) {
 			if ( line.startsWith("#") ) continue;
+			if ( line.trim().isEmpty() ) continue;
 			if ( line.startsWith("FORMAT") ) {
 				cathDescription = new CathDomain();
 				cathDescription.setFormat( line.substring(10) );
@@ -504,8 +512,11 @@ public class CathInstallation implements CathDatabase{
 	}*/
 
 	private CathDomain parseCathListFileLine(String line) {
+		String [] token = line.trim().split("\\s+");
+		if (token.length < 12) {
+			return null;
+		}
 		CathDomain cathDomain = new CathDomain();
-		String [] token = line.split("\\s+");
 		cathDomain.setDomainName(token[0]);
 		cathDomain.setClassId(Integer.parseInt(token[1]));
 		cathDomain.setArchitectureId(Integer.parseInt(token[2]));
@@ -522,8 +533,12 @@ public class CathInstallation implements CathDatabase{
 	}
 
 	private CathNode parseCathNamesFileLine(String line) {
+		String[] token = line.trim().split("\\s+",3);
+		if (token.length < 3) {
+			LOGGER.debug("Invalid line in cath names file, was expecting 3 tokens but got {} tokens: {}", token.length, line);
+			return null;
+		}
 		CathNode cathNode = new CathNode();
-		String[] token = line.split("\\s+",3);
 		cathNode.setNodeId( token[0] );
 		int idx = token[0].lastIndexOf(".");
 		if ( idx == -1 ) idx = token[0].length();
@@ -544,8 +559,8 @@ public class CathInstallation implements CathDatabase{
 		String line;
 		while ( ((line = bufferedReader.readLine()) != null) ) {
 			if ( line.startsWith("#") ) continue;
-			if ( line.length() == 0 ) continue;
-			String[] token = line.split("\\s+");
+			if ( line.trim().isEmpty() ) continue;
+			String[] token = line.trim().split("\\s+");
 			String chainId = token[0];
 			Integer numberOfDomains = Integer.parseInt( token[1].substring(1) );
 			Integer numberOfFragments = Integer.parseInt( token[2].substring(1) );
@@ -671,25 +686,25 @@ public class CathInstallation implements CathDatabase{
 	private boolean domainDescriptionFileAvailable(){
 		String fileName = getDomainDescriptionFileName();
 		File f = new File(fileName);
-		return f.exists();
+		return f.exists() && FileDownloadUtils.validateFile(f);
 	}
 
 	private boolean domainListFileAvailable(){
 		String fileName = getDomainListFileName();
 		File f = new File(fileName);
-		return f.exists();
+		return f.exists() && FileDownloadUtils.validateFile(f);
 	}
 
 	private boolean nodeListFileAvailable(){
 		String fileName = getNodeListFileName();
 		File f = new File(fileName);
-		return f.exists();
+		return f.exists() && FileDownloadUtils.validateFile(f);
 	}
 
 	private boolean domallFileAvailable() {
 		String fileName = getDomallFileName();
 		File f= new File(fileName);
-		return f.exists();
+		return f.exists() && FileDownloadUtils.validateFile(f);
 	}
 
 	protected void downloadDomainListFile() throws IOException{
