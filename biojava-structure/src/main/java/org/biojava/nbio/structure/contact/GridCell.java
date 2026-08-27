@@ -74,14 +74,16 @@ public class GridCell {
 
 		Point3d[] iAtoms = grid.getIAtoms();
 		Point3d[] jAtoms = grid.getJAtoms();
-		double cutoff = grid.getCutoff();
+		// we compare squared distances to the squared cutoff, so that the expensive square root is
+		// only computed for the pairs that are actually in contact (the large majority are not)
+		double cutoffSq = grid.getCutoffSq();
 
 		if (jAtoms==null) {
 			for (int i:iIndices) {
 				for (int j:iIndices) {
 					if (j>i) {
-						double distance = iAtoms[i].distance(iAtoms[j]);
-						if (distance<cutoff) contacts.add(new Contact(i, j, distance));
+						double distanceSq = iAtoms[i].distanceSquared(iAtoms[j]);
+						if (distanceSq<cutoffSq) contacts.add(new Contact(i, j, Math.sqrt(distanceSq)));
 					}
 				}
 			}
@@ -89,8 +91,8 @@ public class GridCell {
 		} else {
 			for (int i:iIndices) {
 				for (int j:jIndices) {
-					double distance = iAtoms[i].distance(jAtoms[j]);
-					if (distance<cutoff) contacts.add(new Contact(i, j, distance));
+					double distanceSq = iAtoms[i].distanceSquared(jAtoms[j]);
+					if (distanceSq<cutoffSq) contacts.add(new Contact(i, j, Math.sqrt(distanceSq)));
 				}
 			}
 		}
@@ -111,7 +113,9 @@ public class GridCell {
 
 		Point3d[] iAtoms = grid.getIAtoms();
 		Point3d[] jAtoms = grid.getJAtoms();
-		double cutoff = grid.getCutoff();
+		// we compare squared distances to the squared cutoff, so that the expensive square root is
+		// only computed for the pairs that are actually in contact (the large majority are not)
+		double cutoffSq = grid.getCutoffSq();
 
 
 		if (jAtoms==null) {
@@ -119,8 +123,8 @@ public class GridCell {
 			for (int i:iIndices) {
 				for (int j:otherCell.iIndices) {
 					if (j>i) {
-						double distance = iAtoms[i].distance(iAtoms[j]);
-						if (distance<cutoff) contacts.add(new Contact(i, j, distance));
+						double distanceSq = iAtoms[i].distanceSquared(iAtoms[j]);
+						if (distanceSq<cutoffSq) contacts.add(new Contact(i, j, Math.sqrt(distanceSq)));
 					}
 				}
 			}
@@ -129,8 +133,8 @@ public class GridCell {
 
 			for (int i:iIndices) {
 				for (int j:otherCell.jIndices) {
-					double distance = iAtoms[i].distance(jAtoms[j]);
-					if (distance<cutoff) contacts.add(new Contact(i, j, distance));
+					double distanceSq = iAtoms[i].distanceSquared(jAtoms[j]);
+					if (distanceSq<cutoffSq) contacts.add(new Contact(i, j, Math.sqrt(distanceSq)));
 				}
 			}
 
@@ -148,15 +152,17 @@ public class GridCell {
 	 * @return
 	 */
 	public boolean hasContactToAtom(Point3d[] iAtoms, Point3d[] jAtoms, Point3d query, double cutoff) {
+		// only the comparison matters here, so we can stay in squared distance space and avoid square roots altogether
+		double cutoffSq = cutoff * cutoff;
 		for( int i : iIndices ) {
-			double distance = iAtoms[i].distance(query);
-			if( distance<cutoff)
+			double distanceSq = iAtoms[i].distanceSquared(query);
+			if( distanceSq<cutoffSq)
 				return true;
 		}
 		if (jAtoms!=null) {
 			for( int i : jIndices ) {
-				double distance = jAtoms[i].distance(query);
-				if( distance<cutoff)
+				double distanceSq = jAtoms[i].distanceSquared(query);
+				if( distanceSq<cutoffSq)
 					return true;
 			}
 		}

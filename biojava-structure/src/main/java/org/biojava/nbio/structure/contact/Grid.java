@@ -66,6 +66,7 @@ public class Grid {
 	private GridCell[][][] cells;
 
 	private double cutoff;
+	private double cutoffSq;
 	private int cellSize;
 
 	private Point3d[] iAtoms;
@@ -91,6 +92,7 @@ public class Grid {
 	 */
 	public Grid(double cutoff) {
 		this.cutoff = cutoff;
+		this.cutoffSq = cutoff * cutoff;
 		this.cellSize = (int) Math.floor(cutoff*SCALE);
 		this.noOverlap = false;
 	}
@@ -494,6 +496,15 @@ public class Grid {
 
 	public double getCutoff() {
 		return cutoff;
+	}
+
+	/**
+	 * Returns the square of the cutoff, precomputed at construction. Used by {@link GridCell} to
+	 * compare squared distances, avoiding a square root per candidate pair.
+	 * @return the squared cutoff
+	 */
+	protected double getCutoffSq() {
+		return cutoffSq;
 	}
 
 	/**
