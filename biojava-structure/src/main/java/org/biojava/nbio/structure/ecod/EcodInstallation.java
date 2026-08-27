@@ -1021,10 +1021,10 @@ declare a column header are read by column name rather than by position.
 
 		private void warnUnparseableLine(int lineNum, IllegalArgumentException e) {
 			if(warnNumberFormat > 1) {
-				logger.warn("Error in ECOD parsing at line "+lineNum,e);
+				logger.warn("Error in ECOD parsing at line {}: {}", lineNum, e.getMessage());
 				warnNumberFormat--;
 			} else if(warnNumberFormat == 1) {
-				logger.warn("Error in ECOD parsing at line "+lineNum+". Not printing future similar warnings",e);
+				logger.warn("Error in ECOD parsing at line {}: {}. Not printing future similar warnings", lineNum, e.getMessage());
 				warnNumberFormat--;
 			}
 		}
