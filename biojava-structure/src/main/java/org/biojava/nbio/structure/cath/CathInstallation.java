@@ -535,7 +535,7 @@ public class CathInstallation implements CathDatabase{
 	private CathNode parseCathNamesFileLine(String line) {
 		String[] token = line.trim().split("\\s+",3);
 		if (token.length < 3) {
-			LOGGER.info("Invalid line in cath names file, was expecting 3 tokens but got {} tokens: {}", token.length, line);
+			LOGGER.debug("Invalid line in cath names file, was expecting 3 tokens but got {} tokens: {}", token.length, line);
 			return null;
 		}
 		CathNode cathNode = new CathNode();
