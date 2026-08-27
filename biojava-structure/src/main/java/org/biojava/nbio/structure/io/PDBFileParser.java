@@ -1406,7 +1406,7 @@ public class PDBFileParser  {
 			try {
 				float res = Float.parseFloat(resString);
 				final float resInHeader = pdbHeader.getResolution();
-				if (resInHeader!=PDBHeader.DEFAULT_RESOLUTION && resInHeader != res) {
+				if (resInHeader!=PDBHeader.DEFAULT_RESOLUTION && Math.abs(resInHeader - res) > 0.001) {
 					logger.warn("More than 1 resolution value present, will use last one {} and discard previous {} "
 							,resString, String.format("%4.2f",resInHeader));
 				}
