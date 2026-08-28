@@ -21,12 +21,12 @@
 package org.biojava.nbio.genome.io.fastq;
 
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit test for SangerFastqWriter.
  */
-public final class SangerFastqWriterTest
+final class SangerFastqWriterTest
 	extends AbstractFastqWriterTest
 {
 
@@ -48,7 +48,7 @@ public final class SangerFastqWriterTest
 	}
 
 	@Test
-	public void testConvertNotSangerVariant() throws Exception
+    void testConvertNotSangerVariant() throws Exception
 	{
 		SangerFastqWriter writer = new SangerFastqWriter();
 		Appendable appendable = new StringBuilder();

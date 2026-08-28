@@ -21,12 +21,12 @@
 package org.biojava.nbio.genome.io.fastq;
 
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit test for IlluminaFastqWriter.
  */
-public final class IlluminaFastqWriterTest
+final class IlluminaFastqWriterTest
 	extends AbstractFastqWriterTest
 {
 
@@ -48,7 +48,7 @@ public final class IlluminaFastqWriterTest
 	}
 
 	@Test
-	public void testConvertNotIlluminaVariant() throws Exception
+    void testConvertNotIlluminaVariant() throws Exception
 	{
 		IlluminaFastqWriter writer = new IlluminaFastqWriter();
 		Appendable appendable = new StringBuilder();

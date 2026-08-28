@@ -40,8 +40,27 @@ public abstract class AbstractCifFileSupplier<S> implements CifFileSupplier<S> {
         // entity information
         List<EntityInfo> entityInfos = structure.getEntityInfos();
 
+        PdbId pdbId = structure.getPdbId();
+
         MmCifBlockBuilder blockBuilder = CifBuilder.enterFile(StandardSchemata.MMCIF)
-                .enterBlock(structure.getPdbId() == null? "" : structure.getPdbId().getId());
+                .enterBlock(pdbId == null? "" : pdbId.getId());
+
+        if (pdbId != null) {
+            // The block header alone does not carry the identifier for consumers: readers pick it up from
+            // _entry.id (e.g. Jmol) or from _struct.entry_id (BioJava's own CifStructureConsumerImpl).
+            // Both are written so that the identifier survives a write-then-read round trip either way.
+            blockBuilder.enterEntry()
+                    .enterId()
+                    .add(pdbId.getId())
+                    .leaveColumn()
+                    .leaveCategory();
+
+            blockBuilder.enterStruct()
+                    .enterEntryId()
+                    .add(pdbId.getId())
+                    .leaveColumn()
+                    .leaveCategory();
+        }
 
         blockBuilder.enterStructKeywords().enterText()
         .add(String.join(", ", structure.getPDBHeader().getKeywords()))

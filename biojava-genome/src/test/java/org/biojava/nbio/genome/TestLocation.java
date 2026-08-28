@@ -20,15 +20,14 @@
  */
 package org.biojava.nbio.genome;
 
-import static org.junit.Assert.*;
-
 import org.biojava.nbio.genome.parsers.gff.Location;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-public class TestLocation {
+class TestLocation {
 
 	@Test
-	public void testLocation() {
+    void testLocation() {
 		// tests taken from Location.main()
 
 		//Location p3_7= new Location( 3, 7 );
@@ -49,70 +48,70 @@ public class TestLocation {
 		Location r5_8= new Location( 5, 8 );
 
 		//distance
-		assertEquals(7, L(14,14).distance( L(3,7) ));
-		assertEquals(7, L(3,7).distance( L(14,14) ));
-		assertEquals(3, L(1,4).distance( L(7, 10) ));
+		Assertions.assertEquals(7, L(14,14).distance( L(3,7) ));
+		Assertions.assertEquals(7, L(3,7).distance( L(14,14) ));
+		Assertions.assertEquals(3, L(1,4).distance( L(7, 10) ));
 
 		//union
-		assertEquals(p10_17, p10_12.union( p14_17 ));
-		assertEquals(p10_17, p14_17.union( p10_12 ));
-		assertEquals(p15_19, p15_19.union( p15_16 ));
+		Assertions.assertEquals(p10_17, p10_12.union( p14_17 ));
+		Assertions.assertEquals(p10_17, p14_17.union( p10_12 ));
+		Assertions.assertEquals(p15_19, p15_19.union( p15_16 ));
 
 		//intersection
-		assertEquals(new Location( 21, 25 ), r13_17.union( r21_25 ).intersection( r21_25 ));
+		Assertions.assertEquals(new Location( 21, 25 ), r13_17.union( r21_25 ).intersection( r21_25 ));
 
 
 		//isBefore
-		assertTrue( r2_5.isBefore( r5_8 ));
-		assertTrue( !r2_5.isBefore( r4_7 ));
+		Assertions.assertTrue(r2_5.isBefore( r5_8 ));
+		Assertions.assertTrue(!r2_5.isBefore( r4_7 ));
 
 		//isAfter
-		assertTrue(r5_8.isAfter( r2_5 ));
-		assertTrue(!r5_8.isAfter( r4_7 ));
+		Assertions.assertTrue(r5_8.isAfter( r2_5 ));
+		Assertions.assertTrue(!r5_8.isAfter( r4_7 ));
 
 		//contains
-		assertTrue(p15_19.contains( p16_19 ));
+		Assertions.assertTrue(p15_19.contains( p16_19 ));
 
 		//overlaps
-		assertTrue(r2_5.overlaps( r4_7 ));
-		assertTrue(r2_5.overlaps( r0_3 ));
-		assertTrue(!r5_8.overlaps( r2_5 ));
-		assertTrue(!r2_5.overlaps( r5_8 ));
+		Assertions.assertTrue(r2_5.overlaps( r4_7 ));
+		Assertions.assertTrue(r2_5.overlaps( r0_3 ));
+		Assertions.assertTrue(!r5_8.overlaps( r2_5 ));
+		Assertions.assertTrue(!r2_5.overlaps( r5_8 ));
 
 
 		//prefix
-		assertEquals(L(2,3), L(2,20).prefix(1));
-		assertEquals(L(2,19), L(2,20).prefix(-1));
-		assertEquals( L(2,10), L(2,20).prefix( L(10,12)));
+		Assertions.assertEquals(L(2,3), L(2,20).prefix(1));
+		Assertions.assertEquals(L(2,19), L(2,20).prefix(-1));
+		Assertions.assertEquals(L(2,10), L(2,20).prefix( L(10,12)));
 
 		//suffix
-		assertEquals(L(3,20), L(2,20).suffix(1));
-		assertEquals(L(19,20), L(2,20).suffix(-1));
-		assertEquals(L(12,20), L(2,20).suffix( L(10,12)));
+		Assertions.assertEquals(L(3,20), L(2,20).suffix(1));
+		Assertions.assertEquals(L(19,20), L(2,20).suffix(-1));
+		Assertions.assertEquals(L(12,20), L(2,20).suffix( L(10,12)));
 
 	}
 
 	@Test
-	public void testLocationIntersections() {
+    void testLocationIntersections() {
 		// One inside another
 		Location r21_25 = new Location( 21, 25 );
 		Location r1_100 = new Location(1, 100 );
 
-		assertEquals(r21_25, r21_25.intersection( r1_100));
-		assertEquals(r21_25, r1_100.intersection( r21_25));
+		Assertions.assertEquals(r21_25, r21_25.intersection( r1_100));
+		Assertions.assertEquals(r21_25, r1_100.intersection( r21_25));
 
 		// Non overlapping
 		Location r10_100 = new Location(10, 100 );
 		Location r1_9 = new Location( 1, 9 );
 
-		assertNull(r10_100.intersection( r1_9));
-		assertNull(r1_9.intersection( new Location( 9, 10 )));
+		Assertions.assertNull(r10_100.intersection( r1_9));
+		Assertions.assertNull(r1_9.intersection( new Location( 9, 10 )));
 
 		// Partially overlappping
 		Location r1_25 = new Location( 1, 25 );
 		Location r21_100 = new Location(21, 100 );
-		assertEquals(r21_25, r1_25.intersection( r21_100));
-		assertEquals(r21_25, r21_100.intersection( r1_25));
+		Assertions.assertEquals(r21_25, r1_25.intersection( r21_100));
+		Assertions.assertEquals(r21_25, r21_100.intersection( r1_25));
 	}
 
 	//shorthand for testing

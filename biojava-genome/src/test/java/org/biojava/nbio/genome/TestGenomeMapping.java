@@ -22,8 +22,8 @@ package org.biojava.nbio.genome;
 
 import com.google.common.collect.Range;
 import org.biojava.nbio.genome.util.ChromosomeMappingTools;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,10 +32,10 @@ import java.util.List;
 /**
  * Created by andreas on 7/19/16.
  */
-public class TestGenomeMapping {
+class TestGenomeMapping {
 
 	@Test
-	public void testGenomeMappingToolGetCDSRanges(){
+    void testGenomeMappingToolGetCDSRanges(){
 
 		List<Integer> lst1 = new ArrayList<>(Arrays.asList( 86346823, 86352858, 86354529));
 		List<Integer> lst2 = new ArrayList<>(Arrays.asList(86348878, 86352984, 86354692));
@@ -45,21 +45,21 @@ public class TestGenomeMapping {
 		List<Range<Integer>> result = ChromosomeMappingTools.getCDSRegions(lst1,lst2,cdsStart,cdsEnd);
 
 		// makes sure the first list does not get  changed;
-		Assert.assertEquals(86346823, (int) lst1.get(0));
+		Assertions.assertEquals(86346823, (int) lst1.get(0));
 
 
-		Assert.assertEquals(86348749, (int) result.get(0).lowerEndpoint());
-		Assert.assertEquals(86352858, (int) result.get(1).lowerEndpoint());
-		Assert.assertEquals(86354529, (int) result.get(2).lowerEndpoint());
+		Assertions.assertEquals(86348749, (int) result.get(0).lowerEndpoint());
+		Assertions.assertEquals(86352858, (int) result.get(1).lowerEndpoint());
+		Assertions.assertEquals(86354529, (int) result.get(2).lowerEndpoint());
 
-		Assert.assertEquals(86348878, (int) result.get(0).upperEndpoint());
-		Assert.assertEquals(86352984, (int) result.get(1).upperEndpoint());
-		Assert.assertEquals(86387027, (int) result.get(2).upperEndpoint());
+		Assertions.assertEquals(86348878, (int) result.get(0).upperEndpoint());
+		Assertions.assertEquals(86352984, (int) result.get(1).upperEndpoint());
+		Assertions.assertEquals(86387027, (int) result.get(2).upperEndpoint());
 
 	}
 
 	@Test
-	public void testGenomeMappingToolGetCDSRangesSERINC2(){
+    void testGenomeMappingToolGetCDSRangesSERINC2(){
 
 		List<Integer> lst1 = new ArrayList<>(Arrays.asList(31413812, 31415872, 31423692));
 		List<Integer> lst2 = new ArrayList<>(Arrays.asList(31414777, 31415907, 31423854));
@@ -69,7 +69,7 @@ public class TestGenomeMapping {
 		List<Range<Integer>> result = ChromosomeMappingTools.getCDSRegions(lst1,lst2,cdsStart,cdsEnd);
 
 		// makes sure the first list does not get  changed;
-		Assert.assertEquals(31423818, (int) result.get(0).lowerEndpoint());
+		Assertions.assertEquals(31423818, (int) result.get(0).lowerEndpoint());
 
 	}
 }
