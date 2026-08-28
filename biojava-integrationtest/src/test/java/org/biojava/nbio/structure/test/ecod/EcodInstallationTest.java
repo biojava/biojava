@@ -22,8 +22,12 @@ package org.biojava.nbio.structure.test.ecod;
 
 import static org.junit.Assert.*;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -47,6 +51,7 @@ import org.biojava.nbio.structure.ecod.EcodDatabase;
 import org.biojava.nbio.structure.ecod.EcodDomain;
 import org.biojava.nbio.structure.ecod.EcodFactory;
 import org.biojava.nbio.structure.ecod.EcodInstallation;
+import org.biojava.nbio.structure.ecod.EcodInstallation.EcodParser;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
@@ -277,12 +282,47 @@ public class EcodInstallationTest {
 		assertEquals(expected,actual);
 	}
 
+	/**
+	 * Checks that the current release can still be read.
+	 * <p>
+	 * The version is read from the file's header without parsing the domains, so this
+	 * additionally parses the first few thousand lines of the same file. That is enough to
+	 * notice a column change — which is what ECOD did at v294.1, unnoticed for months —
+	 * without building the three million domains the whole file now holds.
+	 */
 	@Test
 	public void testVersion() throws IOException {
 		EcodDatabase ecod3 = EcodFactory.getEcodDatabase("latest");
 		String version = ecod3.getVersion();
 		assertNotNull(version);
 		assertNotEquals("latest", version);
+		System.out.println("latest version of ECOD is "+version);
+
+		File domainsFile = new File(((EcodInstallation) ecod3).getCacheLocation(),
+				"ecod.latest.domains.txt");
+		assertTrue("No local copy of the domains file at "+domainsFile, domainsFile.exists());
+
+		EcodParser parser = new EcodParser(firstLines(domainsFile, 5000));
+		assertEquals(version, parser.getVersion());
+		assertFalse("No domains parsed from ECOD "+version
+				+ "; the distribution format has probably changed",
+				parser.getDomains().isEmpty());
+	}
+
+	/**
+	 * @return a reader over the first {@code maxLines} lines of the file
+	 */
+	private static Reader firstLines(File f, int maxLines) throws IOException {
+		StringBuilder head = new StringBuilder();
+		try (BufferedReader in = new BufferedReader(new FileReader(f))) {
+			String line;
+			int n = 0;
+			while (n < maxLines && (line = in.readLine()) != null) {
+				head.append(line).append('\n');
+				n++;
+			}
+		}
+		return new StringReader(head.toString());
 	}
 
 	/**

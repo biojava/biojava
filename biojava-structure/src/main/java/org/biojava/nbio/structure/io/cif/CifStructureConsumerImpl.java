@@ -856,7 +856,8 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
             // we take the last one found so that behaviour is like in PDB file parsing
             double lsDResHigh = refine.getLsDResHigh().get(rowIndex);
             // TODO this could use a check to keep reasonable values - 1.5 may be overwritten by 0.0
-            if (pdbHeader.getResolution() != PDBHeader.DEFAULT_RESOLUTION) {
+            if (pdbHeader.getResolution() != PDBHeader.DEFAULT_RESOLUTION &&
+                    Math.abs(pdbHeader.getResolution() - lsDResHigh) > 0.001) {
                 logger.warn("More than 1 resolution value present, will use last one {} and discard previous {}",
                         lsDResHigh, String.format("%4.2f",pdbHeader.getResolution()));
             }

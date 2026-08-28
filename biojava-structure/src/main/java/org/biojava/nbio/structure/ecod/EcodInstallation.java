@@ -272,17 +272,70 @@ public class EcodInstallation implements EcodDatabase {
 	 *
 	 * Note that this may differ from the version requested in the constructor
 	 * for the special case of "latest"
+	 * <p>
+	 * Since 7.3.0 this reads only the file's header rather than parsing the whole
+	 * file, so it no longer has the side effect of loading every domain.
 	 * @return the ECOD version
 	 * @throws IOException If an error occurs while downloading or parsing the file
 	 */
 	@Override
 	public String getVersion() throws IOException {
-		ensureDomainsFileInstalled();
+		domainsFileLock.readLock().lock();
+		logger.trace("LOCK readlock");
+		try {
+			if( parsedVersion != null ) {
+				return parsedVersion;
+			}
+		} finally {
+			logger.trace("UNLOCK readlock");
+			domainsFileLock.readLock().unlock();
+		}
+
+		// The version is declared in the first few lines of the file, so read those rather
+		// than the millions of domain records behind them. The current release is 657 MB and
+		// holds nearly three million records; parsing it in full to answer this question
+		// costs over a gigabyte of heap and several seconds.
+		ensureDomainsFileDownloaded();
+
+		domainsFileLock.writeLock().lock();
+		logger.trace("LOCK writelock");
+		try {
+			if( parsedVersion == null ) {
+				parsedVersion = parseVersionOnly();
+			}
+		} finally {
+			logger.trace("UNLOCK writelock");
+			domainsFileLock.writeLock().unlock();
+		}
 
 		if( parsedVersion == null) {
 			return requestedVersion;
 		}
 		return parsedVersion;
+	}
+
+	/**
+	 * Reads the version from the header of the local domains file without parsing the
+	 * domains themselves.
+	 * @return the version, or null if the header does not declare one
+	 * @throws IOException if the file cannot be read
+	 * @since 7.3.0
+	 */
+	private String parseVersionOnly() throws IOException {
+		try( BufferedReader in = new BufferedReader(new FileReader(getDomainFile())) ) {
+			String line;
+			while( (line = in.readLine()) != null ) {
+				Matcher match = EcodParser.VERSION_RE.matcher(line);
+				if( match.matches() ) {
+					return match.group(1);
+				}
+				if( !line.startsWith("#") ) {
+					// past the header block; from v294.1 the column names are not commented
+					return null;
+				}
+			}
+		}
+		return null;
 	}
 
 	/**
@@ -323,6 +376,24 @@ public class EcodInstallation implements EcodDatabase {
 		this.cacheLocation = cacheLocation;
 		logger.trace("UNLOCK writelock");
 		domainsFileLock.writeLock().unlock();
+	}
+
+	/**
+	 * Ensures the domains file is present and current locally, without parsing it.
+	 * @throws IOException in cases of file I/O, including failure to download a healthy file
+	 * @since 7.3.0
+	 */
+	private void ensureDomainsFileDownloaded() throws IOException {
+		domainsFileLock.writeLock().lock();
+		logger.trace("LOCK writelock");
+		try {
+			if( !domainsAvailable() ) {
+				downloadDomains();
+			}
+		} finally {
+			logger.trace("UNLOCK writelock");
+			domainsFileLock.writeLock().unlock();
+		}
 	}
 
 	/**
@@ -549,6 +620,24 @@ v1.1 - added rep/nonrep data (1/15/2015)
 v1.2 - added f-group identifiers to fasta file, domain description file. ECODf identifiers now used when available for F-group name.
 	Domain assemblies now represented by assembly uid in domain assembly status.
 v1.4 - added seqid_range and headers (develop101)
+v1.6 - renamed column 4 from f_id to t_id and inserted unp_acc (UniProt accession) as
+	column 9, giving 16 columns (seen in develop291)
+
+From v294.1 the distribution was redesigned. The header comment changed from
+"#ECOD version develop291" to "# Version: v294.1", the column header row is no longer
+commented out, and the columns became:
+
+	uid ecod_domain_id manual_rep f_id pdb chain pdb_range seqid_range architecture_name
+	x_name h_name t_name f_name assembly_id domain_id_short range_count arch_manual
+	x_manual h_manual t_manual f_manual valid_structure ligand_binding
+
+v295 appends ligand_comp_ids and ligand_pdbnum, for 25 columns. Also note that
+manual_rep now holds True/False rather than MANUAL_REP/AUTO_NONREP, that assembly_id
+and domain_id_short are empty on every row, that f_name is empty rather than
+F_UNCLASSIFIED for unclassified domains, and that uid restarts from 0.
+
+Because the columns have been renamed, reordered and added to repeatedly, files that
+declare a column header are read by column name rather than by position.
 		 */
 
 		/** String for unclassified F-groups */
@@ -561,9 +650,27 @@ v1.4 - added seqid_range and headers (develop101)
 		public static final String IS_REPRESENTATIVE = "MANUAL_REP";
 		/** Indicates not a manual representative */
 		public static final String NOT_REPRESENTATIVE = "AUTO_NONREP";
+		/**
+		 * Matches the comment declaring the version, which has taken two forms:
+		 * {@code #ECOD version develop291} up to develop292, and {@code # Version: v295}
+		 * from v294.1 onwards.
+		 * @since 7.3.0
+		 */
+		static final Pattern VERSION_RE = Pattern.compile(
+				"^\\s*#\\s*(?:ECOD\\s+)?version\\s*:?\\s*(\\S+).*", Pattern.CASE_INSENSITIVE);
 
 		private List<EcodDomain> domains;
 		private String version;
+
+		// prevent too many warnings; negative numbers print all warnings
+		private int warnIsDomainAssembly = 1;
+		private int warnHierarchicalFormat = 5;
+		private int warnNumberOfFields = 10;
+		private int warnNumberFormat = 10;
+		/** Data lines that could not be turned into a domain, for the summary at the end */
+		private int skippedLines = 0;
+		/** Data lines describing a domain in a computed model rather than a PDB entry */
+		private int modelLines = 0;
 
 		public EcodParser(String filename) throws IOException {
 			this(new File(filename));
@@ -584,30 +691,55 @@ v1.4 - added seqid_range and headers (develop101)
 				// Allocate plenty of space for ECOD as of 2015
 				ArrayList<EcodDomain> domainsList = new ArrayList<>(500000);
 
-				Pattern versionRE = Pattern.compile("^\\s*#.*ECOD\\s*version\\s+(\\S+).*");
 				Pattern commentRE = Pattern.compile("^\\s*#.*");
 
-				// prevent too many warnings; negative numbers print all warnings
-				int warnIsDomainAssembly = 1;
-				int warnHierarchicalFormat = 5;
-				int warnNumberOfFields = 10;
+				ColumnLayout layout = null;
 
 				String line = in.readLine();
 				int lineNum = 1;
 				while( line != null ) {
 					// Check for requestedVersion string
-					Matcher match = versionRE.matcher(line);
+					Matcher match = VERSION_RE.matcher(line);
 					if(match.matches()) {
 						// special requestedVersion comment
 						this.version = match.group(1);
+					} else if( ColumnLayout.isColumnHeader(line) ) {
+						// The column names. Since the columns have been renamed, reordered and
+						// added to several times, later lines are read by name rather than by
+						// position wherever this header is present (develop101 onwards).
+						layout = ColumnLayout.fromHeader(line);
+						logger.debug("Read ECOD column header at line {}: {} columns",lineNum,layout.size());
 					} else {
 						match = commentRE.matcher(line);
 						if(match.matches()) {
 							// ignore comments
 						} else {
-							// data line
-							String[] fields = line.split("\t");
-							if( fields.length == 13 || fields.length == 14 || fields.length == 15) {
+							// data line. The last column is frequently empty, so keep trailing
+							// empty fields rather than letting split() discard them.
+							String[] fields = line.split("\t", -1);
+							if( layout != null ) {
+								String pdb = layout.get(fields, "pdb");
+								if( pdb != null && pdb.isEmpty() ) {
+									// From v294.1 the distribution also classifies domains
+									// found in computed (AlphaFold) models, which have no PDB
+									// entry and so cannot be represented by an EcodDomain.
+									modelLines++;
+								} else {
+									try {
+										EcodDomain domain = parseDomain(fields, layout, lineNum);
+										if(domain != null) {
+											domainsList.add(domain);
+										} else {
+											skippedLines++;
+											warnMissingColumns(lineNum);
+										}
+									} catch(IllegalArgumentException e) {
+										// includes NumberFormatException and an unusable PDB id
+										skippedLines++;
+										warnUnparseableLine(lineNum, e);
+									}
+								}
+							} else if( fields.length == 13 || fields.length == 14 || fields.length == 15) {
 								try {
 									int i = 0; // field number, to allow future insertion of fields
 
@@ -620,32 +752,16 @@ v1.4 - added seqid_range and headers (develop101)
 									// Manual column may be missing in version 1.0 files
 									Boolean manual = null;
 									if( fields.length >= 14) {
-										String manualString = fields[i++];
-										if(manualString.equalsIgnoreCase(IS_REPRESENTATIVE)) {
-											manual = true;
-										} else if(manualString.equalsIgnoreCase(NOT_REPRESENTATIVE)) {
-											manual = false;
-										} else {
-											logger.warn("Unexpected value for manual field: {} in line {}",manualString,lineNum);
-										}
+										manual = parseManualRep(fields[i++], lineNum);
 									}
 
 									//Column 4: ECOD hierachy identifier - [X-group].[H-group].[T-group].[F-group]
 									// hierarchical field, e.g. "1.1.4.1"
-									String[] xhtGroup = fields[i++].split("\\.");
-									if(xhtGroup.length < 3 || 4 < xhtGroup.length) {
-										if(warnHierarchicalFormat > 1) {
-											logger.warn("Unexpected format for hierarchical field \"{}\" in line {}",fields[i-1],lineNum);
-											warnHierarchicalFormat--;
-										} else if(warnHierarchicalFormat != 0) {
-											logger.warn("Unexpected format for hierarchical field \"{}\" in line {}. Not printing future similar warnings.",fields[i-1],lineNum);
-											warnHierarchicalFormat--;
-										}
-									}
-									Integer xGroup = xhtGroup.length>0 ? Integer.parseInt(xhtGroup[0]) : null;
-									Integer hGroup = xhtGroup.length>1 ? Integer.parseInt(xhtGroup[1]) : null;
-									Integer tGroup = xhtGroup.length>2 ? Integer.parseInt(xhtGroup[2]) : null;
-									Integer fGroup = xhtGroup.length>3 ? Integer.parseInt(xhtGroup[3]) : null;
+									Integer[] xhtfGroup = parseHierarchy(fields[i++], lineNum);
+									Integer xGroup = xhtfGroup[0];
+									Integer hGroup = xhtfGroup[1];
+									Integer tGroup = xhtfGroup[2];
+									Integer fGroup = xhtfGroup[3];
 
 									//Column 5: PDB identifier
 									String pdbId = fields[i++];
@@ -699,32 +815,18 @@ v1.4 - added seqid_range and headers (develop101)
 										assemblyId = Long.parseLong(assemblyStr);
 									}
 
-									String ligandStr = fields[i++];
-									Set<String> ligands = null;
-									if( "NO_LIGANDS_4A".equals(ligandStr) || ligandStr.isEmpty() ) {
-										ligands = Collections.emptySet();
-									} else {
-										String[] ligSplit = ligandStr.split(",");
-										ligands = new LinkedHashSet<>(ligSplit.length);
-										for(String s : ligSplit) {
-											ligands.add(s.intern());
-										}
-									}
+									Set<String> ligands = parseLigands(fields[i++]);
 
 
 									EcodDomain domain = new EcodDomain(uid, domainId, manual, xGroup, hGroup, tGroup, fGroup,pdbId, chainId, range, seqId, architectureName, xGroupName, hGroupName, tGroupName, fGroupName, assemblyId, ligands);
 									domainsList.add(domain);
 								} catch(NumberFormatException e) {
-									logger.warn("Error in ECOD parsing at line "+lineNum,e);
+									skippedLines++;
+									warnUnparseableLine(lineNum, e);
 								}
 							} else {
-								if(warnNumberOfFields > 1) {
-									logger.warn("Unexpected number of fields in line {}.",lineNum);
-									warnNumberOfFields--;
-								} else if(warnNumberOfFields == 0) {
-									logger.warn("Unexpected number of fields in line {}. Not printing future similar warnings",lineNum);
-									warnIsDomainAssembly--;
-								}
+								skippedLines++;
+								warnMissingColumns(lineNum);
 							}
 						}
 					}
@@ -737,6 +839,23 @@ v1.4 - added seqid_range and headers (develop101)
 				else
 					logger.info("Parsed {} ECOD domains from version {}",domainsList.size(),this.version);
 
+				if(modelLines > 0) {
+					logger.info("Ignored {} ECOD domains classified from computed models, "
+							+ "which have no PDB entry", modelLines);
+				}
+
+				if(domainsList.isEmpty() && skippedLines > 0) {
+					// Returning an empty list quietly is how an upstream format change went
+					// unnoticed for eight months. Say so instead.
+					logger.error("Parsed no ECOD domains from {} data lines of version {}. "
+							+ "The file format has probably changed; please report this at "
+							+ "https://github.com/biojava/biojava/issues", skippedLines,
+							this.version == null ? "unknown" : this.version);
+				} else if(skippedLines > 0) {
+					logger.warn("Skipped {} of {} ECOD data lines that could not be parsed",
+							skippedLines, skippedLines + domainsList.size());
+				}
+
 
 				this.domains = Collections.unmodifiableList( domainsList );
 
@@ -744,6 +863,169 @@ v1.4 - added seqid_range and headers (develop101)
 				if(in != null) {
 					in.close();
 				}
+			}
+		}
+
+		/**
+		 * Builds a domain from a data line using the column names the file declares in its
+		 * header, rather than fixed offsets. This is what allows one parser to read the
+		 * 15-column develop101 layout, the 16-column develop291 layout (which inserts
+		 * {@code unp_acc}) and the 23- and 25-column v294.1 and v295 layouts.
+		 * @param fields the tab-separated values of one data line
+		 * @param layout the column names read from the file's header
+		 * @param lineNum the line number, for warnings
+		 * @return the domain, or null if the line does not carry every required column
+		 * @throws NumberFormatException if a numeric column does not hold a number
+		 * @since 7.3.0
+		 */
+		private EcodDomain parseDomain(String[] fields, ColumnLayout layout, int lineNum) {
+			String uidStr    = layout.get(fields, "uid");
+			String domainId  = layout.get(fields, "ecod_domain_id");
+			// renamed from t_id to f_id when the hierarchy gained a fourth level
+			String hierarchy = layout.get(fields, "f_id", "t_id");
+			String pdbId     = layout.get(fields, "pdb");
+			String chainId   = layout.get(fields, "chain");
+			String range     = layout.get(fields, "pdb_range");
+			if( uidStr == null || domainId == null || hierarchy == null
+					|| pdbId == null || chainId == null || range == null ) {
+				return null;
+			}
+
+			Long uid = Long.parseLong(uidStr);
+			Boolean manual = parseManualRep(layout.get(fields, "manual_rep"), lineNum);
+			Integer[] xhtfGroup = parseHierarchy(hierarchy, lineNum);
+			// absent before version 1.4
+			String seqId = layout.get(fields, "seqid_range");
+
+			String architectureName = internName(layout.get(fields, "architecture_name", "arch_name"));
+			String xGroupName = internName(layout.get(fields, "x_name"));
+			String hGroupName = internName(layout.get(fields, "h_name"));
+			String tGroupName = internName(layout.get(fields, "t_name"));
+			// Up to develop292 an unclassified domain carried F_UNCLASSIFIED here. From
+			// v294.1 the name is simply empty, while f_id still classifies the domain to
+			// four levels, so the two are no longer equivalent and the empty value is
+			// deliberately left as it is rather than translated.
+			String fGroupName = internName(layout.get(fields, "f_name"));
+
+			// v294.1 and later declare assembly_id but leave it empty on every row, which
+			// means the same as the NOT_DOMAIN_ASSEMBLY of earlier versions.
+			Long assemblyId = null;
+			String assemblyStr = layout.get(fields, "assembly_id", "asm_status");
+			if( assemblyStr == null || assemblyStr.isEmpty() || NOT_DOMAIN_ASSEMBLY.equals(assemblyStr) ) {
+				assemblyId = uid;
+			} else if( IS_DOMAIN_ASSEMBLY.equals(assemblyStr) ) {
+				warnDomainAssembly(lineNum);
+			} else {
+				assemblyId = Long.parseLong(assemblyStr);
+			}
+
+			// the ligand list moved from the last column to ligand_comp_ids in v295
+			Set<String> ligands = parseLigands(layout.get(fields, "ligand_comp_ids", "ligand"));
+
+			return new EcodDomain(uid, domainId, manual, xhtfGroup[0], xhtfGroup[1], xhtfGroup[2],
+					xhtfGroup[3], pdbId, chainId, range, seqId, architectureName, xGroupName,
+					hGroupName, tGroupName, fGroupName, assemblyId, ligands);
+		}
+
+		/**
+		 * Reads the representative-status column, which held MANUAL_REP or AUTO_NONREP up to
+		 * develop292 and True or False from v294.1 onwards.
+		 * @return true, false, or null if the column is absent or unrecognised
+		 * @since 7.3.0
+		 */
+		private Boolean parseManualRep(String manualString, int lineNum) {
+			if(manualString == null) {
+				return null;
+			}
+			if(manualString.equalsIgnoreCase(IS_REPRESENTATIVE) || manualString.equalsIgnoreCase("true")) {
+				return true;
+			}
+			if(manualString.equalsIgnoreCase(NOT_REPRESENTATIVE) || manualString.equalsIgnoreCase("false")) {
+				return false;
+			}
+			logger.warn("Unexpected value for manual field: {} in line {}",manualString,lineNum);
+			return null;
+		}
+
+		/**
+		 * Splits the hierarchical identifier, e.g. "1.1.4.1".
+		 * @return the X, H, T and F group numbers, any of which may be null if absent
+		 * @since 7.3.0
+		 */
+		private Integer[] parseHierarchy(String hierarchy, int lineNum) {
+			String[] xhtGroup = hierarchy.split("\\.");
+			if(xhtGroup.length < 3 || 4 < xhtGroup.length) {
+				if(warnHierarchicalFormat > 1) {
+					logger.warn("Unexpected format for hierarchical field \"{}\" in line {}",hierarchy,lineNum);
+					warnHierarchicalFormat--;
+				} else if(warnHierarchicalFormat != 0) {
+					logger.warn("Unexpected format for hierarchical field \"{}\" in line {}. Not printing future similar warnings.",hierarchy,lineNum);
+					warnHierarchicalFormat--;
+				}
+			}
+			Integer[] groups = new Integer[4];
+			for(int j = 0; j < groups.length && j < xhtGroup.length; j++) {
+				groups[j] = Integer.parseInt(xhtGroup[j]);
+			}
+			return groups;
+		}
+
+		/**
+		 * Reads a comma-separated list of non-polymer entities close to the domain.
+		 * @return the ligands, or an empty set for NO_LIGANDS_4A, an empty value or no column
+		 * @since 7.3.0
+		 */
+		private Set<String> parseLigands(String ligandStr) {
+			if( ligandStr == null || ligandStr.isEmpty() || "NO_LIGANDS_4A".equals(ligandStr) ) {
+				return Collections.emptySet();
+			}
+			String[] ligSplit = ligandStr.split(",");
+			Set<String> ligands = new LinkedHashSet<>(ligSplit.length);
+			for(String s : ligSplit) {
+				ligands.add(s.intern());
+			}
+			return ligands;
+		}
+
+		/**
+		 * Interns a name likely to be shared by many domains, stripping the quotes that
+		 * versions up to develop292 wrapped some of them in.
+		 * @since 7.3.0
+		 */
+		private String internName(String name) {
+			if(name == null) {
+				return null;
+			}
+			return clearStringQuotes(name).intern();
+		}
+
+		private void warnDomainAssembly(int lineNum) {
+			if(warnIsDomainAssembly > 1) {
+				logger.info("Deprecated 'IS_DOMAIN_ASSEMBLY' value ignored in line {}.",lineNum);
+				warnIsDomainAssembly--;
+			} else if(warnIsDomainAssembly == 0) {
+				logger.info("Deprecated 'IS_DOMAIN_ASSEMBLY' value ignored in line {}. Not printing future similar warnings.",lineNum);
+				warnIsDomainAssembly--;
+			}
+		}
+
+		private void warnMissingColumns(int lineNum) {
+			if(warnNumberOfFields > 1) {
+				logger.warn("Unexpected number of fields in line {}.",lineNum);
+				warnNumberOfFields--;
+			} else if(warnNumberOfFields == 1) {
+				logger.warn("Unexpected number of fields in line {}. Not printing future similar warnings",lineNum);
+				warnNumberOfFields--;
+			}
+		}
+
+		private void warnUnparseableLine(int lineNum, IllegalArgumentException e) {
+			if(warnNumberFormat > 1) {
+				logger.warn("Error in ECOD parsing at line {}: {}", lineNum, e.getMessage());
+				warnNumberFormat--;
+			} else if(warnNumberFormat == 1) {
+				logger.warn("Error in ECOD parsing at line {}: {}. Not printing future similar warnings", lineNum, e.getMessage());
+				warnNumberFormat--;
 			}
 		}
 
@@ -769,6 +1051,77 @@ v1.4 - added seqid_range and headers (develop101)
 		 */
 		public String getVersion() {
 			return version;
+		}
+
+		/**
+		 * Maps the column names an ECOD domain file declares in its header onto their
+		 * positions, so a data line can be read by name rather than by offset.
+		 * <p>
+		 * Every distribution since develop101 carries such a header. It is commented
+		 * (<code>#uid&lt;tab&gt;ecod_domain_id&lt;tab&gt;...</code>) up to develop292 and
+		 * uncommented (<code>uid&lt;tab&gt;ecod_domain_id&lt;tab&gt;...</code>) from v294.1
+		 * onwards. Because names have also been changed between versions, lookups accept
+		 * aliases and any name the file does not declare simply reads as absent.
+		 *
+		 * @author Amr ALHOSSARY
+		 * @since 7.3.0
+		 */
+		private static class ColumnLayout {
+			private final Map<String,Integer> columns;
+
+			private ColumnLayout(Map<String,Integer> columns) {
+				this.columns = columns;
+			}
+
+			/**
+			 * @return true if this line names the columns rather than holding domain data
+			 */
+			public static boolean isColumnHeader(String line) {
+				int tab = line.indexOf('\t');
+				if(tab < 0) {
+					return false;
+				}
+				String first = line.substring(0, tab).trim();
+				if(first.startsWith("#")) {
+					first = first.substring(1).trim();
+				}
+				return first.equalsIgnoreCase("uid");
+			}
+
+			public static ColumnLayout fromHeader(String line) {
+				String[] names = line.split("\t", -1);
+				Map<String,Integer> columns = new HashMap<>(names.length * 2);
+				for(int i = 0; i < names.length; i++) {
+					String name = names[i].trim();
+					if(i == 0 && name.startsWith("#")) {
+						name = name.substring(1).trim();
+					}
+					if(!name.isEmpty()) {
+						columns.put(name.toLowerCase(), i);
+					}
+				}
+				return new ColumnLayout(columns);
+			}
+
+			/**
+			 * @param fields the values of one data line
+			 * @param aliases the names this column has gone by, most recent first
+			 * @return the value of the first alias the file declares, or null if it declares
+			 *  none of them or this line is too short to reach it
+			 */
+			public String get(String[] fields, String... aliases) {
+				for(String alias : aliases) {
+					Integer i = columns.get(alias);
+					if(i != null) {
+						return i < fields.length ? fields[i] : null;
+					}
+				}
+				return null;
+			}
+
+			public int size() {
+				return columns.size();
+			}
 		}
 	}
 

@@ -30,8 +30,14 @@ jobs:
         with:
           distribution: 'oracle'
           java-version: ${{ matrix.java }}
-      - name: Build, test and integration test
-        run: mvn verify --no-transfer-progress
+      - name: Build and test (no integration tests)
+        # Integration tests are excluded here and run nightly instead, see
+        # nightly.yml. They depend on CATH, ECOD, RCSB, EBI and others being up
+        # and responsive, so running them on every pull request means a third
+        # party having a bad day blocks contributors, and a real regression
+        # cannot be told apart from the resulting noise. Master Build already
+        # excludes them for the same reason.
+        run: mvn verify -pl '!biojava-integrationtest' --no-transfer-progress
 
   # Note that 11 is not available in openjdk. So we need to do it with the Zulu distribution (see https://github.com/actions/setup-java)
   # When we drop 11, it will be safe to drop the copy-pasted workflow excerpt below
@@ -54,5 +60,11 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: ${{ matrix.java }}
-      - name: Build, test and integration test
-        run: mvn verify --no-transfer-progress
+      - name: Build and test (no integration tests)
+        # Integration tests are excluded here and run nightly instead, see
+        # nightly.yml. They depend on CATH, ECOD, RCSB, EBI and others being up
+        # and responsive, so running them on every pull request means a third
+        # party having a bad day blocks contributors, and a real regression
+        # cannot be told apart from the resulting noise. Master Build already
+        # excludes them for the same reason.
+        run: mvn verify -pl '!biojava-integrationtest' --no-transfer-progress
