@@ -26,19 +26,18 @@ import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
-
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Round trip conversion functional tests.
  */
-public final class ConvertTest {
+final class ConvertTest {
 
 	@Test
-	public void testConvert() throws Exception
+    void testConvert() throws Exception
 	{
 		Map<FastqVariant, FastqReader> readers = Maps.newHashMap();
 		readers.put(FastqVariant.FASTQ_SANGER, new SangerFastqReader());
@@ -88,13 +87,13 @@ public final class ConvertTest {
 				List<Fastq> observed = Lists.newArrayList(resultReader.read(tmp));
 				List<Fastq> expected = Lists.newArrayList(resultReader.read(getClass().getResource(expectedFileName)));
 
-				assertEquals(expected.size(), observed.size());
+				Assertions.assertEquals(expected.size(), observed.size());
 				for (int i = 0; i < expected.size(); i++)
 				{
-					assertEquals(expected.get(i).getDescription(), observed.get(i).getDescription());
-					assertEquals(expected.get(i).getSequence(), observed.get(i).getSequence());
-					assertEquals(expected.get(i).getQuality(), observed.get(i).getQuality());
-					assertEquals(expected.get(i).getVariant(), observed.get(i).getVariant());
+					Assertions.assertEquals(expected.get(i).getDescription(), observed.get(i).getDescription());
+					Assertions.assertEquals(expected.get(i).getSequence(), observed.get(i).getSequence());
+					Assertions.assertEquals(expected.get(i).getQuality(), observed.get(i).getQuality());
+					Assertions.assertEquals(expected.get(i).getVariant(), observed.get(i).getVariant());
 				}
 			}
 		}
