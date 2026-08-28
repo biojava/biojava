@@ -20,11 +20,8 @@
  */
 package org.biojava.nbio.genome.io.fastq;
 
-import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import org.junit.function.ThrowingRunnable;
 
 /**
  * Unit test for Fastq.
@@ -116,12 +113,7 @@ final class FastqTest {
 	@Test
     void testBuilderNullFastq()
 	{
-		Assert.assertThrows(IllegalArgumentException.class, new ThrowingRunnable() {
-			@Override
-			public void run() {
-				Fastq.builder(null);
-			}
-		});
+		Assertions.assertThrows(IllegalArgumentException.class, () -> Fastq.builder(null));
 	}
 
 	@Test

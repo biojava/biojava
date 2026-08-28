@@ -20,7 +20,6 @@
  */
 package org.biojava.nbio.genome;
 
-import junitx.framework.FileAssert;
 import org.biojava.nbio.genome.parsers.gff.FeatureList;
 import org.biojava.nbio.genome.parsers.gff.GFF3Reader;
 import org.biojava.nbio.genome.parsers.gff.GFF3Writer;
@@ -29,6 +28,7 @@ import org.biojava.nbio.core.sequence.GeneSequence;
 import org.biojava.nbio.core.sequence.ProteinSequence;
 import org.biojava.nbio.core.sequence.io.FastaWriterHelper;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -100,8 +100,10 @@ class GeneFeatureHelperTest {
 		File gffFile = Files.createTempFile("volvox_length","gff3").toFile();
 		gffFile.deleteOnExit();
 		GeneFeatureHelper.outputFastaSequenceLengthGFF3(fastaSequenceFile, gffFile);
-		FileAssert.assertEquals("volvox_length.gff3 and volvox_length_output.gff3 are not equal", gffFile,
-				new File("src/test/resources/volvox_length_reference.gff3"));
+		Assertions.assertEquals(
+				Files.readString(new File("src/test/resources/volvox_length_reference.gff3").toPath()),
+				Files.readString(gffFile.toPath()),
+				"volvox_length.gff3 and volvox_length_output.gff3 are not equal");
 
 	}
 
@@ -140,8 +142,10 @@ class GeneFeatureHelperTest {
 		File tmp = Files.createTempFile("volvox_all","faa").toFile();
 		tmp.deleteOnExit();
 		FastaWriterHelper.writeProteinSequence(tmp, proteinSequenceList.values());
-		FileAssert.assertEquals("volvox_all_reference.faa and volvox_all.faa are not equal", new File(
-				"src/test/resources/volvox_all_reference.faa"), tmp);
+		Assertions.assertEquals(
+				Files.readString(new File("src/test/resources/volvox_all_reference.faa").toPath()),
+				Files.readString(tmp.toPath()),
+				"volvox_all_reference.faa and volvox_all.faa are not equal");
 	}
 
 	/**
