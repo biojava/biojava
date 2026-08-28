@@ -382,9 +382,11 @@ public class Grid {
 	 */
 	public AtomContactSet getAtomContacts() {
 
-		AtomContactSet contacts = new AtomContactSet(cutoff);
-
 		List<Contact> list = getIndicesContacts();
+
+		// each contact maps to at most one entry in the set, so the number of index contacts sizes it
+		// without ever under-allocating
+		AtomContactSet contacts = new AtomContactSet(cutoff, list.size());
 
 		if (jAtomObjects == null) {
 			for (Contact cont : list) {

@@ -37,12 +37,32 @@ public class AtomContactSet implements Serializable, Iterable<AtomContact> {
 
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * The default load factor of a {@link HashMap}, needed to size the map from an expected number of
+	 * entries.
+	 */
+	private static final float DEFAULT_LOAD_FACTOR = 0.75f;
+
 	private HashMap<Pair<AtomIdentifier>, AtomContact> contacts;
 	private double cutoff;
 
 	public AtomContactSet(double cutoff) {
 		this.cutoff = cutoff;
 		this.contacts = new HashMap<>();
+	}
+
+	/**
+	 * Creates an AtomContactSet sized to hold the given number of contacts, so that the underlying map
+	 * doesn't have to be repeatedly resized and rehashed as contacts are added. Contact calculations
+	 * produce hundreds of thousands of contacts for a large structure, where the repeated rehashing
+	 * that growing from the default capacity entails is a significant part of the cost.
+	 * @param cutoff the distance cutoff
+	 * @param expectedSize the number of contacts expected to be added. Only affects performance: an
+	 *                     over-estimate merely leaves the map larger than it needs to be.
+	 */
+	public AtomContactSet(double cutoff, int expectedSize) {
+		this.cutoff = cutoff;
+		this.contacts = new HashMap<>((int) (expectedSize / DEFAULT_LOAD_FACTOR) + 1);
 	}
 
 	public void add(AtomContact contact) {
