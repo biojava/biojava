@@ -17,10 +17,10 @@
  */
 package org.biojava.nbio.structure.io.density;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,8 +31,8 @@ import java.util.List;
 
 import org.biojava.nbio.core.util.HttpStatusException;
 import org.biojava.nbio.structure.PdbId;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * The fallback chain, exercised with stub providers so that no server is
@@ -51,7 +51,7 @@ public class TestDensityFallbackChain {
 	private DensityMapCache cache;
 	private List<DensityMapSource> called;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		cache = new DensityMapCache(System.getProperty("java.io.tmpdir"));
 		called = new ArrayList<>();

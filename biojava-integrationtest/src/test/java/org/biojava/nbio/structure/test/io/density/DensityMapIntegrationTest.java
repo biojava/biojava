@@ -17,11 +17,11 @@
  */
 package org.biojava.nbio.structure.test.io.density;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,9 +39,9 @@ import org.biojava.nbio.structure.io.density.DensityMapRequest;
 import org.biojava.nbio.structure.io.density.DensityMapResult;
 import org.biojava.nbio.structure.io.density.DensityMapSource;
 import org.biojava.nbio.structure.io.density.NoDensityMapException;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Density fetching against the real services.
@@ -60,13 +60,13 @@ public class DensityMapIntegrationTest {
 	private File cacheRoot;
 	private DensityMapCache cache;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws IOException {
 		cacheRoot = Files.createTempDirectory("bj-density-it").toFile();
 		cache = new DensityMapCache(cacheRoot.getAbsolutePath());
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws IOException {
 		FileDownloadUtils.deleteDirectory(cacheRoot.toPath());
 	}
@@ -81,8 +81,8 @@ public class DensityMapIntegrationTest {
 		assertTrue(result.isRenderable());
 		assertFalse(result.isFromCache());
 		assertTrue(result.getFileSizeBytes() > 1024);
-		assertTrue("a .meta sidecar makes the result reconstructible offline",
-				DensityMapResult.metaFileFor(result.getFile()).isFile());
+		assertTrue(DensityMapResult.metaFileFor(result.getFile()).isFile(),
+				"a .meta sidecar makes the result reconstructible offline");
 
 		// second call must come from the cache without another download
 		DensityMapResult again = cache.getDensityMap(new PdbId("1cbs"), DensityMapKind.TWO_FO_FC);
@@ -100,11 +100,11 @@ public class DensityMapIntegrationTest {
 		DensityMapResult foFc = cache.getDensityMap(new PdbId("1cbs"), DensityMapKind.FO_FC);
 
 		assertEquals(DensityMapKind.FO_FC, foFc.getKind());
-		assertFalse("the difference map needs its own file name", twoFoFc.getFile().equals(foFc.getFile()));
-		assertTrue("the marker has to be in the name for Jmol to select the FO-FC block",
-				foFc.getFile().getName().contains("&diff=1"));
-		assertEquals("both names must address the same bytes",
-				twoFoFc.getFileSizeBytes(), foFc.getFileSizeBytes());
+		assertFalse(twoFoFc.getFile().equals(foFc.getFile()), "the difference map needs its own file name");
+		assertTrue(foFc.getFile().getName().contains("&diff=1"),
+				"the marker has to be in the name for Jmol to select the FO-FC block");
+		assertEquals(twoFoFc.getFileSizeBytes(), foFc.getFileSizeBytes(),
+				"both names must address the same bytes");
 	}
 
 	/** PDBe serves real CCP4 files, which the header check should recognise. */
@@ -115,7 +115,7 @@ public class DensityMapIntegrationTest {
 
 		assertEquals(DensityMapSource.PDBE_CCP4, result.getSource());
 		assertEquals(DensityFileFormat.CCP4, result.getFormat());
-		assertTrue("the CCP4 stamp should be present at byte 208", Ccp4Header.isCcp4(result.getFile()));
+		assertTrue(Ccp4Header.isCcp4(result.getFile()), "the CCP4 stamp should be present at byte 208");
 		assertTrue(FileDownloadUtils.validateFile(result.getFile()));
 	}
 
@@ -131,8 +131,8 @@ public class DensityMapIntegrationTest {
 		DensityMapResult result = cache.getDensityMap(new PdbId("6hu9"), DensityMapKind.AUTO);
 		assertEquals(DensityMapKind.EM, result.getKind());
 		assertEquals("EMD-0262", result.getEmdbId());
-		assertNotNull("EM maps need the author contour level to be displayed properly",
-				result.getRecommendedContourLevel());
+		assertNotNull(result.getRecommendedContourLevel(),
+				"EM maps need the author contour level to be displayed properly");
 		assertEquals(0.0263, result.getRecommendedContourLevel(), 1e-6);
 		assertNotNull(result.getContourInSigma());
 
@@ -177,11 +177,11 @@ public class DensityMapIntegrationTest {
 				.build());
 
 		assertEquals(DensityMapSource.WWPDB_MAP_COEFFICIENTS, result.getSource());
-		assertFalse("structure factors are not a map and must not claim to be renderable",
-				result.isRenderable());
+		assertFalse(result.isRenderable(),
+				"structure factors are not a map and must not claim to be renderable");
 
 		File hashFile = new File(result.getFile().getParentFile(), result.getFile().getName() + ".hash_MD5");
-		assertTrue("an MD5 should have been recorded from the ETag", hashFile.isFile());
+		assertTrue(hashFile.isFile(), "an MD5 should have been recorded from the ETag");
 		assertTrue(FileDownloadUtils.validateFile(result.getFile()));
 
 		// corrupt it and confirm the checksum actually catches it

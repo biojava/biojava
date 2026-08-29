@@ -17,14 +17,14 @@
  */
 package org.biojava.nbio.structure.io.density;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 
 import org.biojava.nbio.structure.PdbId;
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * URL construction for each provider. These run offline: only the strings are
@@ -37,7 +37,7 @@ public class TestDensityMapUrlTemplates {
 
 	private static final File ROOT = new File("/tmp/bjcache");
 
-	@After
+	@AfterEach
 	public void restoreDefaults() {
 		PdbeCcp4MapProvider.resetToDefaults();
 		WwpdbMapCoefficientsProvider.resetToDefaults();

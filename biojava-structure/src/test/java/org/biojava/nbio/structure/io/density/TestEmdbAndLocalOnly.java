@@ -17,11 +17,11 @@
  */
 package org.biojava.nbio.structure.io.density;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
 import java.io.IOException;
@@ -33,9 +33,9 @@ import java.util.List;
 import org.biojava.nbio.core.util.FileDownloadUtils;
 import org.biojava.nbio.structure.PdbId;
 import org.biojava.nbio.structure.io.LocalPDBDirectory.FetchBehavior;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * EMDB metadata parsing against captured responses, and the guarantee that
@@ -54,12 +54,12 @@ public class TestEmdbAndLocalOnly {
 
 	private File cacheRoot;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws IOException {
 		cacheRoot = Files.createTempDirectory("bj-density").toFile();
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws IOException {
 		FileDownloadUtils.deleteDirectory(cacheRoot.toPath());
 		PdbeCcp4MapProvider.resetToDefaults();
@@ -71,7 +71,7 @@ public class TestEmdbAndLocalOnly {
 	private void copyResource(String resource, File target) throws IOException {
 		target.getParentFile().mkdirs();
 		try (InputStream in = getClass().getResourceAsStream(resource)) {
-			assertNotNull("missing test resource " + resource, in);
+			assertNotNull(in, "missing test resource " + resource);
 			Files.copy(in, target.toPath());
 		}
 	}
@@ -92,7 +92,7 @@ public class TestEmdbAndLocalOnly {
 		assertNotNull(info);
 		assertEquals("EMD-0262", info.getEmdbId());
 		assertEquals(0.0263, info.getRecommendedContourLevel(), 1e-9);
-		assertNotNull("sigma is needed to express the contour in sigma units", info.getSigma());
+		assertNotNull(info.getSigma(), "sigma is needed to express the contour in sigma units");
 		// 119165 kB, which is well past the default download ceiling
 		assertEquals(119165L * 1024L, info.getMapSizeBytes().longValue());
 	}
@@ -115,14 +115,14 @@ public class TestEmdbAndLocalOnly {
 		resolver.setFetchBehavior(FetchBehavior.LOCAL_ONLY);
 
 		long bytes = resolver.getEntryInfo("EMD-0262").getMapSizeBytes();
-		assertTrue("expected a map of order 100 MB, got " + bytes, bytes > 100L * 1024 * 1024);
-		assertTrue("the ceiling alone would not stop this download",
-				bytes < DensityMapCache.DEFAULT_MAX_DOWNLOAD_BYTES);
+		assertTrue(bytes > 100L * 1024 * 1024, "expected a map of order 100 MB, got " + bytes);
+		assertTrue(bytes < DensityMapCache.DEFAULT_MAX_DOWNLOAD_BYTES,
+				"the ceiling alone would not stop this download");
 
 		DensityMapCache cache = new DensityMapCache(cacheRoot.getAbsolutePath());
 		List<DensityMapSource> em = cache.getSourceChain(DensityMapKind.EM);
-		assertTrue("a density server must be tried before the full archive",
-				em.indexOf(DensityMapSource.RCSB_VOLUME_SERVER) < em.indexOf(DensityMapSource.EMDB_MAP));
+		assertTrue(em.indexOf(DensityMapSource.RCSB_VOLUME_SERVER) < em.indexOf(DensityMapSource.EMDB_MAP),
+				"a density server must be tried before the full archive");
 	}
 
 	@Test
@@ -192,8 +192,8 @@ public class TestEmdbAndLocalOnly {
 		assertEquals(DensityMapSource.PDBE_CCP4, result.getSource());
 		assertTrue(result.isFromCache());
 		assertEquals(cached, result.getFile());
-		assertTrue("a sidecar should have been written for the recovered file",
-				DensityMapResult.metaFileFor(cached).isFile());
+		assertTrue(DensityMapResult.metaFileFor(cached).isFile(),
+				"a sidecar should have been written for the recovered file");
 	}
 
 	@Test

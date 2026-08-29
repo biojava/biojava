@@ -17,9 +17,9 @@
  */
 package org.biojava.nbio.structure.io.density;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.util.HashSet;
@@ -27,7 +27,7 @@ import java.util.Set;
 
 import org.biojava.nbio.structure.PdbId;
 import org.biojava.nbio.structure.io.LocalPDBDirectory;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Cache layout: directory derivation, and that no two source and kind
@@ -99,7 +99,7 @@ public class TestDensityCacheLayout {
 				}
 				for (DensityFileFormat format : DensityFileFormat.values()) {
 					File f = DensityCacheLayout.pdbMapFile(ROOT, id, kind, source, format, null);
-					assertTrue("duplicate cache path: " + f, seen.add(f.getPath()));
+					assertTrue(seen.add(f.getPath()), "duplicate cache path: " + f);
 				}
 			}
 		}

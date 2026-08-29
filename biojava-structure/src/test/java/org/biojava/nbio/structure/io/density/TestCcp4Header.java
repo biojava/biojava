@@ -17,8 +17,8 @@
  */
 package org.biojava.nbio.structure.io.density;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -28,9 +28,9 @@ import java.nio.file.Files;
 import java.util.zip.GZIPOutputStream;
 
 import org.biojava.nbio.core.util.FileDownloadUtils;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * The CCP4 header check that keeps a server's error page out of the cache.
@@ -42,12 +42,12 @@ public class TestCcp4Header {
 
 	private File dir;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws IOException {
 		dir = Files.createTempDirectory("bj-ccp4").toFile();
 	}
 
-	@After
+	@AfterEach
 	public void tearDown() throws IOException {
 		FileDownloadUtils.deleteDirectory(dir.toPath());
 	}
@@ -77,7 +77,7 @@ public class TestCcp4Header {
 		try (GZIPOutputStream gz = new GZIPOutputStream(buffer)) {
 			gz.write(fakeMap());
 		}
-		assertTrue("EMDB serves its maps gzipped", Ccp4Header.isCcp4(write("good.map.gz", buffer.toByteArray())));
+		assertTrue(Ccp4Header.isCcp4(write("good.map.gz", buffer.toByteArray())), "EMDB serves its maps gzipped");
 	}
 
 	/**
@@ -101,8 +101,8 @@ public class TestCcp4Header {
 			noise[i] = (byte) (i * 31);
 		}
 		assertFalse(Ccp4Header.isCcp4(write("noise.ccp4", noise)));
-		assertFalse("a file shorter than the header cannot be a map",
-				Ccp4Header.isCcp4(write("tiny.ccp4", new byte[10])));
+		assertFalse(Ccp4Header.isCcp4(write("tiny.ccp4", new byte[10])),
+				"a file shorter than the header cannot be a map");
 	}
 
 	@Test
