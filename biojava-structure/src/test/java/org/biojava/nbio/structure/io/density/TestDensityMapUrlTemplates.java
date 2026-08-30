@@ -65,16 +65,104 @@ public class TestDensityMapUrlTemplates {
 				p.buildUrl(new PdbId("1cbs"), DensityMapKind.TWO_FO_FC));
 	}
 
-	/** The validation archive is divided by the same two characters as the rest of the PDB. */
+	/**
+	 * The coefficients are addressed by file name, not by a constructed directory
+	 * path, so that the July 2027 move to the per-entry archive does not invalidate
+	 * the URLs.
+	 */
 	@Test
-	public void wwpdbUrlsUseTheDividedLayout() {
+	public void wwpdbUrlsResolveByName() {
 		WwpdbMapCoefficientsProvider p = new WwpdbMapCoefficientsProvider(ROOT);
-		assertEquals("https://files.wwpdb.org/pub/pdb/validation_reports/"
+		assertEquals("https://files.wwpdb.org/validation/download/"
+				+ "1cbs_validation_2fo-fc_map_coef.cif.gz",
+				p.buildUrl(new PdbId("1cbs"), DensityMapKind.TWO_FO_FC));
+		assertEquals("https://files.wwpdb.org/validation/download/"
+				+ "1cbs_validation_fo-fc_map_coef.cif.gz",
+				p.buildUrl(new PdbId("1cbs"), DensityMapKind.FO_FC));
+	}
+
+	/**
+	 * The identifier spelling is not hard-coded either way. An entry with a short
+	 * form is asked for by it; one without &mdash; every entry deposited once the
+	 * four-character space is exhausted &mdash; is asked for by its extended form.
+	 * Both spellings resolve at the endpoint, so nothing here has to change in 2027.
+	 */
+	@Test
+	public void wwpdbUrlsFollowWhicheverSpellingTheEntryHas() {
+		WwpdbMapCoefficientsProvider p = new WwpdbMapCoefficientsProvider(ROOT);
+		assertTrue(p.buildUrl(new PdbId("pdb_00001cbs"), DensityMapKind.TWO_FO_FC)
+				.endsWith("/1cbs_validation_2fo-fc_map_coef.cif.gz"),
+				"a shortable entry is asked for by its short name");
+		assertTrue(p.buildUrl(new PdbId("pdb_00012abc"), DensityMapKind.TWO_FO_FC)
+				.endsWith("/pdb_00012abc_validation_2fo-fc_map_coef.cif.gz"),
+				"an entry with no short form is asked for by its extended name");
+	}
+
+	/**
+	 * The beta host is a host swap and nothing more: the same endpoint, the same
+	 * file name. That is what makes it a test target rather than a default - it
+	 * holds the post-2027 content, so a request against it exercises the archive as
+	 * it will be, while the default host is the one that survives the cutover.
+	 */
+	@Test
+	public void betaHostChangesNothingButTheHost() {
+		WwpdbMapCoefficientsProvider p = new WwpdbMapCoefficientsProvider(ROOT);
+		String viaDefault = p.buildUrl(new PdbId("1cbs"), DensityMapKind.TWO_FO_FC);
+		WwpdbMapCoefficientsProvider.setServerBaseUrl(WwpdbMapCoefficientsProvider.BETA_SERVER_URL);
+		String viaBeta = p.buildUrl(new PdbId("1cbs"), DensityMapKind.TWO_FO_FC);
+		assertEquals(viaDefault.substring(viaDefault.lastIndexOf('/')),
+				viaBeta.substring(viaBeta.lastIndexOf('/')));
+		assertTrue(viaBeta.startsWith("https://files-beta.wwpdb.org/validation/download/"));
+	}
+
+	/** EBI publishes directories rather than an endpoint, so it needs the divided templates. */
+	@Test
+	public void dividedTemplatesStillReachMirrors() {
+		WwpdbMapCoefficientsProvider.setServerBaseUrl(WwpdbMapCoefficientsProvider.EBI_MIRROR_URL);
+		WwpdbMapCoefficientsProvider.setPathUrlTemplate(DensityMapKind.TWO_FO_FC,
+				WwpdbMapCoefficientsProvider.DIVIDED_TWO_FO_FC_TEMPLATE);
+		WwpdbMapCoefficientsProvider p = new WwpdbMapCoefficientsProvider(ROOT);
+		assertEquals("https://ftp.ebi.ac.uk/pub/databases/pdb/validation_reports/"
 				+ "cb/1cbs/1cbs_validation_2fo-fc_map_coef.cif.gz",
 				p.buildUrl(new PdbId("1cbs"), DensityMapKind.TWO_FO_FC));
-		assertEquals("https://files.wwpdb.org/pub/pdb/validation_reports/"
-				+ "cb/1cbs/1cbs_validation_fo-fc_map_coef.cif.gz",
-				p.buildUrl(new PdbId("1cbs"), DensityMapKind.FO_FC));
+	}
+
+	/**
+	 * The archive layout that arrives in July 2027 is expressible as a template,
+	 * so a mirror of it needs configuration rather than a new release.
+	 */
+	@Test
+	public void perEntryTemplateUsesExtendedIdentifiers() {
+		WwpdbMapCoefficientsProvider.setServerBaseUrl("https://files-beta.wwpdb.org/pub/wwpdb/pdb/data/");
+		WwpdbMapCoefficientsProvider.setPathUrlTemplate(DensityMapKind.TWO_FO_FC,
+				WwpdbMapCoefficientsProvider.ENTRIES_TWO_FO_FC_TEMPLATE);
+		WwpdbMapCoefficientsProvider p = new WwpdbMapCoefficientsProvider(ROOT);
+		assertEquals("https://files-beta.wwpdb.org/pub/wwpdb/pdb/data/"
+				+ "entries/cb/pdb_00001cbs/validation_reports/"
+				+ "pdb_00001cbs_validation_2fo-fc_map_coef.cif.gz",
+				p.buildUrl(new PdbId("1cbs"), DensityMapKind.TWO_FO_FC));
+	}
+
+	/** The extended spelling is available to any template, in the case the archive uses. */
+	@Test
+	public void extendedIdentifierPlaceholder() {
+		assertEquals("pdb_00001cbs", UrlTemplates.values("1cbs", null, -1).get("extid"));
+		assertEquals("pdb_00001cbs", UrlTemplates.values("pdb_00001cbs", null, -1).get("extid"));
+		assertEquals("{extid}",
+				UrlTemplates.expand("{extid}", UrlTemplates.values("not an id", null, -1)),
+				"an unusable identifier leaves the placeholder alone rather than guessing");
+	}
+
+	/**
+	 * The two-character directory is counted from the right hand end, so it is the
+	 * same for both spellings. This is what lets the cache layout stay as it is
+	 * across the 2027 transition, and it is the rule the wwPDB documents for the
+	 * new archive.
+	 */
+	@Test
+	public void middleHashIsTheSameForBothSpellings() {
+		assertEquals("cb", UrlTemplates.values("1cbs", null, -1).get("mid"));
+		assertEquals("cb", UrlTemplates.values("pdb_00001cbs", null, -1).get("mid"));
 	}
 
 	@Test

@@ -43,6 +43,24 @@ import org.biojava.nbio.structure.io.LocalPDBDirectory;
  * Several PDB entries are often fitted into a single EM map, and those maps can
  * be hundreds of megabytes, so keying them by PDB entry would cache the same
  * enormous file many times over.
+ * <p>
+ * The two-character directory needs no attention when the archive moves to
+ * extended identifiers in July 2027. It is a device for spreading files over
+ * directories, not a copy of the archive's own layout, and
+ * {@link LocalPDBDirectory#getMiddleHash(String)} counts from the right hand end
+ * of the identifier, so <code>1cbs</code> and <code>pdb_00001cbs</code> both land
+ * in <code>cb</code> &mdash; which is also the rule the wwPDB documents for the
+ * new archive.
+ * <p>
+ * Deliberately <i>not</i> the archive's per-entry layout. A cache is not a mirror
+ * and cannot become one: the archive publishes structure factors and map
+ * coefficients but never grids, so density has to be fetched whatever else is
+ * mirrored, and writing it into a directory whose contents are an exact copy of
+ * upstream puts it at the mercy of the next <code>rsync --delete</code>. Should
+ * that judgement ever be revisited, every cached path is computed here and
+ * nowhere else, so a different layout is a change to this class plus a fallback
+ * probe for files in the old places &mdash; not a cache that everyone has to
+ * discard.
  *
  * @author Amr ALHOSSARY
  * @since 7.3.0

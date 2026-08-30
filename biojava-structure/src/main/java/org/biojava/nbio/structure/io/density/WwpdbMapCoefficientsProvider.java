@@ -40,28 +40,100 @@ import org.biojava.nbio.structure.PdbId;
  * <p>
  * One useful property: these servers return the content MD5 as the HTTP
  * <code>ETag</code>, so downloads from here are checksum-verified automatically.
+ * <p>
+ * The URLs are built against the documented download endpoint, which resolves an
+ * entry by file name, rather than against the divided archive path. This is the
+ * only provider here that ever had a choice &mdash; the density servers and the
+ * EMDB archive are addressed by identifier already &mdash; and it matters because
+ * the PDB moves to extended identifiers and a per-entry directory layout in July
+ * 2027. A name survives that move; a constructed directory path does not. Mirrors
+ * that publish directories instead of an endpoint are still reachable, through
+ * {@link #DIVIDED_TWO_FO_FC_TEMPLATE} and {@link #ENTRIES_TWO_FO_FC_TEMPLATE}.
  *
  * @author Amr ALHOSSARY
  * @since 7.3.0
  */
 public class WwpdbMapCoefficientsProvider extends AbstractDensityMapProvider {
 
-	/** Default base URL, the wwPDB validation report archive. */
-	public static final String DEFAULT_SERVER_URL = "https://files.wwpdb.org/pub/pdb/validation_reports/";
+	/** Default base URL, the wwPDB validation report download endpoint. */
+	public static final String DEFAULT_SERVER_URL = "https://files.wwpdb.org/validation/download/";
 
 	/** An RCSB mirror serving byte-identical files. */
-	public static final String RCSB_MIRROR_URL = "https://files.rcsb.org/pub/pdb/validation_reports/";
+	public static final String RCSB_MIRROR_URL = "https://files.rcsb.org/validation/download/";
 
-	/** An EBI mirror serving byte-identical files. */
+	/**
+	 * The wwPDB beta archive, which already holds the re-organised content that
+	 * replaces the current archive on 21 July 2027 and serves the same endpoint.
+	 * <p>
+	 * Deliberately not the default, despite being the newer archive. The wwPDB
+	 * describes this host as transitional: on the cutover date the beta archive
+	 * replaces the main one, after which the beta URL is supported by redirection
+	 * for three years. So it is the hostname that needs changing, twice, whereas
+	 * {@link #DEFAULT_SERVER_URL} becomes the new archive and needs changing never.
+	 * <p>
+	 * Its value is in testing. Because this host is the post-2027 content today, a
+	 * request against it checks the endpoint against the archive as it will be,
+	 * rather than against the archive as it is.
+	 */
+	public static final String BETA_SERVER_URL = "https://files-beta.wwpdb.org/validation/download/";
+
+	/**
+	 * An EBI mirror serving byte-identical files.
+	 * <p>
+	 * Unlike the two above, EBI publishes no name-resolving endpoint &mdash; only
+	 * full directory paths &mdash; so selecting it means setting the divided
+	 * templates as well:
+	 * <pre>
+	 * setServerBaseUrl(EBI_MIRROR_URL);
+	 * setPathUrlTemplate(DensityMapKind.TWO_FO_FC, DIVIDED_TWO_FO_FC_TEMPLATE);
+	 * setPathUrlTemplate(DensityMapKind.FO_FC, DIVIDED_FO_FC_TEMPLATE);
+	 * </pre>
+	 * Setting the base alone yields 404s, because the flat file names do not exist
+	 * there.
+	 */
 	public static final String EBI_MIRROR_URL = "https://ftp.ebi.ac.uk/pub/databases/pdb/validation_reports/";
 
-	/** Default path template for the 2mFo-DFc coefficients. */
+	/**
+	 * Default path template for the 2mFo-DFc coefficients: the file name alone.
+	 * <p>
+	 * The endpoint resolves an entry by name, so no directory path is built here.
+	 * That is deliberate. In July 2027 the archive moves to extended identifiers
+	 * and a per-entry directory layout, and a path assembled from a hash and an
+	 * identifier would have to be rewritten for it; a name does not. Both spellings
+	 * of an identifier resolve, so whichever {@code PdbId} yields is accepted.
+	 */
 	public static final String DEFAULT_TWO_FO_FC_TEMPLATE =
+			"{pdbid_lc}_validation_2fo-fc_map_coef.cif.gz";
+
+	/** Default path template for the mFo-DFc coefficients; see {@link #DEFAULT_TWO_FO_FC_TEMPLATE}. */
+	public static final String DEFAULT_FO_FC_TEMPLATE =
+			"{pdbid_lc}_validation_fo-fc_map_coef.cif.gz";
+
+	/**
+	 * Path template for the 2mFo-DFc coefficients in the divided archive, for
+	 * mirrors that publish directories rather than an endpoint.
+	 */
+	public static final String DIVIDED_TWO_FO_FC_TEMPLATE =
 			"{mid}/{pdbid_lc}/{pdbid_lc}_validation_2fo-fc_map_coef.cif.gz";
 
-	/** Default path template for the mFo-DFc coefficients. */
-	public static final String DEFAULT_FO_FC_TEMPLATE =
+	/** Path template for the mFo-DFc coefficients in the divided archive. */
+	public static final String DIVIDED_FO_FC_TEMPLATE =
 			"{mid}/{pdbid_lc}/{pdbid_lc}_validation_fo-fc_map_coef.cif.gz";
+
+	/**
+	 * Path template for the 2mFo-DFc coefficients in the per-entry archive that
+	 * replaces the divided one in July 2027, relative to a base URL ending in
+	 * <code>.../pdb/data/</code>.
+	 * <p>
+	 * Provided so that a mirror of the new layout can be used the day it exists,
+	 * without waiting for a release.
+	 */
+	public static final String ENTRIES_TWO_FO_FC_TEMPLATE =
+			"entries/{mid}/{extid}/validation_reports/{extid}_validation_2fo-fc_map_coef.cif.gz";
+
+	/** Path template for the mFo-DFc coefficients in the per-entry archive. */
+	public static final String ENTRIES_FO_FC_TEMPLATE =
+			"entries/{mid}/{extid}/validation_reports/{extid}_validation_fo-fc_map_coef.cif.gz";
 
 	private static String serverBaseUrl = DEFAULT_SERVER_URL;
 	private static String twoFoFcTemplate = DEFAULT_TWO_FO_FC_TEMPLATE;
