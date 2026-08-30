@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -38,7 +39,9 @@ import java.nio.file.attribute.BasicFileAttributes;
 import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.LinkedHashSet;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -53,6 +56,9 @@ public class FileDownloadUtils {
 
 	/** Buffer used when streaming a file through a {@link MessageDigest}. */
 	private static final int DIGEST_BUFFER_SIZE = 64 * 1024;
+
+	/** Redirects to follow before giving up, in case a server sends us in a circle. */
+	private static final int MAX_REDIRECTS = 5;
 
 	/** A bare hex digest, optionally followed by whitespace and a file name (the
 	 * layout written by <code>md5sum</code>, <code>sha1sum</code> and friends). */
@@ -139,8 +145,7 @@ public class FileDownloadUtils {
 		try {
 			while (true) {
 				try {
-					URLConnection connection = prepareURLConnection(url.toString(), timeout);
-					connection.connect();
+					URLConnection connection = openConnectionFollowingRedirects(url, timeout);
 					checkHttpStatus(connection);
 					try (InputStream inputStream = connection.getInputStream()) {
 						// Files.copy loops until end of stream. FileChannel.transferFrom(), used
@@ -199,8 +204,7 @@ public class FileDownloadUtils {
 
 		File tempFile = createTempFileFor(destination);
 		try {
-			URLConnection connection = prepareURLConnection(url.toString(), timeout);
-			connection.connect();
+			URLConnection connection = openConnectionFollowingRedirects(url, timeout);
 			checkHttpStatus(connection);
 
 			long declaredSize = connection.getContentLengthLong();
@@ -253,6 +257,111 @@ public class FileDownloadUtils {
 	}
 
 	/**
+	 * Opens a connection, following any redirect that {@link HttpURLConnection}
+	 * declines to follow itself.
+	 * <p>
+	 * The JDK follows 301, 302 and 303 within a protocol, but it never follows 307 or
+	 * 308, and it never follows a redirect that changes http to https. Both gaps have
+	 * broken downloads in practice: CATH began answering http with a 301 to https, and
+	 * ECOD now answers with a 308 to a rewritten path. A browser follows either without
+	 * comment, so a service making that change has no reason to expect it to break us.
+	 * <p>
+	 * A redirect from https to http is deliberately <em>not</em> followed: a redirect
+	 * must never silently downgrade the transport. Such a response is returned as it is,
+	 * for {@link #checkHttpStatus(URLConnection)} to reject.
+	 *
+	 * @param url the URL to open
+	 * @param timeout connect and read timeout, in milliseconds
+	 * @return a connected {@link URLConnection} at the final location
+	 * @throws HttpStatusException if the redirects loop or exceed the limit
+	 * @throws IOException if the connection could not be opened
+	 * @author Amr ALHOSSARY
+	 * @since 7.3.0
+	 */
+	public static URLConnection openConnectionFollowingRedirects(URL url, int timeout) throws IOException {
+		Set<String> visited = new LinkedHashSet<>();
+		URL current = url;
+		for (int hop = 0; hop <= MAX_REDIRECTS; hop++) {
+			if (!visited.add(current.toString())) {
+				throw new HttpStatusException(HttpURLConnection.HTTP_SEE_OTHER, url.toString(),
+						"Redirect loop: " + String.join(" -> ", visited));
+			}
+			URLConnection connection = prepareURLConnection(current.toString(), timeout);
+			connection.connect();
+			if (!(connection instanceof HttpURLConnection)) {
+				return connection;
+			}
+			URL next = redirectTarget((HttpURLConnection) connection, current);
+			if (next == null) {
+				// either not a redirect, or one we decline to follow; the caller's
+				// checkHttpStatus decides what a non-2xx status means
+				return connection;
+			}
+			logger.info("{} redirects to {}; following.", current, next);
+			((HttpURLConnection) connection).disconnect();
+			current = next;
+		}
+		throw new HttpStatusException(HttpURLConnection.HTTP_SEE_OTHER, url.toString(),
+				"More than " + MAX_REDIRECTS + " redirects starting at " + url);
+	}
+
+	/**
+	 * Works out where a response redirects to, for the redirects the JDK leaves to us.
+	 *
+	 * @param http a connected connection whose status has not yet been acted on
+	 * @param current the URL that was requested, used to resolve a relative location
+	 * @return the redirect target, or null if this is not a redirect we should follow
+	 * @throws IOException if the status could not be read
+	 * @since 7.3.0
+	 */
+	private static URL redirectTarget(HttpURLConnection http, URL current) throws IOException {
+		return redirectTargetFor(http.getResponseCode(), http.getHeaderField("Location"), current);
+	}
+
+	/**
+	 * Decides where a response redirects to, given only its status and location. Split
+	 * out from {@link #redirectTarget(HttpURLConnection, URL)} so that the rules can be
+	 * tested without standing up a server.
+	 *
+	 * @param code the HTTP status
+	 * @param location the Location header, may be null, relative or absolute
+	 * @param current the URL that was requested, used to resolve a relative location
+	 * @return the redirect target, or null if this is not a redirect we should follow
+	 * @since 7.3.0
+	 */
+	static URL redirectTargetFor(int code, String location, URL current) {
+		// 301, 302 and 303 only reach us when the JDK declined them, which it does when
+		// the protocol changes. 307 and 308 it never follows at all.
+		boolean redirect = code == HttpURLConnection.HTTP_MOVED_PERM
+				|| code == HttpURLConnection.HTTP_MOVED_TEMP
+				|| code == HttpURLConnection.HTTP_SEE_OTHER
+				|| code == 307
+				|| code == 308;
+		if (!redirect) {
+			return null;
+		}
+		if (location == null || location.trim().isEmpty()) {
+			logger.warn("{} returned {} with no Location header.", current, code);
+			return null;
+		}
+		URL target;
+		try {
+			// resolves a relative Location, which is what ECOD sends
+			target = new URL(current, location.trim());
+		} catch (MalformedURLException e) {
+			logger.warn("{} returned {} to an unusable Location [{}].", current, code, location);
+			return null;
+		}
+		if ("https".equalsIgnoreCase(current.getProtocol())
+				&& !"https".equalsIgnoreCase(target.getProtocol())) {
+			logger.warn("Refusing to follow {} from {} to [{}]: a redirect must not downgrade https to {}.",
+					code, current, target, target.getProtocol());
+			return null;
+		}
+		return target;
+	}
+
+	/**
 	 * Verifies that an HTTP connection returned a 2xx status. Connections using a
 	 * non-HTTP protocol (<code>file:</code>, <code>ftp:</code>, ...) are left alone.
 	 * <p>
@@ -277,10 +386,10 @@ public class FileDownloadUtils {
 			return;
 		}
 		if (code == 301 || code == 302 || code == 307 || code == 308) {
-			// The JDK follows redirects automatically, but never across protocols, so
-			// an http -> https redirect surfaces here and is worth naming explicitly.
-			logger.warn("{} returned redirect {} to [{}], which was not followed "
-					+ "(the JDK does not follow redirects that change protocol).",
+			// openConnectionFollowingRedirects handles the redirects the JDK will not,
+			// so one reaching here was declined deliberately: an https to http
+			// downgrade, a missing or unusable Location, or too many hops.
+			logger.warn("{} returned redirect {} to [{}], which was not followed.",
 					connection.getURL(), code, http.getHeaderField("Location"));
 		}
 		throw new HttpStatusException(code, connection.getURL().toString(), http.getResponseMessage());
@@ -318,7 +427,7 @@ public class FileDownloadUtils {
 	public static void createValidationFiles(URL url, File localDestination, URL hashURL, Hash hash,
 			ETagPolicy eTagPolicy){
 		try {
-			URLConnection resourceConnection = url.openConnection();
+			URLConnection resourceConnection = openConnectionFollowingRedirects(url, 60000);
 			createValidationFiles(resourceConnection, localDestination, hashURL, hash, eTagPolicy);
 		} catch (IOException e) {
 			logger.warn("could not open connection to resource file due to exception: {}", e.getMessage());
