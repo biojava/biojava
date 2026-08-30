@@ -25,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.List;
@@ -163,11 +164,22 @@ public class DensityMapIntegrationTest {
 	}
 
 	/**
-	 * The wwPDB servers return the content MD5 as the ETag, so a coefficient
-	 * download is checksum-verified without a separate hash file.
+	 * Coefficients must arrive intact and be verifiable afterwards. Whether that
+	 * verification includes a cryptographic digest depends on the server.
+	 * <p>
+	 * The divided archive paths on files.wwpdb.org and files.rcsb.org return the content
+	 * MD5 as the ETag. The flat /validation/download/ endpoint this provider now uses
+	 * returns neither an ETag nor a Content-Length, and neither does the beta archive on
+	 * those two hosts, so no digest can be recorded there. The size sidecar is written
+	 * from the bytes actually read, so it exists either way.
+	 * <p>
+	 * The digest is therefore asserted when the server offered one and skipped when it
+	 * did not, rather than being required: requiring it would fail against the endpoint
+	 * we use, and hard-coding the divided path would only work until the archive
+	 * transition in July 2027.
 	 */
 	@Test
-	public void mapCoefficientsArriveWithAVerifiableChecksum() throws IOException {
+	public void mapCoefficientsArriveIntactAndVerifiable() throws IOException {
 		cache.setSourceEnabled(DensityMapSource.WWPDB_MAP_COEFFICIENTS, true);
 		cache.setSourceChain(DensityMapKind.TWO_FO_FC, Arrays.asList(DensityMapSource.WWPDB_MAP_COEFFICIENTS));
 
@@ -180,12 +192,24 @@ public class DensityMapIntegrationTest {
 		assertFalse(result.isRenderable(),
 				"structure factors are not a map and must not claim to be renderable");
 
-		File hashFile = new File(result.getFile().getParentFile(), result.getFile().getName() + ".hash_MD5");
-		assertTrue(hashFile.isFile(), "an MD5 should have been recorded from the ETag");
-		assertTrue(FileDownloadUtils.validateFile(result.getFile()));
+		// written from the observed byte count, so it is present whether or not the
+		// server declared a length
+		assertTrue(FileDownloadUtils.validateFile(result.getFile()),
+				"a freshly downloaded file must validate against its own sidecars");
 
-		// corrupt it and confirm the checksum actually catches it
+		File hashFile = new File(result.getFile().getParentFile(), result.getFile().getName() + ".hash_MD5");
+		if (hashFile.isFile()) {
+			String recorded = new String(Files.readAllBytes(hashFile.toPath()), StandardCharsets.UTF_8).trim();
+			assertTrue(FileDownloadUtils.verifyHash(result.getFile(), FileDownloadUtils.Hash.MD5, recorded),
+					"the recorded MD5 must match the file it describes");
+		} else {
+			System.out.println("No MD5 recorded for " + result.getSourceUrl()
+					+ " - the server offered no usable ETag. Size validation still applies.");
+		}
+
+		// corrupt it and confirm validation actually catches it
 		Files.write(result.getFile().toPath(), new byte[] {0, 1, 2, 3});
-		assertFalse(FileDownloadUtils.validateFile(result.getFile()));
+		assertFalse(FileDownloadUtils.validateFile(result.getFile()),
+				"a truncated file must not validate");
 	}
 }
