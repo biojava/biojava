@@ -137,9 +137,15 @@ public class EcodInstallation implements EcodDatabase {
 				// unlock to allow ensureDomainsFileInstalled to get the write lock
 				logger.trace("UNLOCK readlock");
 				domainsFileLock.readLock().unlock();
-				indexDomains();
-				domainsFileLock.readLock().lock();
-				logger.trace("LOCK readlock");
+				try {
+					indexDomains();
+				} finally {
+					// re-acquire even if indexing failed, so the outer finally has a
+					// lock to release; otherwise IllegalMonitorStateException replaces
+					// the real cause and the failure becomes unreadable
+					domainsFileLock.readLock().lock();
+					logger.trace("LOCK readlock");
+				}
 			}
 
 			PdbId pdbId = null;
@@ -244,9 +250,15 @@ public class EcodInstallation implements EcodDatabase {
 				// unlock to allow ensureDomainsFileInstalled to get the write lock
 				logger.trace("UNLOCK readlock");
 				domainsFileLock.readLock().unlock();
-				ensureDomainsFileInstalled();
-				domainsFileLock.readLock().lock();
-				logger.trace("LOCK readlock");
+				try {
+					ensureDomainsFileInstalled();
+				} finally {
+					// re-acquire even if the download failed, so the outer finally has a
+					// lock to release; otherwise IllegalMonitorStateException replaces
+					// the real cause and the failure becomes unreadable
+					domainsFileLock.readLock().lock();
+					logger.trace("LOCK readlock");
+				}
 			}
 			return allDomains;
 		} finally {
