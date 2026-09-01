@@ -126,19 +126,19 @@ public class TestAsaCalc {
 				AsaCalculator.DEFAULT_PROBE_SIZE,
 				1000, 1, false);
 
-		AsaCalculator.IndexAndDistance[][] allNbsSh = asaCalc.findNeighborIndicesSpatialHashing();
+		AsaCalculator.Neighbors[] allNbsSh = asaCalc.findNeighborIndicesSpatialHashing();
 
-		AsaCalculator.IndexAndDistance[][] allNbs = asaCalc.findNeighborIndices();
+		AsaCalculator.Neighbors[] allNbs = asaCalc.findNeighborIndices();
 
 		for (int indexToTest =0; indexToTest < asaCalc.getAtomCoords().length; indexToTest++) {
 			//int indexToTest = 198;
-			AsaCalculator.IndexAndDistance[] nbsSh = allNbsSh[indexToTest];
-			AsaCalculator.IndexAndDistance[] nbs = allNbs[indexToTest];
+			int[] nbsSh = allNbsSh[indexToTest].indices;
+			int[] nbs = allNbs[indexToTest].indices;
 
 			List<Integer> listOfMatchingIndices = new ArrayList<>();
 			for (int i = 0; i < nbsSh.length; i++) {
 				for (int j = 0; j < nbs.length; j++) {
-					if (nbs[j].index == nbsSh[i].index) {
+					if (nbs[j] == nbsSh[i]) {
 						listOfMatchingIndices.add(j);
 						break;
 					}
@@ -229,21 +229,21 @@ public class TestAsaCalc {
 				AsaCalculator.DEFAULT_PROBE_SIZE,
 				1000, 1);
 
-		AsaCalculator.IndexAndDistance[][] allNbsSh = asaCalc.findNeighborIndicesSpatialHashing();
+		AsaCalculator.Neighbors[] allNbsSh = asaCalc.findNeighborIndicesSpatialHashing();
 
-		AsaCalculator.IndexAndDistance[][] allNbs = asaCalc.findNeighborIndices();
+		AsaCalculator.Neighbors[] allNbs = asaCalc.findNeighborIndices();
 
 		assertEquals(3, allNbs.length);
 		assertEquals(3, allNbsSh.length);
 
 		for (int indexToTest =0; indexToTest < asaCalc.getAtomCoords().length; indexToTest++) {
-			AsaCalculator.IndexAndDistance[] nbsSh = allNbsSh[indexToTest];
-			AsaCalculator.IndexAndDistance[] nbs = allNbs[indexToTest];
+			int[] nbsSh = allNbsSh[indexToTest].indices;
+			int[] nbs = allNbs[indexToTest].indices;
 
 			List<Integer> listOfMatchingIndices = new ArrayList<>();
 			for (int i = 0; i < nbsSh.length; i++) {
 				for (int j = 0; j < nbs.length; j++) {
-					if (nbs[j].index == nbsSh[i].index) {
+					if (nbs[j] == nbsSh[i]) {
 						listOfMatchingIndices.add(j);
 						break;
 					}
@@ -256,7 +256,7 @@ public class TestAsaCalc {
 		}
 
 		// first atom should have no neighbors
-		assertEquals(0, allNbsSh[0].length);
+		assertEquals(0, allNbsSh[0].indices.length);
 	}
 
 	private Atom getAtom(double x, double y, double z) {
