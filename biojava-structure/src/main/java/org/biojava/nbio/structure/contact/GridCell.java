@@ -21,6 +21,7 @@
 package org.biojava.nbio.structure.contact;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.vecmath.Point3d;
@@ -35,30 +36,61 @@ import javax.vecmath.Point3d;
 public class GridCell {
 
 
+	/**
+	 * Shared empty array so that cells that never receive indices (e.g. the j indices when only one
+	 * set of atoms was added to the grid) don't allocate anything at all.
+	 */
+	private static final int[] EMPTY = new int[0];
+
+	/**
+	 * Capacity of the index arrays on first insertion. Cell occupancy depends on the cutoff (the cell
+	 * side is the cutoff), ranging from a handful of atoms for small cutoffs to a few tens for large
+	 * ones, so we start small and grow geometrically.
+	 */
+	private static final int INITIAL_CAPACITY = 8;
+
 	private Grid grid;
-	private ArrayList<Integer> iIndices;
-	private ArrayList<Integer> jIndices;
+
+	/**
+	 * The indices of the i atoms in this cell, held as a primitive array to avoid the boxing (and the
+	 * pointer chasing it entails) of a Collection of Integers: these are read in the innermost loop of
+	 * the contact calculation. Only the first {@link #numIindices} elements are meaningful.
+	 */
+	private int[] iIndices;
+	private int numIindices;
+
+	/**
+	 * The indices of the j atoms in this cell. See {@link #iIndices}.
+	 */
+	private int[] jIndices;
+	private int numJindices;
 
 	public GridCell(Grid parent){
-		iIndices = new ArrayList<>();
-		jIndices = new ArrayList<>();
+		iIndices = EMPTY;
+		jIndices = EMPTY;
 		this.grid = parent;
 	}
 
 	public void addIindex(int serial){
-		iIndices.add(serial);
+		if (numIindices == iIndices.length) {
+			iIndices = Arrays.copyOf(iIndices, numIindices == 0 ? INITIAL_CAPACITY : numIindices * 2);
+		}
+		iIndices[numIindices++] = serial;
 	}
 
 	public void addJindex(int serial){
-		jIndices.add(serial);
+		if (numJindices == jIndices.length) {
+			jIndices = Arrays.copyOf(jIndices, numJindices == 0 ? INITIAL_CAPACITY : numJindices * 2);
+		}
+		jIndices[numJindices++] = serial;
 	}
 
 	public int getNumIindices() {
-		return iIndices.size();
+		return numIindices;
 	}
 
 	public int getNumJindices() {
-		return jIndices.size();
+		return numJindices;
 	}
 
 	/**
@@ -74,23 +106,31 @@ public class GridCell {
 
 		Point3d[] iAtoms = grid.getIAtoms();
 		Point3d[] jAtoms = grid.getJAtoms();
-		double cutoff = grid.getCutoff();
+		// we compare squared distances to the squared cutoff, so that the expensive square root is
+		// only computed for the pairs that are actually in contact (the large majority are not)
+		double cutoffSq = grid.getCutoffSq();
 
 		if (jAtoms==null) {
-			for (int i:iIndices) {
-				for (int j:iIndices) {
+			for (int a=0; a<numIindices; a++) {
+				int i = iIndices[a];
+				Point3d atomI = iAtoms[i];
+				for (int b=0; b<numIindices; b++) {
+					int j = iIndices[b];
 					if (j>i) {
-						double distance = iAtoms[i].distance(iAtoms[j]);
-						if (distance<cutoff) contacts.add(new Contact(i, j, distance));
+						double distanceSq = atomI.distanceSquared(iAtoms[j]);
+						if (distanceSq<cutoffSq) contacts.add(new Contact(i, j, Math.sqrt(distanceSq)));
 					}
 				}
 			}
 
 		} else {
-			for (int i:iIndices) {
-				for (int j:jIndices) {
-					double distance = iAtoms[i].distance(jAtoms[j]);
-					if (distance<cutoff) contacts.add(new Contact(i, j, distance));
+			for (int a=0; a<numIindices; a++) {
+				int i = iIndices[a];
+				Point3d atomI = iAtoms[i];
+				for (int b=0; b<numJindices; b++) {
+					int j = jIndices[b];
+					double distanceSq = atomI.distanceSquared(jAtoms[j]);
+					if (distanceSq<cutoffSq) contacts.add(new Contact(i, j, Math.sqrt(distanceSq)));
 				}
 			}
 		}
@@ -111,26 +151,38 @@ public class GridCell {
 
 		Point3d[] iAtoms = grid.getIAtoms();
 		Point3d[] jAtoms = grid.getJAtoms();
-		double cutoff = grid.getCutoff();
+		// we compare squared distances to the squared cutoff, so that the expensive square root is
+		// only computed for the pairs that are actually in contact (the large majority are not)
+		double cutoffSq = grid.getCutoffSq();
 
 
 		if (jAtoms==null) {
 
-			for (int i:iIndices) {
-				for (int j:otherCell.iIndices) {
+			int[] otherIndices = otherCell.iIndices;
+			int otherNum = otherCell.numIindices;
+			for (int a=0; a<numIindices; a++) {
+				int i = iIndices[a];
+				Point3d atomI = iAtoms[i];
+				for (int b=0; b<otherNum; b++) {
+					int j = otherIndices[b];
 					if (j>i) {
-						double distance = iAtoms[i].distance(iAtoms[j]);
-						if (distance<cutoff) contacts.add(new Contact(i, j, distance));
+						double distanceSq = atomI.distanceSquared(iAtoms[j]);
+						if (distanceSq<cutoffSq) contacts.add(new Contact(i, j, Math.sqrt(distanceSq)));
 					}
 				}
 			}
 
 		} else {
 
-			for (int i:iIndices) {
-				for (int j:otherCell.jIndices) {
-					double distance = iAtoms[i].distance(jAtoms[j]);
-					if (distance<cutoff) contacts.add(new Contact(i, j, distance));
+			int[] otherIndices = otherCell.jIndices;
+			int otherNum = otherCell.numJindices;
+			for (int a=0; a<numIindices; a++) {
+				int i = iIndices[a];
+				Point3d atomI = iAtoms[i];
+				for (int b=0; b<otherNum; b++) {
+					int j = otherIndices[b];
+					double distanceSq = atomI.distanceSquared(jAtoms[j]);
+					if (distanceSq<cutoffSq) contacts.add(new Contact(i, j, Math.sqrt(distanceSq)));
 				}
 			}
 
@@ -148,15 +200,17 @@ public class GridCell {
 	 * @return
 	 */
 	public boolean hasContactToAtom(Point3d[] iAtoms, Point3d[] jAtoms, Point3d query, double cutoff) {
-		for( int i : iIndices ) {
-			double distance = iAtoms[i].distance(query);
-			if( distance<cutoff)
+		// only the comparison matters here, so we can stay in squared distance space and avoid square roots altogether
+		double cutoffSq = cutoff * cutoff;
+		for (int a=0; a<numIindices; a++) {
+			double distanceSq = iAtoms[iIndices[a]].distanceSquared(query);
+			if( distanceSq<cutoffSq)
 				return true;
 		}
 		if (jAtoms!=null) {
-			for( int i : jIndices ) {
-				double distance = jAtoms[i].distance(query);
-				if( distance<cutoff)
+			for (int a=0; a<numJindices; a++) {
+				double distanceSq = jAtoms[jIndices[a]].distanceSquared(query);
+				if( distanceSq<cutoffSq)
 					return true;
 			}
 		}
@@ -168,7 +222,7 @@ public class GridCell {
 	 */
 	@Override
 	public String toString() {
-		return String.format("GridCell [%d iAtoms,%d jAtoms]",iIndices.size(),jIndices==null?"-":jIndices.size());
+		return String.format("GridCell [%d iAtoms,%d jAtoms]", numIindices, numJindices);
 	}
 
 
