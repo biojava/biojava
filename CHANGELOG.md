@@ -1,6 +1,55 @@
 BioJava Changelog
 -----------------
 
+BioJava 7.3.0
+==============================
+### Added
+* Fetching, caching and display of electron density and cryo-EM maps #1134
+* Checksum verification (MD5, SHA-1, SHA-256) in `FileDownloadUtils`, replacing the previous
+  stub. Downloads from `files.wwpdb.org` and `files.rcsb.org` are checksummed from their `ETag`
+  without a second request #1133
+* `HttpStatusException`, so callers can tell "not there" from a transport failure #1133
+* `FileDownloadUtils.downloadFileWithValidation()`, which downloads and validates over a single
+  connection #1133
+* `LocalPDBDirectory.getMiddleHash(String)`, computing the two-character directory from the
+  right so that it is correct for both short and extended PDB IDs #1133
+* Support for the ECOD distribution format introduced at v294.1 #1141 #1139
+
+### Performance
+* Contact calculation is about 1.5x faster: squared distances compared against a squared cutoff,
+  primitive arrays in `GridCell` instead of boxed lists, and a pre-sized `AtomContactSet` #1147
+* ASA calculation is about 1.2-1.3x faster, by the same replacement of objects with flat
+  primitive arrays in the hot loops #1148
+* `EcodInstallation.getVersion()` reads the file header instead of parsing every domain. The
+  current release is 653 MB and holds nearly three million records #1141
+
+### Fixed
+* CATH downloads use https and check the response before caching it. The previous http URL began
+  redirecting, and the redirect body was cached as classification data #1133 #1138
+* CATH parsing no longer throws `ArrayIndexOutOfBoundsException` on blank or truncated lines, and
+  cached files are validated before being used #1145
+* Chemical component downloads reject redirects and error responses rather than caching them #1133
+* Redirects that `HttpURLConnection` does not follow by itself - 307, 308, and any that change
+  http to https - are now followed #1151 #1149
+* `FileDownloadUtils`: the `hash` argument was ignored by one overload; downloads could be
+  silently truncated; temporary files leaked on failure; `validateFile` threw on a file with no
+  parent directory and on an empty `.size` sidecar #1133
+* mmCIF writer emits the entry identifier as a data item, so `getPdbId()` survives a
+  write-then-read round trip #1144 #1143
+* The ECOD read lock is left balanced when a download fails, so the original error is no longer
+  replaced by `IllegalMonitorStateException` #1150
+* Resolution parsing warns only when the values actually differ
+
+### Changed
+* `createValidationFiles()` now defaults to `ETagPolicy.USE_IF_HEX_DIGEST`, so existing callers
+  begin recording checksums where the server offers one #1133
+* Integration tests run nightly rather than on every pull request #1137 #1135
+* Tests migrated to JUnit 5 #1125 #1126 #1038
+* Library upgrades #1130 #1132
+
+### Removed
+* The `junit-addons` test dependency, no longer needed after the JUnit 5 migration #1126
+
 BioJava 7.2.6
 ==============================
 ### Fixed
