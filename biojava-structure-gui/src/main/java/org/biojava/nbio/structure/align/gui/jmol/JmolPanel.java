@@ -31,12 +31,14 @@ import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PipedInputStream;
 import java.io.PipedOutputStream;
 import java.text.DecimalFormat;
 import java.util.List;
+import java.util.Locale;
 
 import javax.swing.JComboBox;
 
@@ -50,6 +52,8 @@ import org.biojava.nbio.structure.domain.LocalProteinDomainParser;
 import org.biojava.nbio.structure.domain.pdp.Domain;
 import org.biojava.nbio.structure.domain.pdp.Segment;
 import org.biojava.nbio.structure.gui.util.color.ColorUtils;
+import org.biojava.nbio.structure.io.density.DensityMapKind;
+import org.biojava.nbio.structure.io.density.DensityMapResult;
 import org.biojava.nbio.structure.io.mmtf.MmtfActions;
 import org.biojava.nbio.structure.jama.Matrix;
 import org.biojava.nbio.structure.scop.ScopDatabase;
@@ -164,6 +168,157 @@ implements ActionListener
 	public void setStructure(final Structure s) {
 		// Set the default to MMCIF (until issue #629 is fixed)
 		setStructure(s, false);
+	}
+
+	/** Isosurface id used for the 2mFo-DFc map, so that it can be addressed on its own. */
+	public static final String ISOSURFACE_ID_2FOFC = "bj_density_2fofc";
+
+	/** Isosurface id used for the mFo-DFc difference map, drawn as a signed pair of lobes. */
+	public static final String ISOSURFACE_ID_FOFC = "bj_density_fofc";
+
+	/** Isosurface id used for a cryo-EM map. */
+	public static final String ISOSURFACE_ID_EM = "bj_density_em";
+
+	/** Default clipping radius, in Angstroms, around the selected atoms. */
+	public static final double DEFAULT_WITHIN_RADIUS = 5.0;
+
+	/**
+	 * Displays a density map fetched through
+	 * {@link org.biojava.nbio.structure.io.density.DensityMapCache}, clipped to
+	 * {@value #DEFAULT_WITHIN_RADIUS} Angstroms around the whole model.
+	 *
+	 * @param map the map to display
+	 * @throws IllegalArgumentException if the map cannot be displayed without a
+	 *         Fourier transform first
+	 * @since 7.3.0
+	 */
+	public void loadDensityMap(DensityMapResult map) {
+		loadDensityMap(map, "{*}", DEFAULT_WITHIN_RADIUS);
+	}
+
+	/**
+	 * Displays a density map, clipped to a distance around a selection.
+	 * <p>
+	 * Contouring follows the convention for each kind of map: the 2mFo-DFc map at
+	 * 1 sigma in blue, the mFo-DFc difference map as a signed red/green pair at 3
+	 * sigma, and a cryo-EM map at the level its depositors recommend when the entry
+	 * states one, falling back to 3 sigma when it does not.
+	 * <p>
+	 * Clipping matters for more than tidiness: contouring a whole cryo-EM grid at
+	 * mesh resolution can take long enough to make the interface appear frozen.
+	 *
+	 * @param map the map to display
+	 * @param atomSelection a Jmol atom expression such as <code>{*}</code> or
+	 *        <code>{ligand}</code>, or <code>null</code> to contour the whole cell
+	 * @param withinRadius the clipping radius in Angstroms, ignored when
+	 *        <code>atomSelection</code> is <code>null</code>
+	 * @throws IllegalArgumentException if the map cannot be displayed without a
+	 *         Fourier transform first
+	 * @since 7.3.0
+	 */
+	public void loadDensityMap(DensityMapResult map, String atomSelection, double withinRadius) {
+		if (!map.isRenderable()) {
+			throw new IllegalArgumentException("A " + map.getFormat() + " file holds structure factors, not a "
+					+ "sampled map, and cannot be displayed as it stands. Convert it first, for example with "
+					+ "'gemmi sf2map', or fetch the map from a source that serves a grid.");
+		}
+
+		Double level = map.getRecommendedContourLevel();
+		if (map.getKind() == DensityMapKind.EM && level != null) {
+			// EM maps are conventionally contoured at the absolute level the
+			// depositors chose rather than at a multiple of sigma.
+			loadDensityMap(map.getFile(), map.getKind(), level, false, atomSelection, withinRadius);
+		} else {
+			double sigma = map.getKind() == DensityMapKind.TWO_FO_FC ? 1.0 : 3.0;
+			loadDensityMap(map.getFile(), map.getKind(), sigma, true, atomSelection, withinRadius);
+		}
+	}
+
+	/**
+	 * Displays a density map file directly.
+	 *
+	 * @param mapFile the map file, in a format Jmol can contour (CCP4/MRC, or a
+	 *        BinaryCIF volume)
+	 * @param kind what the map values mean, which decides the colouring and whether
+	 *        a signed pair of surfaces is drawn
+	 * @param level the contour level
+	 * @param levelIsSigma whether <code>level</code> is a multiple of the map's RMS
+	 *        deviation rather than an absolute value
+	 * @param atomSelection a Jmol atom expression, or <code>null</code> to contour
+	 *        the whole cell
+	 * @param withinRadius the clipping radius in Angstroms
+	 * @since 7.3.0
+	 */
+	public void loadDensityMap(File mapFile, DensityMapKind kind, double level, boolean levelIsSigma,
+			String atomSelection, double withinRadius) {
+
+		String url = toJmolFileUrl(mapFile);
+		String within = atomSelection == null ? ""
+				: String.format(Locale.US, " within %.1f %s", withinRadius, atomSelection);
+
+		if (kind == DensityMapKind.FO_FC) {
+			// One signed surface carrying both lobes, red for negative and green for
+			// positive. Drawing the negative lobe as a separate surface at "sigma -3"
+			// does not work: Jmol gives a negative sigma its own internal meaning and
+			// silently contours at the default level instead.
+			evalString(isosurfaceCommand(ISOSURFACE_ID_FOFC, "sign red green", level, levelIsSigma, within, url));
+		} else if (kind == DensityMapKind.EM) {
+			evalString(isosurfaceCommand(ISOSURFACE_ID_EM, "color grey", level, levelIsSigma, within, url));
+		} else {
+			evalString(isosurfaceCommand(ISOSURFACE_ID_2FOFC, "color blue", level, levelIsSigma, within, url));
+		}
+
+		// resetDisplay() restores "state_1", which is saved when the structure is
+		// loaded. Without re-saving here, pressing Reset Display would silently
+		// discard the map the user just asked for.
+		evalString("save STATE state_1");
+	}
+
+	/**
+	 * Builds an isosurface command.
+	 * <p>
+	 * The option order is not a matter of taste: <code>mesh</code> and
+	 * <code>nofill</code> have to follow the file name. Placed before it, Jmol
+	 * accepts the command without complaint and draws nothing at all.
+	 */
+	private static String isosurfaceCommand(String id, String colouring, double level, boolean levelIsSigma,
+			String within, String url) {
+		return String.format(Locale.US,
+				"isosurface ID \"%s\" delete; isosurface ID \"%s\" %s %s %.4f%s \"%s\" mesh nofill;",
+				id, id, colouring, levelIsSigma ? "sigma" : "cutoff", level, within, url);
+	}
+
+	/**
+	 * Removes any density surfaces this panel has drawn, leaving other isosurfaces
+	 * alone.
+	 *
+	 * @since 7.3.0
+	 */
+	public void clearDensityMaps() {
+		for (String id : new String[] {ISOSURFACE_ID_2FOFC, ISOSURFACE_ID_FOFC, ISOSURFACE_ID_EM}) {
+			evalString("isosurface ID \"" + id + "\" delete;");
+		}
+		evalString("save STATE state_1");
+	}
+
+	/**
+	 * Converts a file to the URL form Jmol expects.
+	 * <p>
+	 * Going through {@link File#toURI()} percent-encodes spaces and removes
+	 * backslashes, which Jmol would otherwise read as escape characters in a script
+	 * string. On Windows the result is a single-slash <code>file:/C:/...</code>,
+	 * which is normalised here to the usual three-slash form.
+	 *
+	 * @param file the file
+	 * @return a URL string safe to embed in a Jmol script
+	 * @since 7.3.0
+	 */
+	public static String toJmolFileUrl(File file) {
+		String url = file.getAbsoluteFile().toURI().toString();
+		if (url.startsWith("file:/") && !url.startsWith("file://")) {
+			url = "file:///" + url.substring("file:/".length());
+		}
+		return url;
 	}
 
 	/** assign a custom color to the Jmol chains command.

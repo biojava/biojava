@@ -66,6 +66,8 @@ public class MenuCreator {
 	public static final String PAIRWISE_ALIGN = "New Pairwise Alignment";
 	public static final String MULTIPLE_ALIGN = "New Multiple Alignment";
 	public static final String PHYLOGENETIC_TREE = "Phylogenetic Tree";
+	/** @since 7.3.0 */
+	public static final String SHOW_DENSITY = "Show Electron Density";
 	protected static final int keyMask =
 			Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
 
@@ -169,6 +171,8 @@ public class MenuCreator {
 			distMax.setMnemonic(KeyEvent.VK_D);
 			distMax.addActionListener(new MyDistMaxListener(parent));
 			view.add(distMax);
+			//Electron density
+			view.add(getShowDensityMenuItem(parent));
 			//Dot Plot - only if the alignment was an afpChain
 			if (afpChain != null){
 				JMenuItem dotplot = new JMenuItem(DOT_PLOT);
@@ -227,6 +231,22 @@ public class MenuCreator {
 		openI.setMnemonic(KeyEvent.VK_F);
 		openI.addActionListener(new MyOpenPdbFileListener());
 		return openI;
+	}
+
+	/**
+	 * Menu item that fetches and displays the electron density or cryo-EM map for
+	 * the structure currently on screen.
+	 *
+	 * @param parent the viewer to draw the map into
+	 * @return the menu item
+	 * @author Amr ALHOSSARY
+	 * @since 7.3.0
+	 */
+	public static JMenuItem getShowDensityMenuItem(AbstractAlignmentJmol parent) {
+		JMenuItem densityI = new JMenuItem(SHOW_DENSITY);
+		densityI.setMnemonic(KeyEvent.VK_E);
+		densityI.addActionListener(new MyShowDensityListener(parent));
+		return densityI;
 	}
 
 

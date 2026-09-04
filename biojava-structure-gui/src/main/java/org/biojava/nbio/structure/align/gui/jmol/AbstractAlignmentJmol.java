@@ -195,6 +195,29 @@ implements MouseMotionListener, MouseListener, WindowListener, ActionListener {
 	public abstract List<Matrix> getDistanceMatrices();
 
 	/**
+	 * The window this viewer lives in, for use as the owner of dialogs raised from
+	 * outside this package.
+	 *
+	 * @return the frame, which may be <code>null</code> before the window is built
+	 * @since 7.3.0
+	 */
+	public JFrame getFrame() {
+		return frame;
+	}
+
+	/**
+	 * Writes a short message into the viewer's status field.
+	 *
+	 * @param message the message; ignored if there is no status field yet
+	 * @since 7.3.0
+	 */
+	public void setStatus(String message) {
+		if (status != null) {
+			status.setText(message);
+		}
+	}
+
+	/**
 	 * Set the title of the AlignmentJmol window.
 	 * @param title
 	 */
