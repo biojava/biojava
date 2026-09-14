@@ -319,7 +319,8 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
             }
 
             if (params.isParseCAOnly()) {
-                if (!labelAtomId.get(atomIndex).equals(StructureTools.CA_ATOM_NAME) && "C".equals(typeSymbol.get(atomIndex))) {
+                // keep only C-alpha atoms; requiring element C excludes calcium ions, whose atom name is also CA
+                if (!(labelAtomId.get(atomIndex).equals(StructureTools.CA_ATOM_NAME) && "C".equals(typeSymbol.get(atomIndex)))) {
                     continue;
                 }
             }
