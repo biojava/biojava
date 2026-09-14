@@ -217,9 +217,19 @@ class FileDownloadUtilsTest {
     @Nested
     class HttpStatus {
 
+        /**
+         * Which status an absent file comes back with is the server's business, and it
+         * changes: files.wwpdb.org moved behind Amazon S3 in September 2026, and S3
+         * answers a missing key with 403 rather than 404 when the caller cannot list
+         * the bucket. Pinning the code made this test fail on an upstream hosting
+         * change that broke nothing.
+         * <p>
+         * What must hold is the contract: an error status throws, and nothing is left
+         * on disk for it. {@link HttpStatusException#isNotFound()} is pinned separately
+         * below, without a network.
+         */
         @Test
-        void notFoundThrowsAndLeavesNothingBehind() throws IOException {
-            // A path that is guaranteed absent from the wwPDB archive.
+        void anAbsentFileThrowsAndLeavesNothingBehind() throws IOException {
             URL missing = new URL("https://files.wwpdb.org/pub/pdb/data/structures/divided/mmCIF/zz/zzzz.cif.gz");
             File dest = new File(System.getProperty("java.io.tmpdir"), "bj-missing.cif.gz");
             File sizeFile = new File(dest.getParentFile(), dest.getName() + ".size");
@@ -228,14 +238,24 @@ class FileDownloadUtilsTest {
 
             HttpStatusException e = assertThrows(HttpStatusException.class,
                     () -> FileDownloadUtils.downloadFile(missing, dest));
-            assertEquals(404, e.getStatusCode());
-            assertTrue(e.isNotFound());
-            assertFalse(dest.exists(), "a 404 body must never be written to the destination");
+            assertTrue(e.getStatusCode() >= 400,
+                    "an absent file must report an error status, got " + e.getStatusCode());
+            assertFalse(dest.exists(), "an error body must never be written to the destination");
 
             // ... and no validation metadata may be recorded for it either, or the
             // cached error page would later pass validation.
             FileDownloadUtils.createValidationFiles(missing, dest, null, FileDownloadUtils.Hash.UNKNOWN);
-            assertFalse(sizeFile.exists(), "no size file should be written for a 404 response");
+            assertFalse(sizeFile.exists(), "no size file should be written for an error response");
+        }
+
+        @Test
+        void isNotFoundCoversTheAbsentStatusesOnly() {
+            assertTrue(new HttpStatusException(404, "http://example.org/x", "Not Found").isNotFound());
+            assertTrue(new HttpStatusException(410, "http://example.org/x", "Gone").isNotFound());
+            // 403 is what an S3-backed archive returns for a missing key, but it is not a
+            // statement that the file does not exist, so it must not claim to be one
+            assertFalse(new HttpStatusException(403, "http://example.org/x", "Forbidden").isNotFound());
+            assertFalse(new HttpStatusException(500, "http://example.org/x", "Server Error").isNotFound());
         }
     }
 
