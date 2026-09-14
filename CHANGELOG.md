@@ -14,12 +14,17 @@ BioJava 7.3.0
 * `LocalPDBDirectory.getMiddleHash(String)`, computing the two-character directory from the
   right so that it is correct for both short and extended PDB IDs #1133
 * Support for the ECOD distribution format introduced at v294.1 #1141 #1139
+* `StructureInterfaceList.clusterInterfaces()`, which clusters interfaces starting from any
+  given clusters and with a custom identifier pair for matching (e.g. `ENTITY_ID_PAIR`)
 
 ### Performance
 * Contact calculation is about 1.5x faster: squared distances compared against a squared cutoff,
   primitive arrays in `GridCell` instead of boxed lists, and a pre-sized `AtomContactSet` #1147
 * ASA calculation is about 1.2-1.3x faster, by the same replacement of objects with flat
   primitive arrays in the hot loops #1148
+* Interface clustering in `StructureInterfaceList.getClusters()` uses a greedy leader algorithm
+  instead of single linkage, needing at most n(n-1)/2 contact overlap scores and usually far fewer.
+  For 1gav (690 interfaces) it takes 45 ms instead of 8.3 s
 * `EcodInstallation.getVersion()` reads the file header instead of parsing every domain. The
   current release is 653 MB and holds nearly three million records #1141
 
@@ -43,6 +48,10 @@ BioJava 7.3.0
 ### Changed
 * `createValidationFiles()` now defaults to `ETagPolicy.USE_IF_HEX_DIGEST`, so existing callers
   begin recording checksums where the server offers one #1133
+* `StructureInterfaceList.getClusters()`: results can depend on the order of the interfaces (by
+  default descending by area), members are no longer sorted by id, and
+  `StructureInterfaceCluster.getAverageScore()` is now the average score of the members merged into
+  the representative rather than over all pairs of members
 * Integration tests run nightly rather than on every pull request #1137 #1135
 * Tests migrated to JUnit 5 #1125 #1126 #1038
 * Library upgrades #1130 #1132
