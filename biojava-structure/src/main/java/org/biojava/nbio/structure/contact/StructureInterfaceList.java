@@ -27,11 +27,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.TreeMap;
+import java.util.function.Function;
 
-import org.biojava.nbio.core.util.SingleLinkageClusterer;
 import org.biojava.nbio.structure.Atom;
+import org.biojava.nbio.structure.Chain;
+import org.biojava.nbio.structure.EntityInfo;
 import org.biojava.nbio.structure.Structure;
 import org.biojava.nbio.structure.asa.AsaCalculator;
 import org.biojava.nbio.structure.xtal.CrystalBuilder;
@@ -368,6 +369,10 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 	 * using Jaccard contact set scores to measure the similarity of interfaces.
 	 * Subsequent calls will use the cached value without recomputing the clusters.
 	 * The clusters will be assigned ids by sorting descending by {@link StructureInterfaceCluster#getTotalArea()}
+	 * <p>
+	 * Interfaces are compared by entity pairs (see {@link #ENTITY_ID_PAIR}) and grouped with the leader
+	 * algorithm described in {@link #clusterInterfaces(List, Function, double)}, thus the result depends on
+	 * the order of the list (by default descending by area, see {@link #sort()}).
 	 * @param contactOverlapScoreClusterCutoff the contact overlap score above which a pair will be
 	 * clustered
 	 * @return
@@ -377,66 +382,14 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 			return clusters;
 		}
 
-		clusters = new ArrayList<>();
-
-		// nothing to do if we have no interfaces
-		if (list.isEmpty()) return clusters;
-
-		logger.debug("Calculating all-vs-all Jaccard scores for {} interfaces", list.size());
-		double[][] matrix = new double[list.size()][list.size()];
-
-		for (int i=0;i<list.size();i++) {
-			for (int j=i+1;j<list.size();j++) {
-				StructureInterface iInterf = list.get(i);
-				StructureInterface jInterf = list.get(j);
-
-				double scoreDirect = iInterf.getContactOverlapScore(jInterf, false);
-				double scoreInvert = iInterf.getContactOverlapScore(jInterf, true);
-
-				double maxScore = Math.max(scoreDirect, scoreInvert);
-
-				matrix[i][j] = maxScore;
-			}
-
-		}
-
-		logger.debug("Will now cluster {} interfaces based on full all-vs-all Jaccard scores matrix", list.size());
-		SingleLinkageClusterer slc = new SingleLinkageClusterer(matrix, true);
-
-		Map<Integer, Set<Integer>> clusteredIndices = slc.getClusters(contactOverlapScoreClusterCutoff);
-		for (int clusterIdx:clusteredIndices.keySet()) {
-			List<StructureInterface> members = new ArrayList<>();
-			for (int idx:clusteredIndices.get(clusterIdx)) {
-				members.add(list.get(idx));
-			}
+		List<StructureInterfaceCluster> singletons = new ArrayList<>(list.size());
+		for (StructureInterface interf : list) {
 			StructureInterfaceCluster cluster = new StructureInterfaceCluster();
-			cluster.setMembers(members);
-			double averageScore = 0.0;
-			int countPairs = 0;
-			for (int i=0;i<members.size();i++) {
-                int iIdx = list.indexOf(members.get(i));
-				for (int j=i+1;j<members.size();j++) {
-					averageScore += matrix[iIdx][list.indexOf(members.get(j))];
-					countPairs++;
-				}
-			}
-			if (countPairs>0) {
-				averageScore = averageScore/countPairs;
-			} else {
-				// if only one interface in cluster we set the score to the maximum
-				averageScore = 1.0;
-			}
-			cluster.setAverageScore(averageScore);
-			clusters.add(cluster);
+			cluster.addMember(interf);
+			singletons.add(cluster);
 		}
 
-		// finally we have to set the back-references in each StructureInterface
-		for (StructureInterfaceCluster cluster:clusters) {
-			for (StructureInterface interf:cluster.getMembers()) {
-				interf.setCluster(cluster);
-			}
-		}
-		logger.debug("Done clustering {} interfaces based on full all-vs-all Jaccard scores matrix. Found a total of {} clusters", list.size(), clusters.size());
+		clusters = clusterInterfaces(singletons, ENTITY_ID_PAIR, contactOverlapScoreClusterCutoff);
 
 		// now we sort by areas (descending) and assign ids based on that sorting
 		clusters.sort((o1, o2) -> Double.compare(o2.getTotalArea(), o1.getTotalArea())); //note we invert so that sorting is descending
@@ -448,6 +401,106 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 		}
 
 		return clusters;
+	}
+
+	/**
+	 * Identifies each side of an interface by the entity id ({@link EntityInfo#getMolId()}) of its parent chain.
+	 * Returns null if any of the parent chains or entities can't be found.
+	 * @see #clusterInterfaces(List, Function, double)
+	 */
+	public static final Function<StructureInterface, Pair<Integer>> ENTITY_ID_PAIR = interf -> {
+		Pair<Chain> chains = interf.getParentChains();
+		if (chains == null || chains.getFirst().getEntityInfo() == null || chains.getSecond().getEntityInfo() == null) {
+			return null;
+		}
+		return new Pair<>(chains.getFirst().getEntityInfo().getMolId(), chains.getSecond().getEntityInfo().getMolId());
+	};
+
+	/**
+	 * Groups interface clusters further, merging any two whose representatives (first members) have a
+	 * contact overlap score above the given cutoff.
+	 * <p>
+	 * This is the leader algorithm: the representative of the first cluster is compared to the representatives of all
+	 * subsequent clusters, merging those above cutoff into it; then the same is repeated for the next remaining cluster.
+	 * It performs at most n(n-1)/2 score calculations, and about n*k for n input and k output clusters.
+	 * Unlike single linkage clustering, similarity is not transitive through non-representative members
+	 * and the result depends on the input order: placing larger interfaces first makes them the representatives.
+	 * <p>
+	 * Two interfaces are only compared if their identifier pairs match, in the same or inverted order.
+	 * The score is then {@link StructureInterface#getContactOverlapScore(StructureInterface, boolean)} non-inverted
+	 * or inverted respectively, or the maximum of both if all 4 identifiers are equal.
+	 * <p>
+	 * The input clusters are not modified. The output clusters are new objects whose members are the
+	 * representative's cluster members followed by the members of the clusters merged into it, and whose average
+	 * score is the average of the scores that caused merges (1.0 if no merges). The cluster back-references of all
+	 * members are set to the output clusters. Ids are not assigned.
+	 * @param initialClusters the starting clusters, e.g. one singleton cluster per interface. The first member of
+	 *                           each is its representative
+	 * @param idPairFunction gives the pair of identifiers for the 2 sides of an interface, e.g. {@link #ENTITY_ID_PAIR}.
+	 *                          If it returns null the interface is not merged with any other
+	 * @param contactOverlapScoreClusterCutoff the contact overlap score above which a pair of clusters is merged
+	 * @return the merged clusters, in the order of their representatives in the input
+	 * @since 7.3.0
+	 */
+	public static <T> List<StructureInterfaceCluster> clusterInterfaces(List<StructureInterfaceCluster> initialClusters,
+																		Function<StructureInterface, Pair<T>> idPairFunction,
+																		double contactOverlapScoreClusterCutoff) {
+		int n = initialClusters.size();
+		logger.debug("Clustering {} interface clusters by contact overlap score", n);
+
+		List<StructureInterface> reps = new ArrayList<>(n);
+		List<Pair<T>> idPairs = new ArrayList<>(n);
+		for (StructureInterfaceCluster cluster : initialClusters) {
+			StructureInterface rep = cluster.getMembers().get(0);
+			reps.add(rep);
+			idPairs.add(idPairFunction.apply(rep));
+		}
+
+		List<StructureInterfaceCluster> result = new ArrayList<>();
+		boolean[] merged = new boolean[n];
+		for (int i = 0; i < n; i++) {
+			if (merged[i]) continue;
+			StructureInterfaceCluster cluster = new StructureInterfaceCluster();
+			cluster.getMembers().addAll(initialClusters.get(i).getMembers());
+			double sumScores = 0;
+			int countMerges = 0;
+			// descending, so that merged members are appended in the same order as in previous implementations
+			for (int j = n - 1; j > i; j--) {
+				if (merged[j]) continue;
+				double score = getContactOverlapScore(reps.get(i), idPairs.get(i), reps.get(j), idPairs.get(j));
+				if (score > contactOverlapScoreClusterCutoff) {
+					cluster.getMembers().addAll(initialClusters.get(j).getMembers());
+					merged[j] = true;
+					sumScores += score;
+					countMerges++;
+				}
+			}
+			cluster.setAverageScore(countMerges > 0 ? sumScores / countMerges : 1.0);
+			for (StructureInterface member : cluster.getMembers()) {
+				member.setCluster(cluster);
+			}
+			result.add(cluster);
+		}
+
+		logger.debug("Found {} clusters from {} input clusters at contact overlap score cutoff {}", result.size(), n, contactOverlapScoreClusterCutoff);
+		return result;
+	}
+
+	private static <T> double getContactOverlapScore(StructureInterface iInterf, Pair<T> iIds, StructureInterface jInterf, Pair<T> jIds) {
+		if (iIds == null || jIds == null) {
+			return 0;
+		}
+		boolean direct = iIds.getFirst().equals(jIds.getFirst()) && iIds.getSecond().equals(jIds.getSecond());
+		boolean inverted = iIds.getFirst().equals(jIds.getSecond()) && iIds.getSecond().equals(jIds.getFirst());
+		if (direct && inverted) {
+			// all 4 ids are the same: the order of the sides is not known, so we try both
+			return Math.max(iInterf.getContactOverlapScore(jInterf, false), iInterf.getContactOverlapScore(jInterf, true));
+		} else if (direct) {
+			return iInterf.getContactOverlapScore(jInterf, false);
+		} else if (inverted) {
+			return iInterf.getContactOverlapScore(jInterf, true);
+		}
+		return 0;
 	}
 
 	@Override
