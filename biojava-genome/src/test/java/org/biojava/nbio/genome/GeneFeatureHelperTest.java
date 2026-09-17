@@ -101,8 +101,8 @@ class GeneFeatureHelperTest {
 		gffFile.deleteOnExit();
 		GeneFeatureHelper.outputFastaSequenceLengthGFF3(fastaSequenceFile, gffFile);
 		Assertions.assertEquals(
-				Files.readString(new File("src/test/resources/volvox_length_reference.gff3").toPath()),
-				Files.readString(gffFile.toPath()),
+				Files.readAllLines(new File("src/test/resources/volvox_length_reference.gff3").toPath()),
+				Files.readAllLines(gffFile.toPath()),
 				"volvox_length.gff3 and volvox_length_output.gff3 are not equal");
 
 	}
@@ -143,8 +143,8 @@ class GeneFeatureHelperTest {
 		tmp.deleteOnExit();
 		FastaWriterHelper.writeProteinSequence(tmp, proteinSequenceList.values());
 		Assertions.assertEquals(
-				Files.readString(new File("src/test/resources/volvox_all_reference.faa").toPath()),
-				Files.readString(tmp.toPath()),
+				Files.readAllLines(new File("src/test/resources/volvox_all_reference.faa").toPath()),
+				Files.readAllLines(tmp.toPath()),
 				"volvox_all_reference.faa and volvox_all.faa are not equal");
 	}
 
