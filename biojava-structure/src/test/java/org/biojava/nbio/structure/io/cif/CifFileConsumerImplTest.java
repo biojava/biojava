@@ -1,6 +1,10 @@
 package org.biojava.nbio.structure.io.cif;
 
+import org.biojava.nbio.structure.Atom;
 import org.biojava.nbio.structure.Chain;
+import org.biojava.nbio.structure.Element;
+import org.biojava.nbio.structure.Group;
+import org.biojava.nbio.structure.StructureTools;
 import org.biojava.nbio.structure.EntityInfo;
 import org.biojava.nbio.structure.EntityType;
 import org.biojava.nbio.structure.Structure;
@@ -17,6 +21,7 @@ import org.rcsb.cif.schema.mm.MmCifFile;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -266,5 +271,69 @@ public class CifFileConsumerImplTest {
         assertNotNull(s);
         assertEquals(2, s.getPolyChain("A").getAtomGroups().size());
         assertEquals(2, s.getPolyChainByPDB("A").getAtomGroups().size());
+    }
+
+    /**
+     * With parseCAOnly, only C-alpha atoms must be kept: no N/O/S or other non-carbon atoms,
+     * and no calcium ions (atom name CA, element Ca).
+     */
+    @Test
+    public void testParseCAOnly() throws IOException {
+        String resource = "/org/biojava/nbio/structure/io/mmcif/1stp_v5.cif";
+        String mmcifStr;
+        try (InputStream inputStream = getClass().getResourceAsStream(resource)) {
+            Objects.requireNonNull(inputStream, "could not acquire test resource " + resource);
+            mmcifStr = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+        }
+        // turn the last water oxygen into an atom named CA with element Ca, like a calcium ion
+        String waterRow = "HETATM 1001 O O   . HOH C 3 .   ? 19.892  14.908  -13.679 0.90 40.00 ? 449 HOH A O   1";
+        assertTrue(mmcifStr.contains(waterRow));
+        mmcifStr = mmcifStr.replace(waterRow, "HETATM 1001 CA CA . HOH C 3 .   ? 19.892  14.908  -13.679 0.90 40.00 ? 449 HOH A CA  1");
+
+        FileParsingParameters fullParams = new FileParsingParameters();
+        fullParams.setCreateAtomBonds(true);
+        Structure full = CifStructureConverter.fromInputStream(
+                new ByteArrayInputStream(mmcifStr.getBytes(StandardCharsets.UTF_8)), fullParams);
+
+        FileParsingParameters caParams = new FileParsingParameters();
+        caParams.setCreateAtomBonds(true);
+        caParams.setParseCAOnly(true);
+        Structure caOnly = CifStructureConverter.fromInputStream(
+                new ByteArrayInputStream(mmcifStr.getBytes(StandardCharsets.UTF_8)), caParams);
+
+        int expected = 0;
+        boolean hasCalcium = false;
+        for (int model = 0; model < full.nrModels(); model++) {
+            for (Chain chain : full.getChains(model)) {
+                for (Group group : chain.getAtomGroups()) {
+                    Atom ca = group.getAtom(StructureTools.CA_ATOM_NAME);
+                    if (group.isAminoAcid() && ca != null) {
+                        expected++;
+                    } else if (ca != null && ca.getElement() == Element.Ca) {
+                        hasCalcium = true;
+                    }
+                }
+            }
+        }
+        assertTrue(expected > 0);
+        assertTrue("test input should contain a calcium named CA", hasCalcium);
+
+        int count = 0;
+        for (int model = 0; model < caOnly.nrModels(); model++) {
+            // the water and ligand chains hold no C-alpha, so they should not have been created
+            assertEquals(full.getPolyChains(model).size(), caOnly.getChains(model).size());
+            for (Chain chain : caOnly.getChains(model)) {
+                for (Group group : chain.getAtomGroups()) {
+                    // no group without a C-alpha should have been created either
+                    assertEquals(1, group.getAtoms().size());
+                    for (Atom atom : group.getAtoms()) {
+                        assertEquals(StructureTools.CA_ATOM_NAME, atom.getName());
+                        assertEquals(Element.C, atom.getElement());
+                        count++;
+                    }
+                }
+            }
+        }
+        assertEquals(expected, count);
     }
 }

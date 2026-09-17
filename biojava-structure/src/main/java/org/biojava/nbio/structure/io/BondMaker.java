@@ -463,14 +463,24 @@ public class BondMaker {
 
 			} catch (StructureException e) {
 
-				logger.warn("Could not find atom specified in struct_conn record: {}{}({}) in chain {}, atom {} {}", seqId1, insCode1, resName1, chainId1, atomName1, altLocStr1);
+				// Note, in Calpha only mode the struct_conn atoms may not be present.
+				if (! params.isParseCAOnly()) {
+					logger.warn("Could not find atom specified in struct_conn record: {}{}({}) in chain {}, atom {} {}", seqId1, insCode1, resName1, chainId1, atomName1, altLocStr1);
+				} else {
+					logger.debug("Could not find atom specified in struct_conn record while parsing in parseCAonly mode: {}{}({}) in chain {}, atom {} {}", seqId1, insCode1, resName1, chainId1, atomName1, altLocStr1);
+				}
 				continue;
 			}
 			try {
 				a2 = getAtomFromRecord(atomName2, altLoc2, chainId2, seqId2, insCode2);
 			} catch (StructureException e) {
 
-				logger.warn("Could not find atom specified in struct_conn record: {}{}({}) in chain {}, atom {} {}", seqId2, insCode2, resName2, chainId2, atomName2, altLocStr2);
+				// Note, in Calpha only mode the struct_conn atoms may not be present.
+				if (! params.isParseCAOnly()) {
+					logger.warn("Could not find atom specified in struct_conn record: {}{}({}) in chain {}, atom {} {}", seqId2, insCode2, resName2, chainId2, atomName2, altLocStr2);
+				} else {
+					logger.debug("Could not find atom specified in struct_conn record while parsing in parseCAonly mode: {}{}({}) in chain {}, atom {} {}", seqId2, insCode2, resName2, chainId2, atomName2, altLocStr2);
+				}
 				continue;
 			}
 
