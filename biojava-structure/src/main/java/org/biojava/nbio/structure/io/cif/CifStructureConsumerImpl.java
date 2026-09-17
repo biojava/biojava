@@ -205,6 +205,13 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
         IntColumn pdbx_pdb_model_num = atomSite.getPdbxPDBModelNum();
 
         for (int atomIndex = 0; atomIndex < atomSite.getRowCount(); atomIndex++) {
+            // skip before any chain or group is set up, so that groups and chains without a
+            // C-alpha (waters, ligands, nucleotides) are not created at all
+            if (params.isParseCAOnly() &&
+                    !(labelAtomId.get(atomIndex).equals(StructureTools.CA_ATOM_NAME) && "C".equals(typeSymbol.get(atomIndex)))) {
+                continue;
+            }
+
             boolean startOfNewChain = false;
             Character oneLetterCode = StructureTools.get1LetterCodeAmino(labelCompId.get(atomIndex));
 
@@ -315,13 +322,6 @@ public class CifStructureConsumerImpl implements CifStructureConsumer {
                             altGroup.setChain(currentChain);
                         }
                     }
-                }
-            }
-
-            if (params.isParseCAOnly()) {
-                // keep only C-alpha atoms; requiring element C excludes calcium ions, whose atom name is also CA
-                if (!(labelAtomId.get(atomIndex).equals(StructureTools.CA_ATOM_NAME) && "C".equals(typeSymbol.get(atomIndex)))) {
-                    continue;
                 }
             }
 

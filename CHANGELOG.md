@@ -40,7 +40,8 @@ BioJava 7.3.0
   replaced by `IllegalMonitorStateException` #1150
 * `FileParsingParameters.setParseCAOnly(true)` keeps only C-alpha atoms when reading mmCIF and
   BinaryCIF, as it does for PDB files. Since the unified CIF parser it had dropped only non-CA
-  carbons, keeping every N, O and S atom. 
+  carbons, keeping every N, O and S atom. Groups and chains that hold no C-alpha (waters,
+  ligands, nucleotides) are no longer created at all in this mode
 * Resolution parsing warns only when the values actually differ
 
 ### Changed

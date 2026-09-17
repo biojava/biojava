@@ -320,8 +320,12 @@ public class CifFileConsumerImplTest {
 
         int count = 0;
         for (int model = 0; model < caOnly.nrModels(); model++) {
+            // the water and ligand chains hold no C-alpha, so they should not have been created
+            assertEquals(full.getPolyChains(model).size(), caOnly.getChains(model).size());
             for (Chain chain : caOnly.getChains(model)) {
                 for (Group group : chain.getAtomGroups()) {
+                    // no group without a C-alpha should have been created either
+                    assertEquals(1, group.getAtoms().size());
                     for (Atom atom : group.getAtoms()) {
                         assertEquals(StructureTools.CA_ATOM_NAME, atom.getName());
                         assertEquals(Element.C, atom.getElement());
