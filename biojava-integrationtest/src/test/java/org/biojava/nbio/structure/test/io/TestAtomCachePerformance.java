@@ -37,11 +37,8 @@ import static org.junit.Assert.assertNotNull;
 /**
  * A test to check the performance of AtomCache downloading
  *
- * By default it is ignored.
- * To execute use:
- * <pre>
- * mvn -Dtest=TestAtomCachePerformance test
- * </pre>
+ * By default it is ignored, also by maven when the test is selected explicitly with -Dtest.
+ * To execute it, run it from the IDE or remove the {@code @Ignore} annotation temporarily.
  *
  * @author duarte_j
  *

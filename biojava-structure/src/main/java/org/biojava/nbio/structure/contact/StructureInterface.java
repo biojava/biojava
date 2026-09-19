@@ -651,7 +651,7 @@ public class StructureInterface implements Serializable, Comparable<StructureInt
 	}
 
 	/**
-	 * This method check if two compounds have same MolIds or not.
+	 * Checks whether the 2 pairs of entities (compounds) are composed by the same entity IDs (molId).
 	 * @param thisCompounds
 	 * @param otherCompounds
 	 * @return

@@ -36,14 +36,18 @@ import org.biojava.nbio.structure.io.StructureFiletype;
 import org.biojava.nbio.structure.StructureIO;
 import org.biojava.nbio.structure.align.util.AtomCache;
 import org.biojava.nbio.structure.asa.GroupAsa;
+import org.biojava.nbio.structure.contact.InterfaceFinder;
+import org.biojava.nbio.structure.contact.Pair;
 import org.biojava.nbio.structure.contact.StructureInterface;
 import org.biojava.nbio.structure.contact.StructureInterfaceCluster;
 import org.biojava.nbio.structure.contact.StructureInterfaceList;
 import org.biojava.nbio.structure.io.FileParsingParameters;
 import org.biojava.nbio.structure.io.PDBFileParser;
+import org.biojava.nbio.structure.quaternary.BiologicalAssemblyBuilder;
 import org.junit.Test;
 
 import javax.vecmath.Matrix4d;
+import java.util.function.Function;
 
 public class TestInterfaceClustering {
 
@@ -166,6 +170,12 @@ public class TestInterfaceClustering {
 
 		assertTrue(clusters.size()<=interfaces.size());
 
+		// clusters are recalculated after removing interfaces: they contain exactly the remaining ones
+		List<StructureInterface> clusterMembers = new ArrayList<>();
+		clusters.forEach(c -> clusterMembers.addAll(c.getMembers()));
+		assertEquals(interfaces.size(), clusterMembers.size());
+		assertTrue(interfaces.getList().containsAll(clusterMembers));
+
 		for (StructureInterface interf : interfaces) {
 			GroupAsa groupAsa = interf.getFirstGroupAsas().values().iterator().next();
 			String expected = interf.getMoleculeIds().getFirst();
@@ -272,4 +282,61 @@ public class TestInterfaceClustering {
 
 
 	}
+
+	/**
+	 * Two-step clustering of the interfaces of an assembly: first geometrically identical interfaces (same asym ids),
+	 * then similar interfaces between same entities, starting from the clusters of the first step.
+	 */
+	@Test
+	public void testClusterInterfacesTwoSteps() throws IOException, StructureException {
+
+		AtomCache cache = new AtomCache();
+		FileParsingParameters params = new FileParsingParameters();
+		params.setAlignSeqRes(true);
+		cache.setFileParsingParams(params);
+		cache.setFiletype(StructureFiletype.CIF);
+		StructureIO.setAtomCache(cache);
+
+		// 6cco assembly 1: D3 with 2 entities, 12 interfaces
+		Structure assembly = StructureIO.getBiologicalAssembly("6cco", 1, false);
+		List<StructureInterface> interfaces = new InterfaceFinder(assembly).getAllInterfaces().getList();
+		assertEquals(12, interfaces.size());
+
+		Function<StructureInterface, Pair<String>> asymIdPair = interf -> new Pair<>(
+				stripOperators(interf.getParentChains().getFirst().getId()),
+				stripOperators(interf.getParentChains().getSecond().getId()));
+
+		List<StructureInterfaceCluster> singletons = new ArrayList<>();
+		for (StructureInterface interf : interfaces) {
+			StructureInterfaceCluster cluster = new StructureInterfaceCluster();
+			cluster.addMember(interf);
+			singletons.add(cluster);
+		}
+
+		List<StructureInterfaceCluster> identicalClusters = StructureInterfaceList.clusterInterfaces(singletons, asymIdPair, 0.99);
+		assertEquals(4, identicalClusters.size());
+		for (StructureInterfaceCluster cluster : identicalClusters) {
+			assertEquals(3, cluster.getMembers().size());
+			cluster.getMembers().forEach(m -> assertSame(cluster, m.getCluster()));
+		}
+		// input is not modified
+		singletons.forEach(c -> assertEquals(1, c.getMembers().size()));
+
+		List<StructureInterfaceCluster> entityClusters = StructureInterfaceList.clusterInterfaces(identicalClusters, StructureInterfaceList.ENTITY_ID_PAIR, StructureInterfaceList.DEFAULT_CONTACT_OVERLAP_SCORE_CLUSTER_CUTOFF);
+		assertEquals(3, entityClusters.size());
+		int total = 0;
+		for (StructureInterfaceCluster cluster : entityClusters) {
+			// representatives are preserved from the first step
+			assertTrue(identicalClusters.stream().anyMatch(c -> c.getMembers().get(0) == cluster.getMembers().get(0)));
+			cluster.getMembers().forEach(m -> assertSame(cluster, m.getCluster()));
+			total += cluster.getMembers().size();
+		}
+		assertEquals(12, total);
+		identicalClusters.forEach(c -> assertEquals(3, c.getMembers().size()));
+	}
+
+	private static String stripOperators(String chainId) {
+		return chainId.substring(0, chainId.indexOf(BiologicalAssemblyBuilder.SYM_CHAIN_ID_SEPARATOR));
+	}
+
 }
