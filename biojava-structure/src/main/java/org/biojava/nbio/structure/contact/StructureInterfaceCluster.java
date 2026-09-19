@@ -34,7 +34,7 @@ public class StructureInterfaceCluster implements Serializable {
 	private List<StructureInterface> members;
 
 	/**
-	 * The average similarity score between all pairs of members in the cluster.
+	 * The average similarity score of the cluster, see {@link #getAverageScore()}
 	 */
 	private double averageScore;
 
@@ -76,8 +76,13 @@ public class StructureInterfaceCluster implements Serializable {
 	}
 
 	/**
-	 * Returns the average similarity score between all pairs of members in the cluster
-	 * @return
+	 * Returns the average similarity score of the cluster.
+	 * For clusters calculated with {@link StructureInterfaceList#getClusters()} or
+	 * {@link StructureInterfaceList#clusterInterfaces(List, java.util.function.Function, double)}, it is the
+	 * average of the contact overlap scores between the representative (first member) and the representatives of
+	 * the clusters merged into it, or 1.0 if nothing was merged. Note that it is not the average over all pairs of
+	 * members.
+	 * @return the average score
 	 */
 	public double getAverageScore() {
 		return averageScore;
