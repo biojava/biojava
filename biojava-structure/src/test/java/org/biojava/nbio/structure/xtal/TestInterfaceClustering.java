@@ -170,6 +170,12 @@ public class TestInterfaceClustering {
 
 		assertTrue(clusters.size()<=interfaces.size());
 
+		// clusters are recalculated after removing interfaces: they contain exactly the remaining ones
+		List<StructureInterface> clusterMembers = new ArrayList<>();
+		clusters.forEach(c -> clusterMembers.addAll(c.getMembers()));
+		assertEquals(interfaces.size(), clusterMembers.size());
+		assertTrue(interfaces.getList().containsAll(clusterMembers));
+
 		for (StructureInterface interf : interfaces) {
 			GroupAsa groupAsa = interf.getFirstGroupAsas().values().iterator().next();
 			String expected = interf.getMoleculeIds().getFirst();

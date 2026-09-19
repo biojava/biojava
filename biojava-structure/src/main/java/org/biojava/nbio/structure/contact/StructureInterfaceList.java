@@ -23,6 +23,7 @@ package org.biojava.nbio.structure.contact;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -346,6 +347,8 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 	public void removeInterfacesBelowArea(double area) {
 
 		list.removeIf(interf -> interf.getTotalArea() < area);
+		// clusters need recalculating without the removed interfaces
+		clusters = null;
 
 	    if (clustersNcs != null) {
 	    	clustersNcs.removeIf(ncsCluster -> ncsCluster.getMembers().get(0).getTotalArea() < area);
@@ -367,12 +370,13 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 	/**
 	 * Calculate the interface clusters for this StructureInterfaceList
 	 * using Jaccard contact set scores to measure the similarity of interfaces.
-	 * Subsequent calls will use the cached value without recomputing the clusters.
+	 * Subsequent calls will use the cached value without recomputing the clusters, until {@link #removeInterfacesBelowArea(double)} is called.
 	 * The clusters will be assigned ids by sorting descending by {@link StructureInterfaceCluster#getTotalArea()}
 	 * <p>
 	 * Interfaces are compared by entity pairs (see {@link #ENTITY_ID_PAIR}) and grouped with the leader
-	 * algorithm described in {@link #clusterInterfaces(List, Function, double)}, thus the result depends on
-	 * the order of the list (by default descending by area, see {@link #sort()}).
+	 * algorithm described in {@link #clusterInterfaces(List, Function, double)}. The interfaces with most residue
+	 * contacts are taken first as representatives, so that the result doesn't depend on the order of the list or on
+	 * whether ASAs have been calculated. Ties keep the order of the list.
 	 * @param contactOverlapScoreClusterCutoff the contact overlap score above which a pair will be
 	 * clustered
 	 * @return
@@ -382,8 +386,12 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 			return clusters;
 		}
 
+		// a sorted copy: the list order and the interface ids are not modified
+		List<StructureInterface> sortedByContacts = new ArrayList<>(list);
+		sortedByContacts.sort(Comparator.comparingInt((StructureInterface interf) -> interf.getGroupContacts().size()).reversed());
+
 		List<StructureInterfaceCluster> singletons = new ArrayList<>(list.size());
-		for (StructureInterface interf : list) {
+		for (StructureInterface interf : sortedByContacts) {
 			StructureInterfaceCluster cluster = new StructureInterfaceCluster();
 			cluster.addMember(interf);
 			singletons.add(cluster);

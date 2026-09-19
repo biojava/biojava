@@ -41,6 +41,8 @@ BioJava 7.3.0
   parent directory and on an empty `.size` sidecar #1133
 * mmCIF writer emits the entry identifier as a data item, so `getPdbId()` survives a
   write-then-read round trip #1144 #1143
+* `StructureInterfaceList.removeInterfacesBelowArea()` clears the cached clusters, which kept
+  the removed interfaces
 * The ECOD read lock is left balanced when a download fails, so the original error is no longer
   replaced by `IllegalMonitorStateException` #1150
 * Resolution parsing warns only when the values actually differ
@@ -48,10 +50,9 @@ BioJava 7.3.0
 ### Changed
 * `createValidationFiles()` now defaults to `ETagPolicy.USE_IF_HEX_DIGEST`, so existing callers
   begin recording checksums where the server offers one #1133
-* `StructureInterfaceList.getClusters()`: results can depend on the order of the interfaces (by
-  default descending by area), members are no longer sorted by id, and
-  `StructureInterfaceCluster.getAverageScore()` is now the average score of the members merged into
-  the representative rather than over all pairs of members
+* `StructureInterfaceList.getClusters()`: interfaces with most residue contacts are taken first as
+  cluster representatives, and `StructureInterfaceCluster.getAverageScore()` is now the average
+  score of the members merged into the representative rather than over all pairs of members
 * Integration tests run nightly rather than on every pull request #1137 #1135
 * Tests migrated to JUnit 5 #1125 #1126 #1038
 * Library upgrades #1130 #1132
