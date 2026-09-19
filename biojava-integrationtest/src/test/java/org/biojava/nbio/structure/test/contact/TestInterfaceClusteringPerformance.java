@@ -46,11 +46,8 @@ import static org.junit.Assert.assertEquals;
  * Compares the performance of interface clustering with {@link StructureInterfaceList#clusterInterfaces}
  * (leader algorithm) against single linkage clustering with {@link SingleLinkageClusterer}, for an assembly with many interfaces.
  *
- * By default it is ignored.
- * To execute use:
- * <pre>
- * mvn -Dtest=TestInterfaceClusteringPerformance test
- * </pre>
+ * By default it is ignored, also by maven when the test is selected explicitly with -Dtest.
+ * To execute it, run it from the IDE or remove the {@code @Ignore} annotation temporarily.
  */
 public class TestInterfaceClusteringPerformance {
 
