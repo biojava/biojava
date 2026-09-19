@@ -434,8 +434,8 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 	 * representative's cluster members followed by the members of the clusters merged into it, and whose average
 	 * score is the average of the scores that caused merges (1.0 if no merges). The cluster back-references of all
 	 * members are set to the output clusters. Ids are not assigned.
-	 * @param initialClusters the starting clusters, e.g. one singleton cluster per interface. The first member of
-	 *                           each is its representative
+	 * @param initialClusters the starting clusters, e.g. one singleton cluster per interface. Must not be empty: the first member
+	 *                           of each is its representative
 	 * @param idPairFunction gives the pair of identifiers for the 2 sides of an interface, e.g. {@link #ENTITY_ID_PAIR}.
 	 *                          If it returns null the interface is not merged with any other
 	 * @param contactOverlapScoreClusterCutoff the contact overlap score above which a pair of clusters is merged
@@ -451,6 +451,9 @@ public class StructureInterfaceList implements Serializable, Iterable<StructureI
 		List<StructureInterface> reps = new ArrayList<>(n);
 		List<Pair<T>> idPairs = new ArrayList<>(n);
 		for (StructureInterfaceCluster cluster : initialClusters) {
+			if (cluster.getMembers().isEmpty()) {
+				throw new IllegalArgumentException("Input clusters must have at least one member: the first one is the representative");
+			}
 			StructureInterface rep = cluster.getMembers().get(0);
 			reps.add(rep);
 			idPairs.add(idPairFunction.apply(rep));
