@@ -44,6 +44,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -60,7 +61,7 @@ public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
 
 	private SequenceCreatorInterface<C> sequenceCreator;
 	private GenbankSequenceParser<S,C> genbankParser;
-	private BufferedReader bufferedReader;
+	private PositionTrackingReader bufferedReader;
 	private boolean closed;
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
@@ -79,7 +80,7 @@ public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
 	public GenbankReader(final InputStream is, final SequenceHeaderParserInterface<S,C> headerParser,
 						 final SequenceCreatorInterface<C> sequenceCreator) {
 		this.sequenceCreator = sequenceCreator;
-		bufferedReader = new BufferedReader(new InputStreamReader(is));
+		bufferedReader = new PositionTrackingReader(new InputStreamReader(is));
 		genbankParser = new GenbankSequenceParser<>();
 		closed = false;
 	}
@@ -103,7 +104,7 @@ public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
 			final SequenceCreatorInterface<C> sequenceCreator
 			) throws FileNotFoundException {
 
-		this.bufferedReader = new BufferedReader(new FileReader(file));
+		this.bufferedReader = new PositionTrackingReader(new FileReader(file));
 		this.sequenceCreator = sequenceCreator;
 		genbankParser = new GenbankSequenceParser<>();
 	}
@@ -160,11 +161,12 @@ public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
 		while(true) {
 			if(max>0 && i>=max) break;
 			i++;
+			long sequenceIndex = bufferedReader.position;
 			String seqString = genbankParser.getSequence(bufferedReader, 0);
 			//reached end of file?
 			if(seqString==null) break;
 			@SuppressWarnings("unchecked")
-			S sequence = (S) sequenceCreator.getSequence(seqString, 0);
+			S sequence = (S) sequenceCreator.getSequence(seqString, sequenceIndex);
 			GenericGenbankHeaderParser<S, C> genbankHeaderParser = genbankParser.getSequenceHeaderParser();			
 			genbankHeaderParser.parseHeader(genbankParser.getHeader(), sequence);			
 			String id = genbankHeaderParser.getAccession();
@@ -189,6 +191,55 @@ public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
 		}
 
 		return sequences;
+	}
+
+	/**
+	 * Tracks character offsets, including line endings and parser lookahead, to
+	 * match the character-based skip in SequenceFileProxyLoader.
+	 */
+	private static class PositionTrackingReader extends BufferedReader {
+		private long position;
+		private long markedPosition;
+		private boolean skipLF;
+		private boolean markedSkipLF;
+
+		private PositionTrackingReader(Reader reader) {
+			super(reader);
+		}
+
+		@Override
+		public String readLine() throws IOException {
+			StringBuilder line = new StringBuilder();
+			int c;
+			while ((c = super.read()) != -1) {
+				position++;
+				if (skipLF) {
+					skipLF = false;
+					if (c == '\n') continue;
+				}
+				if (c == '\n') return line.toString();
+				if (c == '\r') {
+					skipLF = true;
+					return line.toString();
+				}
+				line.append((char) c);
+			}
+			return line.length() == 0 ? null : line.toString();
+		}
+
+		@Override
+		public void mark(int readAheadLimit) throws IOException {
+			super.mark(readAheadLimit);
+			markedPosition = position;
+			markedSkipLF = skipLF;
+		}
+
+		@Override
+		public void reset() throws IOException {
+			super.reset();
+			position = markedPosition;
+			skipLF = markedSkipLF;
+		}
 	}
 
 	public void close() {
