@@ -25,8 +25,6 @@ package org.biojava.nbio.core.sequence;
 
 import org.biojava.nbio.core.exceptions.CompoundNotFoundException;
 import org.biojava.nbio.core.sequence.compound.DNACompoundSet;
-import org.biojava.nbio.core.sequence.compound.NucleotideCompound;
-import org.biojava.nbio.core.sequence.template.CompoundSet;
 
 /**
  * Represents a exon or coding sequence in a gene. It has a parent {@link TranscriptSequence}
@@ -95,20 +93,6 @@ public class CDSSequence extends DNASequence {
 	 * @return coding sequence
 	 */
 	public String getCodingSequence() {
-		String sequence = this.getSequenceAsString(getBioBegin(), getBioEnd(), getStrand());
-
-		if (getStrand() == Strand.NEGATIVE) {
-			//need to take complement of sequence because it is negative and we are returning a coding sequence
-			StringBuilder b = new StringBuilder(getLength());
-			CompoundSet<NucleotideCompound> compoundSet = this.getCompoundSet();
-			for (int i = 0; i < sequence.length(); i++) {
-				String nucleotide = String.valueOf(sequence.charAt(i));
-				NucleotideCompound nucleotideCompound = compoundSet.getCompoundForString(nucleotide);
-				b.append(nucleotideCompound.getComplement().getShortName());
-			}
-			sequence = b.toString();
-		}
-		//  sequence = sequence.substring(phase);
-		return sequence;
+		return this.getSequenceAsString(getBioBegin(), getBioEnd(), getStrand());
 	}
 }
