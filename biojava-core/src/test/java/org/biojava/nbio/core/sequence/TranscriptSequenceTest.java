@@ -82,13 +82,11 @@ class TranscriptSequenceTest {
     }
 
     @Test
-    @Disabled("is reversed, not complemented?")
     void getCDNASeqNegativeStrand() throws Exception {
         TranscriptSequence ts = SequenceTestUtils.transcriptFromSequence("AAAAACCCCCTTTTGGGGGG", 3, 10, Strand.NEGATIVE);
         CDSSequence s2 = ts.addCDS(new AccessionID("b"), 1, 10, 0);
-        // this should be GGGGGTTTTT( ie the reverse complement of the chromosome sequence,
-        // but is just reversed and generates CCCCCAAAAA
-        //assertEquals("GGGGGTTTTT", ts.getDNACodingSequence());
+        assertEquals("GGGGGTTTTT", s2.getCodingSequence());
+        assertEquals("GGGGGTTTTT", ts.getDNACodingSequence().getSequenceAsString());
     }
 
     @Test
