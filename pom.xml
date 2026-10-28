@@ -714,6 +714,14 @@
 			</build>
 		</profile>
 
+		<!-- GPU paths with TornadoVM (needs JDK 21): mvn -Ptornadovm install -->
+		<profile>
+			<id>tornadovm</id>
+			<modules>
+				<module>biojava-tornadovm</module>
+			</modules>
+		</profile>
+
 	</profiles>
 
 	<modules>
