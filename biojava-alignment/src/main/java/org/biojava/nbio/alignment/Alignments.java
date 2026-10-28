@@ -185,8 +185,14 @@ public class Alignments {
 		}
 
 		// stage 1: pairwise similarity calculation
-		List<PairwiseSequenceScorer<S, C>> scorers = getAllPairsScorers(sequences, ps, gapPenalty, subMatrix);
-		runPairwiseScorers(scorers);
+		List<PairwiseSequenceScorer<S, C>> scorers;
+		if (AllPairsScores.isSupported(sequences, ps, gapPenalty, subMatrix)) {
+			// GLOBAL and LOCAL need only the scores: no alignment is built
+			scorers = AllPairsScores.getScorers(sequences, ps, gapPenalty, subMatrix);
+		} else {
+			scorers = getAllPairsScorers(sequences, ps, gapPenalty, subMatrix);
+			runPairwiseScorers(scorers);
+		}
 
 		// stage 2: hierarchical clustering into a guide tree
 		GuideTree<S, C> tree = new GuideTree<>(sequences, scorers);
@@ -269,6 +275,10 @@ public class Alignments {
 	 * Factory method which computes a sequence pair score for all {@link Sequence} pairs in the given {@link List}.
 	 * This method runs the scorings in parallel by submitting all of the scorings to the shared thread pool of the
 	 * {@link ConcurrencyTools} utility.
+	 * <p>
+	 * {@link PairwiseSequenceScorerType#GLOBAL GLOBAL} and {@link PairwiseSequenceScorerType#LOCAL LOCAL} scores
+	 * are computed without building the alignments, in linear memory: the scores are the same as those of
+	 * {@link NeedlemanWunsch} and {@link SmithWaterman}.
 	 *
 	 * @param <S> each {@link Sequence} of a pair is of type S
 	 * @param <C> each element of a {@link Sequence} is a {@link Compound} of type C
@@ -280,6 +290,9 @@ public class Alignments {
 	 */
 	public static <S extends Sequence<C>, C extends Compound> double[] getAllPairsScores( List<S> sequences,
 			PairwiseSequenceScorerType type, GapPenalty gapPenalty, SubstitutionMatrix<C> subMatrix) {
+		if (AllPairsScores.isSupported(sequences, type, gapPenalty, subMatrix)) {
+			return AllPairsScores.getScores(sequences, type, gapPenalty, subMatrix);
+		}
 		return runPairwiseScorers(getAllPairsScorers(sequences, type, gapPenalty, subMatrix));
 	}
 
