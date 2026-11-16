@@ -213,4 +213,25 @@ public class SmithWatermanTest {
 		assertEquals(self.getPair().toString(), String.format("AERNDKK%nAERNDKK%n"));
 	}
 
+
+	/**
+	 * With a linear gap penalty and no positively scoring pair, the local alignment is empty.
+	 * This used to throw an ArrayIndexOutOfBoundsException during traceback.
+	 */
+	@Test
+	public void testNoPositiveScoreLinearGap() throws CompoundNotFoundException {
+		SmithWaterman<ProteinSequence, AminoAcidCompound> sw = new SmithWaterman<>(new ProteinSequence("W"),
+				new ProteinSequence("P"), new SimpleGapPenalty(0, 2), blosum62);
+		assertEquals(GapPenalty.Type.LINEAR, sw.getGapPenalty().getType());
+		assertEquals(0, sw.getScore(), PRECISION);
+		assertEquals(0, sw.getPair().getLength());
+	}
+
+	@Test
+	public void testNoPositiveScoreAffineGap() throws CompoundNotFoundException {
+		SmithWaterman<ProteinSequence, AminoAcidCompound> sw = new SmithWaterman<>(new ProteinSequence("W"),
+				new ProteinSequence("P"), new SimpleGapPenalty(10, 2), blosum62);
+		assertEquals(0, sw.getScore(), PRECISION);
+		assertEquals(0, sw.getPair().getLength());
+	}
 }

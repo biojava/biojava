@@ -618,6 +618,10 @@ public class AlignerHelper {
 			List<Step> sy) {
 		int x = xyMax[0], y = xyMax[1];
 		boolean linear = (traceback[x][y].length == 1);
+		if (local && linear && traceback[x][y][0] == null) {
+			// no cell scored above zero: the local alignment is empty
+			last = null;
+		}
 		while (local ? (linear ? last : traceback[x][y][last.ordinal()]) != null : x > 0 || y > 0) {
 			switch (last) {
 			case DELETION:
