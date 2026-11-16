@@ -234,4 +234,18 @@ public class SmithWatermanTest {
 		assertEquals(0, sw.getScore(), PRECISION);
 		assertEquals(0, sw.getPair().getLength());
 	}
+
+	/**
+	 * Aligning an empty sequence used to throw an ArrayIndexOutOfBoundsException when the score matrix was not
+	 * stored, as by default.
+	 */
+	@Test
+	public void testEmptySequences() throws CompoundNotFoundException {
+		ProteinSequence empty = new ProteinSequence("");
+		for (ProteinSequence[] pair : new ProteinSequence[][] { { empty, query }, { query, empty }, { empty, empty } }) {
+			SmithWaterman<ProteinSequence, AminoAcidCompound> sw = new SmithWaterman<>(pair[0], pair[1], gaps, blosum62);
+			assertEquals(0, sw.getScore(), PRECISION);
+			assertEquals(0, sw.getPair().getLength());
+		}
+	}
 }

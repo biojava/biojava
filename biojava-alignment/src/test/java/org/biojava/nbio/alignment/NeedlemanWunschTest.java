@@ -346,4 +346,20 @@ public class NeedlemanWunschTest {
 		assertTrue("Similarity must be positive, this must be an integer overflow bug!", aligner.getSimilarity()>0);
 	}
 
+	/**
+	 * Aligning an empty query used to throw an ArrayIndexOutOfBoundsException when the score matrix was not
+	 * stored, as by default.
+	 */
+	@Test
+	public void testEmptySequences() throws CompoundNotFoundException {
+		ProteinSequence empty = new ProteinSequence(""), seq = new ProteinSequence("ACDE");
+		// only gaps: open 10, then 1 per position
+		NeedlemanWunsch<ProteinSequence, AminoAcidCompound> nw = new NeedlemanWunsch<>(empty, seq, gaps, blosum62);
+		assertEquals(-14, nw.getScore(), PRECISION);
+		nw = new NeedlemanWunsch<>(seq, empty, gaps, blosum62);
+		assertEquals(-14, nw.getScore(), PRECISION);
+		nw = new NeedlemanWunsch<>(empty, empty, gaps, blosum62);
+		assertEquals(0, nw.getScore(), PRECISION);
+		assertEquals(0, nw.getPair().getLength());
+	}
 }
