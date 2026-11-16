@@ -30,7 +30,9 @@ import org.biojava.nbio.core.sequence.template.CompoundSet;
 import org.biojava.nbio.core.sequence.template.Sequence;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Implements common code for an {@link Aligner} for a pair of {@link Sequence}s.
@@ -47,6 +49,12 @@ public abstract class AbstractPairwiseSequenceAligner<S extends Sequence<C>, C e
 
 	// additional output field
 	protected SequencePair<S, C> pair;
+
+	// substitution scores cached for the current query, target and substitution matrix:
+	// the score of query position x (1-based) against target position y is
+	// substitutionScores[queryCompoundIndices[x]][targetCompoundIndices[y]]
+	private int[] queryCompoundIndices, targetCompoundIndices;
+	private int[][] substitutionScores;
 
 	/**
 	 * Before running a pairwise global sequence alignment, data must be sent in via calls to
@@ -153,7 +161,46 @@ public abstract class AbstractPairwiseSequenceAligner<S extends Sequence<C>, C e
 
 	@Override
 	protected int getSubstitutionScore(int queryColumn, int targetColumn) {
-		return getSubstitutionMatrix().getValue(query.getCompoundAt(queryColumn), target.getCompoundAt(targetColumn));
+		if (substitutionScores == null) {
+			cacheSubstitutionScores();
+		}
+		return substitutionScores[queryCompoundIndices[queryColumn]][targetCompoundIndices[targetColumn]];
+	}
+
+	/**
+	 * Looking up a pair of compounds in a {@link SubstitutionMatrix} is slow, and an alignment does it for every
+	 * cell of the score matrix. Instead, map each distinct compound to a small index and look up each distinct
+	 * pair only once.
+	 */
+	private void cacheSubstitutionScores() {
+		Map<C, Integer> queryIndices = new HashMap<>(), targetIndices = new HashMap<>();
+		queryCompoundIndices = indexCompounds(query, queryIndices);
+		targetCompoundIndices = indexCompounds(target, targetIndices);
+		List<C> queryCompounds = new ArrayList<>(queryIndices.keySet()), targetCompounds = new ArrayList<>(targetIndices.keySet());
+		int[][] subs = new int[queryCompounds.size()][targetCompounds.size()];
+		SubstitutionMatrix<C> matrix = getSubstitutionMatrix();
+		for (C q : queryCompounds) {
+			int[] row = subs[queryIndices.get(q)];
+			for (C t : targetCompounds) {
+				row[targetIndices.get(t)] = matrix.getValue(q, t);
+			}
+		}
+		substitutionScores = subs;
+	}
+
+	// returns the index of the compound at each (1-based) position of the sequence, adding new compounds to indices
+	private static <C extends Compound> int[] indexCompounds(Sequence<C> sequence, Map<C, Integer> indices) {
+		int[] compoundIndices = new int[sequence.getLength() + 1];
+		int i = 1;
+		for (C c : sequence) {
+			Integer index = indices.get(c);
+			if (index == null) {
+				index = indices.size();
+				indices.put(c, index);
+			}
+			compoundIndices[i++] = index;
+		}
+		return compoundIndices;
 	}
 
 	@Override
@@ -166,6 +213,8 @@ public abstract class AbstractPairwiseSequenceAligner<S extends Sequence<C>, C e
 	protected void reset() {
 		super.reset();
 		pair = null;
+		queryCompoundIndices = targetCompoundIndices = null;
+		substitutionScores = null;
 		if (query != null && target != null && getGapPenalty() != null && getSubstitutionMatrix() != null &&
 				query.getCompoundSet().equals(target.getCompoundSet())) {
 			int maxq = 0, maxt = 0;

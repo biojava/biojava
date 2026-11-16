@@ -27,6 +27,7 @@ import org.biojava.nbio.core.alignment.template.AlignedSequence.Step;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -405,29 +406,32 @@ public class AlignerHelper {
 		Last[][] pointers = new Last[ye + 1][];
 		int min = Integer.MIN_VALUE - gop - gep;
 		ensureScoringMatrixColumn(x, storing, scores);
+		int[][] cur = scores[x];
 		if (x == xb) {
-			scores[xb][yb][1] = scores[xb][yb][2] = gop;
-			pointers[yb] = new Last[] {null, null, null};
+			cur[yb][1] = cur[yb][2] = gop;
+			pointers[yb] = AFFINE_POINTERS[0];
 			if (startAnchored) {
 				assert (xb > 0 && yb > 0);
 				int subproblemStartingScore = scores[xb - 1][yb - 1][0] + subs[yb];
-				scores[xb][yb][0] = subproblemStartingScore;
-				scores[xb][yb][1] = subproblemStartingScore + gop;
-				scores[xb][yb][2] = subproblemStartingScore + gop;
-				pointers[yb] = new Last[] {Last.SUBSTITUTION, Last.SUBSTITUTION, Last.SUBSTITUTION};
+				cur[yb][0] = subproblemStartingScore;
+				cur[yb][1] = subproblemStartingScore + gop;
+				cur[yb][2] = subproblemStartingScore + gop;
+				pointers[yb] = affinePointers(SUBSTITUTION, SUBSTITUTION, SUBSTITUTION);
 			}
-			Last[] insertion = new Last[] { null, null, Last.INSERTION };
+			Last[] insertion = affinePointers(NONE, NONE, INSERTION);
 			for (int y = yb + 1; y <= ye; y++) {
-				scores[xb][y][0] = scores[xb][y][1] = min;
-				scores[xb][y][2] = scores[xb][y - 1][2] + gep;
+				cur[y][0] = cur[y][1] = min;
+				cur[y][2] = cur[y - 1][2] + gep;
 				pointers[y] = insertion;
 			}
 		} else {
-			scores[x][yb][0] = scores[x][yb][2] = min;
-			scores[x][yb][1] = scores[x - 1][yb][1] + gep;
-			pointers[yb] = new Last[] { null, Last.DELETION, null };
+			int[][] prev = scores[x - 1];
+			cur[yb][0] = cur[yb][2] = min;
+			cur[yb][1] = prev[yb][1] + gep;
+			pointers[yb] = affinePointers(NONE, DELETION, NONE);
 			for (int y = yb + 1; y <= ye; y++) {
-				pointers[y] = setScorePoint(x, y, gop, gep, subs[y], scores);
+				int[] c = cur[y];
+				pointers[y] = AFFINE_POINTERS[setAffineScorePoint(c, prev[y - 1], prev[y], cur[y - 1], gop, gep, subs[y])];
 			}
 		}
 		return pointers;
@@ -463,23 +467,27 @@ public class AlignerHelper {
 	 */
 	public static Last[][] setScoreVector(int x, int xb, int yb, int ye, int gep, int[] subs, boolean storing,
 			int[][][] scores, boolean startAnchored) {
-		Last[][] pointers = new Last[ye + 1][1];
+		Last[][] pointers = new Last[ye + 1][];
+		Arrays.fill(pointers, LINEAR_POINTERS[NONE]);
 		ensureScoringMatrixColumn(x, storing, scores);
+		int[][] cur = scores[x];
 		if (x == xb) {
 			if (startAnchored) {
 				assert (xb > 0 && yb > 0);
-				scores[xb][yb][0] = scores[xb - 1][yb - 1][0] + subs[yb];
-				pointers[yb][0] = Last.SUBSTITUTION;
+				cur[yb][0] = scores[xb - 1][yb - 1][0] + subs[yb];
+				pointers[yb] = LINEAR_POINTERS[SUBSTITUTION];
 			}
+			Last[] insertion = LINEAR_POINTERS[INSERTION];
 			for (int y = yb + 1; y <= ye; y++) {
-				scores[xb][y][0] = scores[xb][y - 1][0] + gep;
-				pointers[y][0] = Last.INSERTION;
+				cur[y][0] = cur[y - 1][0] + gep;
+				pointers[y] = insertion;
 			}
 		} else {
-			scores[x][yb][0] = scores[x - 1][yb][0] + gep;
-			pointers[yb][0] = Last.DELETION;
+			int[][] prev = scores[x - 1];
+			cur[yb][0] = prev[yb][0] + gep;
+			pointers[yb] = LINEAR_POINTERS[DELETION];
 			for (int y = yb + 1; y <= ye; y++) {
-				pointers[y][0] = setScorePoint(x, y, gep, subs[y], scores);
+				pointers[y] = LINEAR_POINTERS[setLinearScorePoint(cur[y], prev[y - 1][0], prev[y][0], cur[y - 1][0], gep, subs[y])];
 			}
 		}
 		return pointers;
@@ -519,25 +527,34 @@ public class AlignerHelper {
 	 */
 	public static Last[][] setScoreVector(int x, int xb, int yb, int ye, int gop, int gep, int[] subs,
 			boolean storing, int[][][] scores, int[] xyMax, int score) {
-		Last[][] pointers;
+		Last[][] pointers = new Last[ye + 1][];
 		ensureScoringMatrixColumn(x, storing, scores);
 		if (x == xb) {
-			pointers = new Last[ye + 1][scores[0][0].length];
+			Arrays.fill(pointers, AFFINE_POINTERS[0]);
 		} else {
-			pointers = new Last[ye + 1][];
-			pointers[0] = new Last[scores[0][0].length];
-			for (int y = 1; y < scores[0].length; y++) {
-				pointers[y] = setScorePoint(x, y, gop, gep, subs[y], scores);
-				for (int z = 0; z < scores[0][0].length; z++) {
-					if (scores[x][y][z] <= 0) {
-						scores[x][y][z] = 0;
-						pointers[y][z] = null;
-					}
+			int[][] cur = scores[x], prev = scores[x - 1];
+			pointers[0] = AFFINE_POINTERS[0];
+			for (int y = 1; y < cur.length; y++) {
+				int[] c = cur[y];
+				int code = setAffineScorePoint(c, prev[y - 1], prev[y], cur[y - 1], gop, gep, subs[y]);
+				// a local alignment never extends a path scoring zero or less
+				if (c[0] <= 0) {
+					c[0] = 0;
+					code &= ~(3 << 4);
 				}
-				if (scores[x][y][0] > score) {
+				if (c[1] <= 0) {
+					c[1] = 0;
+					code &= ~(3 << 2);
+				}
+				if (c[2] <= 0) {
+					c[2] = 0;
+					code &= ~3;
+				}
+				pointers[y] = AFFINE_POINTERS[code];
+				if (c[0] > score) {
 					xyMax[0] = x;
 					xyMax[1] = y;
-					score = scores[x][y][0];
+					score = c[0];
 				}
 			}
 		}
@@ -576,26 +593,106 @@ public class AlignerHelper {
 	 */
 	public static Last[][] setScoreVector(int x, int xb, int yb, int ye, int gep, int[] subs, boolean storing,
 			int[][][] scores, int[] xyMax, int score) {
-		Last[][] pointers;
+		Last[][] pointers = new Last[ye + 1][];
+		Arrays.fill(pointers, LINEAR_POINTERS[NONE]);
 		ensureScoringMatrixColumn(x, storing, scores);
-		if (x == xb) {
-			pointers = new Last[ye + 1][1];
-		} else {
-			pointers = new Last[ye + 1][1];
-			pointers[0] = new Last[1];
-			for (int y = 1; y < scores[x].length; y++) {
-				pointers[y][0] = setScorePoint(x, y, gep, subs[y], scores);
-				if (scores[x][y][0] <= 0) {
-					scores[x][y][0] = 0;
-					pointers[y][0] = null;
-				} else if (scores[x][y][0] > score) {
+		if (x != xb) {
+			int[][] cur = scores[x], prev = scores[x - 1];
+			for (int y = 1; y < cur.length; y++) {
+				int[] c = cur[y];
+				int code = setLinearScorePoint(c, prev[y - 1][0], prev[y][0], cur[y - 1][0], gep, subs[y]);
+				if (c[0] <= 0) {
+					c[0] = 0;
+					code = NONE;
+				} else if (c[0] > score) {
 					xyMax[0] = x;
 					xyMax[1] = y;
-					score = scores[x][y][0];
+					score = c[0];
 				}
+				pointers[y] = LINEAR_POINTERS[code];
 			}
 		}
 		return pointers;
+	}
+
+	// Traceback pointers are encoded as 2-bit codes: NONE (null) or the ordinal of a Last value plus one. The fill
+	// loops return shared, immutable pointer arrays rather than allocating one per cell of the score matrix.
+	private static final int NONE = 0, SUBSTITUTION = Last.SUBSTITUTION.ordinal() + 1,
+			DELETION = Last.DELETION.ordinal() + 1, INSERTION = Last.INSERTION.ordinal() + 1;
+
+	private static final Last[] CODES = { null, Last.SUBSTITUTION, Last.DELETION, Last.INSERTION };
+
+	// indexed by a linear pointer code
+	private static final Last[][] LINEAR_POINTERS = new Last[4][];
+
+	// indexed by (substitution code << 4) | (deletion code << 2) | insertion code
+	private static final Last[][] AFFINE_POINTERS = new Last[64][];
+
+	static {
+		for (int i = 0; i < 4; i++) {
+			LINEAR_POINTERS[i] = new Last[] { CODES[i] };
+		}
+		for (int i = 0; i < 64; i++) {
+			AFFINE_POINTERS[i] = new Last[] { CODES[(i >> 4) & 3], CODES[(i >> 2) & 3], CODES[i & 3] };
+		}
+	}
+
+	private static Last[] affinePointers(int substitution, int deletion, int insertion) {
+		return AFFINE_POINTERS[(substitution << 4) | (deletion << 2) | insertion];
+	}
+
+	// same recurrence and tie breaking as setScorePoint(x, y, gop, gep, sub, scores); returns the affine pointer code
+	private static int setAffineScorePoint(int[] cur, int[] diag, int[] up, int[] left, int gop, int gep, int sub) {
+		int code;
+
+		// substitution
+		if (diag[1] >= diag[0] && diag[1] >= diag[2]) {
+			cur[0] = diag[1] + sub;
+			code = DELETION << 4;
+		} else if (diag[0] >= diag[2]) {
+			cur[0] = diag[0] + sub;
+			code = SUBSTITUTION << 4;
+		} else {
+			cur[0] = diag[2] + sub;
+			code = INSERTION << 4;
+		}
+
+		// deletion
+		if (up[1] >= up[0] + gop) {
+			cur[1] = up[1] + gep;
+			code |= DELETION << 2;
+		} else {
+			cur[1] = up[0] + gop + gep;
+			code |= SUBSTITUTION << 2;
+		}
+
+		// insertion
+		if (left[0] + gop >= left[2]) {
+			cur[2] = left[0] + gop + gep;
+			code |= SUBSTITUTION;
+		} else {
+			cur[2] = left[2] + gep;
+			code |= INSERTION;
+		}
+
+		return code;
+	}
+
+	// same recurrence and tie breaking as setScorePoint(x, y, gep, sub, scores); returns the linear pointer code
+	private static int setLinearScorePoint(int[] cur, int diag, int up, int left, int gep, int sub) {
+		int d = up + gep;
+		int i = left + gep;
+		int s = diag + sub;
+		if (d >= s && d >= i) {
+			cur[0] = d;
+			return DELETION;
+		} else if (s >= i) {
+			cur[0] = s;
+			return SUBSTITUTION;
+		} else {
+			cur[0] = i;
+			return INSERTION;
+		}
 	}
 
 	private static void ensureScoringMatrixColumn(int x, boolean storingFullMatrix, int[][][] scores) {
@@ -618,6 +715,10 @@ public class AlignerHelper {
 			List<Step> sy) {
 		int x = xyMax[0], y = xyMax[1];
 		boolean linear = (traceback[x][y].length == 1);
+		if (local && linear && traceback[x][y][0] == null) {
+			// no cell scored above zero: the local alignment is empty
+			last = null;
+		}
 		while (local ? (linear ? last : traceback[x][y][last.ordinal()]) != null : x > 0 || y > 0) {
 			switch (last) {
 			case DELETION:
