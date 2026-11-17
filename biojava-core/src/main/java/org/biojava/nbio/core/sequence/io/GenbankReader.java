@@ -195,50 +195,165 @@ public class GenbankReader<S extends AbstractSequence<C>, C extends Compound> {
 
 	/**
 	 * Tracks character offsets, including line endings and parser lookahead, to
-	 * match the character-based skip in SequenceFileProxyLoader.
+	 * match the character-based skip in SequenceFileProxyLoader. Keeps its own
+	 * buffer so that readLine scans whole lines instead of one read() per character.
 	 */
 	private static class PositionTrackingReader extends BufferedReader {
+		private final Reader in;
+		private char[] buf = new char[8192];
+		private int next;
+		private int end;
+		private int markIndex = -1;
+		private int markLimit;
 		private long position;
 		private long markedPosition;
 		private boolean skipLF;
 		private boolean markedSkipLF;
 
 		private PositionTrackingReader(Reader reader) {
-			super(reader);
+			super(reader, 1);
+			this.in = reader;
+		}
+
+		private boolean fill() throws IOException {
+			if (markIndex >= 0 && next - markIndex > markLimit) {
+				markIndex = -1;
+			}
+			if (markIndex >= 0) {
+				int kept = end - markIndex;
+				char[] target = kept == buf.length ? new char[buf.length * 2] : buf;
+				System.arraycopy(buf, markIndex, target, 0, kept);
+				buf = target;
+				next -= markIndex;
+				end = kept;
+				markIndex = 0;
+			} else {
+				next = 0;
+				end = 0;
+			}
+			int n = in.read(buf, end, buf.length - end);
+			if (n <= 0) {
+				return false;
+			}
+			end += n;
+			return true;
 		}
 
 		@Override
 		public String readLine() throws IOException {
-			StringBuilder line = new StringBuilder();
-			int c;
-			while ((c = super.read()) != -1) {
-				position++;
+			StringBuilder line = null;
+			while (true) {
+				if (next >= end && !fill()) {
+					return line == null || line.length() == 0 ? null : line.toString();
+				}
 				if (skipLF) {
 					skipLF = false;
-					if (c == '\n') continue;
+					if (buf[next] == '\n') {
+						next++;
+						position++;
+						continue;
+					}
 				}
-				if (c == '\n') return line.toString();
-				if (c == '\r') {
-					skipLF = true;
-					return line.toString();
+				int i = next;
+				while (i < end && buf[i] != '\n' && buf[i] != '\r') {
+					i++;
 				}
-				line.append((char) c);
+				if (i < end) {
+					String s = line == null ? new String(buf, next, i - next)
+							: line.append(buf, next, i - next).toString();
+					skipLF = buf[i] == '\r';
+					position += i + 1 - next;
+					next = i + 1;
+					return s;
+				}
+				if (line == null) {
+					line = new StringBuilder(i - next + 80);
+				}
+				line.append(buf, next, i - next);
+				position += i - next;
+				next = i;
 			}
-			return line.length() == 0 ? null : line.toString();
+		}
+
+		@Override
+		public int read() throws IOException {
+			if (next >= end && !fill()) {
+				return -1;
+			}
+			if (skipLF) {
+				skipLF = false;
+				if (buf[next] == '\n') {
+					next++;
+					position++;
+					if (next >= end && !fill()) {
+						return -1;
+					}
+				}
+			}
+			position++;
+			return buf[next++];
+		}
+
+		@Override
+		public int read(char[] cbuf, int off, int len) throws IOException {
+			if (len == 0) {
+				return 0;
+			}
+			if (next >= end && !fill()) {
+				return -1;
+			}
+			int n = Math.min(len, end - next);
+			System.arraycopy(buf, next, cbuf, off, n);
+			next += n;
+			position += n;
+			skipLF = false;
+			return n;
+		}
+
+		@Override
+		public long skip(long n) throws IOException {
+			long done = 0;
+			while (done < n && (next < end || fill())) {
+				int k = (int) Math.min(n - done, end - next);
+				next += k;
+				done += k;
+			}
+			position += done;
+			skipLF = false;
+			return done;
+		}
+
+		@Override
+		public boolean ready() throws IOException {
+			return next < end || in.ready();
+		}
+
+		@Override
+		public boolean markSupported() {
+			return true;
 		}
 
 		@Override
 		public void mark(int readAheadLimit) throws IOException {
-			super.mark(readAheadLimit);
+			markIndex = next;
+			markLimit = readAheadLimit;
 			markedPosition = position;
 			markedSkipLF = skipLF;
 		}
 
 		@Override
 		public void reset() throws IOException {
-			super.reset();
+			if (markIndex < 0) {
+				throw new IOException("Mark invalid");
+			}
+			next = markIndex;
 			position = markedPosition;
 			skipLF = markedSkipLF;
+		}
+
+		@Override
+		public void close() throws IOException {
+			in.close();
 		}
 	}
 
