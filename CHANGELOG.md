@@ -17,7 +17,8 @@ BioJava 7.4.0
 * `Alignments.getAllPairsScores` and the pairwise stage of `getMultipleSequenceAlignment` no
   longer build an alignment per pair for `GLOBAL`, `LOCAL`, `GLOBAL_IDENTITIES` (the default)
   and `LOCAL_IDENTITIES` scoring: each pair is aligned by `PairwiseStatisticsAligner`, with the
-  same scores. All pairs of 100 proteins of about 300 residues take 2.3-2.8x less time
+  same scores. All pairs of 100 proteins of about 300 residues take about 2.2-2.7x less time
+  #1166
 
 ### Fixed
 * `CDSSequence.getCodingSequence()` returned the reverse instead of the reverse complement for
@@ -29,12 +30,14 @@ BioJava 7.4.0
   scored above zero; it now returns an empty alignment, as with affine gaps #1164
 * Pairwise alignment of an empty query threw `ArrayIndexOutOfBoundsException`. `SmithWaterman`
   now returns an empty alignment and `NeedlemanWunsch` scores it #1164
+* `UserConfiguration` logs each of its configuration warnings (e.g. no PDB or cache directory
+  set) once per JVM, rather than every time an `AtomCache` is created
 
 ### Changed
 * Negative-strand coding sequences and the proteins translated from them change with the
   `CDSSequence` fix above. Code that complemented them to work around the bug must stop doing so
   #1160
-* Library upgrades: jackson-databind 2.18.10, guava 33.7.1-jre #1157 #1163
+* Library upgrades: jackson-databind 2.18.11, guava 33.7.1-jre #1157 #1163 #1165
 
 BioJava 7.3.0
 ==============================
