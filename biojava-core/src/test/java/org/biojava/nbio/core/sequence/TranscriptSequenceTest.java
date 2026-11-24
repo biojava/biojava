@@ -5,6 +5,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class TranscriptSequenceTest {
@@ -86,6 +88,39 @@ class TranscriptSequenceTest {
         CDSSequence s2 = ts.addCDS(new AccessionID("b"), 1, 10, 0);
         assertEquals("GGGGGTTTTT", s2.getCodingSequence());
         assertEquals("GGGGGTTTTT", ts.getDNACodingSequence().getSequenceAsString());
+    }
+
+    /**
+     * A transcript on the negative strand with 2 exons, coding for ATGGCTT|GGAAACGT (MAW|KR, codon TGG split by the
+     * intron). On the positive strand the second exon comes first: revcomp(GGAAACGT) + intron + revcomp(ATGGCTT).
+     * The CDSs are added in the wrong order, to check that they are sorted 5' to 3' on the negative strand.
+     */
+    private static TranscriptSequence twoExonNegativeTranscript() throws Exception {
+        String chromosome = "ACGTTTCC" + "GGGGGGGGGG" + "AAGCCAT";
+        TranscriptSequence ts = SequenceTestUtils.transcriptFromSequence(chromosome, 1, chromosome.length(), Strand.NEGATIVE);
+        // the second exon starts with the 2 bases that complete the codon split by the intron: phase 2
+        ts.addCDS(new AccessionID("exon2"), 1, 8, 2);
+        ts.addCDS(new AccessionID("exon1"), 19, 25, 0);
+        return ts;
+    }
+
+    @Test
+    void getCDNASeqNegativeStrandMultipleExons() throws Exception {
+        TranscriptSequence ts = twoExonNegativeTranscript();
+        assertEquals("ATGGCTT", ts.getCDSSequences().get("exon1").getCodingSequence());
+        assertEquals("GGAAACGT", ts.getCDSSequences().get("exon2").getCodingSequence());
+        // exon1 must come first, although it was added last
+        assertEquals("ATGGCTTGGAAACGT", ts.getDNACodingSequence().getSequenceAsString());
+    }
+
+    @Test
+    void getProteinCDSSequencesNegativeStrandWithPhase() throws Exception {
+        TranscriptSequence ts = twoExonNegativeTranscript();
+        List<ProteinSequence> proteins = ts.getProteinCDSSequences();
+        assertEquals(2, proteins.size());
+        // the codon split by the intron goes to the first exon, and the phase removes its 2 bases from the second
+        assertEquals("MAW", proteins.get(0).getSequenceAsString());
+        assertEquals("KR", proteins.get(1).getSequenceAsString());
     }
 
     @Test
