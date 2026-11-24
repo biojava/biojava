@@ -26,7 +26,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
-          distribution: 'oracle'
+          distribution: 'temurin'
           java-version: ${{ matrix.java }}
       - name: Build, test (no integration) and Sonarqube analyse
         env:
