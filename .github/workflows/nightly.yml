@@ -38,7 +38,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v4
         with:
-          distribution: 'oracle'
+          distribution: 'temurin'
           java-version: ${{ matrix.java }}
       - name: Build and run integration tests
         run: mvn verify --no-transfer-progress
