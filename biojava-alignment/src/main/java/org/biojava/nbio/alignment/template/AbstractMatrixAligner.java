@@ -307,8 +307,10 @@ public abstract class AbstractMatrixAligner<S extends Sequence<C>, C extends Com
 			scores = new int[dim[0]][dim[1]][dim[2]];
 		} else {
 			scores = new int[dim[0]][][];
-			scores[0] = new int[dim[1]][dim[2]];
-			scores[1] = new int[dim[1]][dim[2]];
+			// only two rows are kept, or one if the query is empty
+			for (int x = 0; x < Math.min(2, dim[0]); x++) {
+				scores[x] = new int[dim[1]][dim[2]];
+			}
 		}
 		boolean linear = (gapPenalty.getType() == GapPenalty.Type.LINEAR);
 		Last[][][] traceback = new Last[dim[0]][][];
