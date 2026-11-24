@@ -1,6 +1,37 @@
 BioJava Changelog
 -----------------
 
+BioJava 7.4.0
+==============================
+### Added
+* `PairwiseStatisticsAligner`, which computes the score, number of identical positions, length
+  and start and end of a pairwise alignment without a traceback, with memory linear in the
+  length of the target. It follows the same recurrence and tie-breaking as `SmithWaterman`
+  (local) and `NeedlemanWunsch` (global), so the statistics are those of the alignment they
+  return. Intended for all-against-all comparisons such as clustering sequences #1164
+
+### Performance
+* Faster pairwise alignment: substitution scores are looked up in a table built once per
+  alignment instead of scanning the matrix compound lists for every cell, and the dynamic
+  programming fill no longer allocates a traceback pointer array per cell #1164
+
+### Fixed
+* `CDSSequence.getCodingSequence()` returned the reverse instead of the reverse complement for
+  negative-strand transcripts, and so did `TranscriptSequence.getDNACodingSequence()` and
+  `getProteinCDSSequences()`, which translated the wrong sequence #1160 #1016
+* Lazy loading of GenBank files with several records read every record's sequence from the wrong
+  offset. Offsets now account for line endings (LF, CRLF or CR) and parser lookahead #1159
+* `SmithWaterman` with a linear gap penalty threw `ArrayIndexOutOfBoundsException` when no cell
+  scored above zero; it now returns an empty alignment, as with affine gaps #1164
+* Pairwise alignment of an empty query threw `ArrayIndexOutOfBoundsException`. `SmithWaterman`
+  now returns an empty alignment and `NeedlemanWunsch` scores it #1164
+
+### Changed
+* Negative-strand coding sequences and the proteins translated from them change with the
+  `CDSSequence` fix above. Code that complemented them to work around the bug must stop doing so
+  #1160
+* Library upgrades: jackson-databind 2.18.10, guava 33.7.1-jre #1157 #1163
+
 BioJava 7.3.0
 ==============================
 ### Added
