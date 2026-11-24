@@ -36,6 +36,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.util.*;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -162,6 +164,42 @@ public class GenbankReaderTest {
 		genbankDNA.close();
 		assertTrue(genbankDNA.isClosed());
 		assertTrue(inStream.isclosed());
+	}
+
+	@Test
+	public void testLazyLoadingMultipleRecords() throws Exception {
+		String records;
+		try (InputStream input = getClass().getResourceAsStream("/two-dnaseqs.gb")) {
+			records = new String(input.readAllBytes(), Charset.defaultCharset()).replace("\r\n", "\n");
+		}
+		for (String newline : new String[]{"\n", "\r\n", "\r"}) {
+			File file = Files.createTempFile("genbank-lazy-", ".gb").toFile();
+			try {
+				Files.writeString(file.toPath(), records.replace("\n", newline), Charset.defaultCharset());
+				Map<String, DNASequence> expected = GenbankReaderHelper.readGenbankDNASequence(file, false);
+				Map<String, DNASequence> actual = GenbankReaderHelper.readGenbankDNASequence(file, true);
+				assertEquals(expected.keySet(), actual.keySet());
+				assertEquals(expected.get("sbFDR").getSequenceAsString(), actual.get("sbFDR").getSequenceAsString());
+				assertEquals(expected.get("vPetite").getSequenceAsString(), actual.get("vPetite").getSequenceAsString());
+
+				GenbankReader<DNASequence, NucleotideCompound> reader = new GenbankReader<>(file,
+						new GenericGenbankHeaderParser<>(),
+						new FileProxyDNASequenceCreator(file, DNACompoundSet.getDNACompoundSet(),
+								new GenbankSequenceParser<DNASequence, NucleotideCompound>()));
+				Map<String, DNASequence> first;
+				Map<String, DNASequence> second;
+				try {
+					first = reader.process(1);
+					second = reader.process(1);
+				} finally {
+					reader.close();
+				}
+				assertEquals(expected.get("sbFDR").getSequenceAsString(), second.get("sbFDR").getSequenceAsString());
+				assertEquals(expected.get("vPetite").getSequenceAsString(), first.get("vPetite").getSequenceAsString());
+			} finally {
+				Files.delete(file.toPath());
+			}
+		}
 	}
 
 	@Test
