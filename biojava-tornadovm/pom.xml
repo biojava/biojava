@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>biojava</artifactId>
+		<groupId>org.biojava</groupId>
+		<version>7.3.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>biojava-tornadovm</artifactId>
+	<name>biojava-tornadovm</name>
+	<description>GPU paths for BioJava hot spots (ASA, all-pairs alignment scores) with TornadoVM. Needs JDK 21; built with -Ptornadovm.</description>
+
+	<licenses>
+		<license>
+			<name>GNU LGPL v2</name>
+			<url>http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<url>http://www.biojava.org</url>
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<tornadovm.version>8.0.0-jdk21</tornadovm.version>
+	</properties>
+	<build>
+		<plugins>
+			<!-- TornadoVM 8.0.0 for JDK 21 uses the foreign-memory API, a preview feature in JDK 21 -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<release>21</release>
+					<compilerArgs>
+						<arg>--enable-preview</arg>
+					</compilerArgs>
+				</configuration>
+			</plugin>
+			<!-- Plain JVM: the tests exercise the exact CPU paths; scripts/test-gpu.sh runs them on a GPU -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<argLine>-Xmx1500M --enable-preview</argLine>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>demo/**</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+	<dependencies>
+		<dependency>
+			<groupId>org.biojava</groupId>
+			<artifactId>biojava-structure</artifactId>
+			<version>7.3.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.biojava</groupId>
+			<artifactId>biojava-alignment</artifactId>
+			<version>7.3.1-SNAPSHOT</version>
+		</dependency>
+		<!-- Compile-time API only: at run time the classes come from the TornadoVM SDK (its argument file). -->
+		<dependency>
+			<groupId>io.github.beehive-lab</groupId>
+			<artifactId>tornado-api</artifactId>
+			<version>${tornadovm.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-params</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-slf4j2-impl</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-core</artifactId>
+		</dependency>
+	</dependencies>
+</project>
